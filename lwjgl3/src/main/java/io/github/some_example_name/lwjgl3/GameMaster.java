@@ -92,6 +92,7 @@ public class GameMaster extends ApplicationAdapter {
     private CustomButton playButton;
     private CollisionManager collisionManager;
     private CollidableEntity player;
+    private CollidableEntity player1;
     private CollidableEntity enemy;
 
     @Override
@@ -103,10 +104,13 @@ public class GameMaster extends ApplicationAdapter {
 
         // Initialize player and enemy
         player = new CollidableEntity(100, 100, 50, 50, Color.GREEN, 0);
+        player = new CollidableEntity(100, 100, 50, 50, Color.GREEN, 0);
         enemy = new CollidableEntity(300, 300, 50, 50, Color.RED, 0);
 
         // Register entities for collision detection
         collisionManager.register(player);
+        collisionManager.register(player1);
+
         collisionManager.register(enemy);
     }
 
@@ -116,6 +120,7 @@ public class GameMaster extends ApplicationAdapter {
 
         sr.begin(ShapeRenderer.ShapeType.Filled);
         player.draw(sr);
+        player1.draw(sr);
         enemy.draw(sr);
         sr.end();
 
