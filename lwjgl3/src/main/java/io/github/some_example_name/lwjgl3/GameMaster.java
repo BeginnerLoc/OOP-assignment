@@ -104,7 +104,7 @@ public class GameMaster extends ApplicationAdapter {
 
         // Initialize player and enemy
         player = new CollidableEntity(100, 100, 50, 50, Color.GREEN, 0);
-        player = new CollidableEntity(100, 100, 50, 50, Color.GREEN, 0);
+        player1 = new CollidableEntity(100, 100, 50, 50, Color.GREEN, 0);
         enemy = new CollidableEntity(300, 300, 50, 50, Color.RED, 0);
 
         // Register entities for collision detection
