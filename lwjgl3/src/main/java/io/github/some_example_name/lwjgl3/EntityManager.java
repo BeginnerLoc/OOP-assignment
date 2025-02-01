@@ -6,8 +6,9 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+
 public class EntityManager {
-	private List<Entity> entityList = new ArrayList<Entity>();
+	private final List<Entity> entityList = new ArrayList<Entity>();
 	
 	public void addEntity(Entity entity) {
 		entityList.add(entity);
@@ -20,16 +21,11 @@ public class EntityManager {
 		}
 	}
 	
-    public void movement() {
-        for (Entity entity: this.entityList) {
-            entity.movement();
-        }
-    }
-
-    public void update() {
-        for (Entity entity: this.entityList) {
-            entity.update();
-        }
-    }
-
+	public void movement() {
+		
+	}
+	
+	public void update() {
+		
+	}
 }

@@ -1,11 +1,10 @@
 package io.github.some_example_name.lwjgl3;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-public abstract class Entity implements iMovable{
+public abstract class Entity {
 	private float x;
 	private float y;
 	private float speed;
@@ -69,6 +68,5 @@ public abstract class Entity implements iMovable{
 	}
 	
 	public abstract void update();
-	
 	
 }

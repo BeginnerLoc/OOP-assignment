@@ -84,12 +84,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-import assignment.Collidable;
-import assignment.CollidableEntity;
-import assignment.CollisionManager;
-import assignment.CustomButton;
-import assignment.IOManager;
-
 public class GameMaster extends ApplicationAdapter {
 
     private SpriteBatch batch;
