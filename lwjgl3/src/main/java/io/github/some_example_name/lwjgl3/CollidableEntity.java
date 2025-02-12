@@ -38,7 +38,7 @@ public class CollidableEntity extends Entity implements Collidable {
 
     @Override
     public void update() {
-        setX(getX() + getSpeed());
+        
     }
 
     @Override

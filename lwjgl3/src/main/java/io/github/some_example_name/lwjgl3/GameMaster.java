@@ -19,9 +19,6 @@ public class GameMaster extends ApplicationAdapter {
     private CollidableEntity enemy;
     private SceneManager sceneManager;
     
-    private Square square;
-    private Rectangl rectangl;
-    
     private EntityManager em;
 
     @Override
@@ -39,19 +36,15 @@ public class GameMaster extends ApplicationAdapter {
         
         em.addEntity(new Circle(500, 250, 2, 35, Color.RED)); 
         em.addEntity(new Triangle(500, 400, 1, Color.FOREST)); 
-        //em.addEntity(player);
-        //em.addEntity(enemy);
+        em.addEntity(player);
+        em.addEntity(enemy);
         
         // To create Square & Rectangle
-        
-        square = new Square(100, 100, 50, 50, Color.BLUE, 0);
-        rectangl = new Rectangl(300, 300, 50, 100, Color.YELLOW, 0);
-        em.addEntity(square);
-        em.addEntity(rectangl);
+        em.addEntity(new Square(40, 80, 50, 50, Color.GREEN, 0));
+        em.addEntity(new Square(120, 350, 120, 50, Color.YELLOW, 0));
 
         // Register entities for collision detection
         collisionManager.register(player);
-
         collisionManager.register(enemy);
         
         

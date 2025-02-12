@@ -52,7 +52,6 @@ public class Square extends Entity implements Collidable {
     
     @Override
 	public void update() {
-    	setX(getX() + getSpeed());
 		
 	}
     

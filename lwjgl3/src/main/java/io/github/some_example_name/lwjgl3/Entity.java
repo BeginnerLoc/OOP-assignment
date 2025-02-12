@@ -22,6 +22,7 @@ public abstract class Entity {
 		this.color = color;
 	}
 
+
 	public float getX() {
 		return x;
 	}
