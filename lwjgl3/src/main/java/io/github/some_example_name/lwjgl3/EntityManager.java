@@ -10,8 +10,10 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 public class EntityManager {
 	private final List<Entity> entityList = new ArrayList<Entity>();
 	
+    
 	public void addEntity(Entity entity) {
-		entityList.add(entity);
+		entityList.add(entity);		
+		
 	}
 	
 	public void draw(SpriteBatch sb, ShapeRenderer sr) {
