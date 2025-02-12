@@ -43,12 +43,27 @@ public class GameMaster extends ApplicationAdapter {
         collisionManager.register(player);
 
         collisionManager.register(enemy);
+        
+        
+     // Create and add scenes to the SceneManager
+        MainMenuScene mainMenuScene = new MainMenuScene();
+        GameScene gameScene = new GameScene(player, enemy, collisionManager, sr);
+
+        sceneManager.addScene("MainMenu", mainMenuScene);
+        sceneManager.addScene("Game", gameScene);
+
+        // Load the initial scene (e.g., main menu)
+        sceneManager.loadScene("MainMenu");
     }
 
     @Override
     public void render() {
     	
-    	sceneManager.loadScene(null);
+    	// Update and render the current scene
+        sceneManager.update();
+        sceneManager.render();
+        
+        
         ScreenUtils.clear(0, 0, 0.2f, 1);
 
         sr.begin(ShapeRenderer.ShapeType.Filled);
@@ -71,6 +86,14 @@ public class GameMaster extends ApplicationAdapter {
             player.setY(player.getY() + 100 * Gdx.graphics.getDeltaTime());
         if (Gdx.input.isKeyPressed(Keys.DOWN)) 
             player.setY(player.getY() - 100 * Gdx.graphics.getDeltaTime());
+        
+        
+        //scene
+        if (Gdx.input.isKeyPressed(Keys.SPACE)) {
+            sceneManager.loadScene("Game");
+        } else if (Gdx.input.isKeyPressed(Keys.Q)) {
+            sceneManager.loadScene("MainMenu");
+        }
     }
 
     @Override

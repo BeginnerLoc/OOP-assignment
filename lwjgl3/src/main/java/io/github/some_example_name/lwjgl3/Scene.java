@@ -10,7 +10,14 @@ abstract class Scene {
         this.name = name;
         this.isLoaded = false;
     }
+    
+    public boolean isLoaded() {
+        return isLoaded;
+    }
 
+    public void setLoaded(boolean loaded) {
+        isLoaded = loaded;
+    }
     public abstract void load();
     public abstract void update();
     public abstract void render();
