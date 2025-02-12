@@ -10,9 +10,10 @@ public class PauseScene extends Scene {
     private SpriteBatch batch;
     private SceneManager sceneManager; // Add this field
 
-    public PauseScene(SpriteBatch batch) {
+    public PauseScene(SpriteBatch batch, SceneManager sceneManager) { // Pass sceneManager
         super("PauseMenu");
         this.batch = batch;
+        this.sceneManager = sceneManager; // Initialize the field
         font = new BitmapFont(); // Default font
     }
 
@@ -24,10 +25,10 @@ public class PauseScene extends Scene {
 
     @Override
     public void update() {
-    	if (Gdx.input.isKeyPressed(Keys.P)) {
-           sceneManager.loadScene("Game"); // Use the sceneManager field directly
+        if (Gdx.input.isKeyPressed(Keys.P)) {
+            sceneManager.loadScene("Game"); // Load GameScene when 'P' is pressed
         } else if (Gdx.input.isKeyPressed(Keys.Q)) {
-            sceneManager.loadScene("MainMenu"); // Use the sceneManager field directly
+            sceneManager.loadScene("MainMenu"); // Load MainMenu when 'Q' is pressed
         }
     }
 

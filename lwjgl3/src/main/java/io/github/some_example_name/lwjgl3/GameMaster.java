@@ -50,11 +50,11 @@ public class GameMaster extends ApplicationAdapter {
         
      // Create and add scenes to the SceneManager
         MainMenuScene mainMenuScene = new MainMenuScene(batch);
-        GameScene gameScene = new GameScene(player, enemy, collisionManager, sr);
-        PauseScene pauseMenuScene = new PauseScene(batch);
+        GameScene gameScene = new GameScene(player, enemy, collisionManager, sr, sceneManager);
+        PauseScene pauseMenuScene = new PauseScene(batch, sceneManager);
         sceneManager.addScene("MainMenu", mainMenuScene);
         sceneManager.addScene("Game", gameScene);
-        //sceneManager.addScene("PauseMenu", pauseMenuScene);
+        sceneManager.addScene("PauseMenu", pauseMenuScene);
         
         // Load the initial scene (e.g., main menu)
         sceneManager.loadScene("MainMenu");

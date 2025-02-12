@@ -11,13 +11,15 @@ class GameScene extends Scene {
     private CollidableEntity enemy;
     private CollisionManager collisionManager;
     private ShapeRenderer sr;
+    private SceneManager sceneManager; // Add this field
 
-    public GameScene(CollidableEntity player, CollidableEntity enemy, CollisionManager collisionManager, ShapeRenderer sr) {
+    public GameScene(CollidableEntity player, CollidableEntity enemy, CollisionManager collisionManager, ShapeRenderer sr, SceneManager sceneManager) {
         super("Game");
         this.player = player;
         this.enemy = enemy;
         this.collisionManager = collisionManager;
         this.sr = sr;
+        this.sceneManager = sceneManager;
     }
 
     @Override
@@ -27,10 +29,16 @@ class GameScene extends Scene {
 
     @Override
     public void update() {
-        // Update logic for the game scene
-        handlePlayerMovement();
-        collisionManager.checkCollisions();
+    	if (Gdx.input.isKeyPressed(Keys.P)) {
+            sceneManager.loadScene("PauseMenu"); // Load PauseScene when 'P' is pressed
+        } else if (Gdx.input.isKeyPressed(Keys.Q)) {
+            sceneManager.loadScene("MainMenu"); // Load MainMenu when 'Q' is pressed
+        } else {
+            handlePlayerMovement();
+            collisionManager.checkCollisions();
+        }
     }
+    
 
     @Override
     public void render() {
