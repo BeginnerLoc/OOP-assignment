@@ -1,43 +1,45 @@
 package io.github.some_example_name.lwjgl3;
 
-class MainMenuScene extends Scene {
-    public MainMenuScene() {
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.ScreenUtils;
+
+public class MainMenuScene extends Scene {
+    private BitmapFont font;
+    private SpriteBatch batch;
+
+    public MainMenuScene(SpriteBatch batch) {
         super("MainMenu");
+        this.batch = batch;
+        font = new BitmapFont();
     }
 
     @Override
     public void load() {
-        // Load resources specific to the main menu scene
         System.out.println("Loading Main Menu...");
         setLoaded(true);
     }
 
     @Override
     public void update() {
-        // Update logic for the main menu scene
-        // This could include handling user input, updating game state, etc.
-        // For simplicity, let's just print a message
         System.out.println("Updating Main Menu...");
     }
 
     @Override
     public void render() {
-        // Render the main menu scene
-        // Assuming there's a method to draw text on the screen
-        drawText("Main Menu Screen", 200, 100);
-        drawText("Press Space to play.", 200, 500);
-        drawText("Press P to pause.", 200, 550);
-        drawText("Press Q to quit to main menu.", 200, 600);
-    }
-
-    private void drawText(String text, int x, int y) {
-        // Placeholder for actual drawing logic
-        System.out.println("Drawing text '" + text + "' at (" + x + ", " + y + ")");
+    	ScreenUtils.clear(0, 2, 0.2f, 10);
+        batch.begin();
+        font.draw(batch, "Main Menu Screen", 200, 350);
+        font.draw(batch, "Press Space to play.", 200, 300);
+        font.draw(batch, "Press O to adjust Sound.", 200, 250);
+        
+        //font.draw(batch, "Press P to pause.", 200, 250);
+        //font.draw(batch, "Press Q to quit to main menu.", 200, 200);
+        batch.end();
     }
 
     @Override
     public void unload() {
-        // Unload resources specific to the main menu scene
         System.out.println("Unloading Main Menu...");
         setLoaded(false);
     }

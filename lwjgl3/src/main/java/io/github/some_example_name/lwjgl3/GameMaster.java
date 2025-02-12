@@ -56,12 +56,13 @@ public class GameMaster extends ApplicationAdapter {
         
         
      // Create and add scenes to the SceneManager
-        MainMenuScene mainMenuScene = new MainMenuScene();
+        MainMenuScene mainMenuScene = new MainMenuScene(batch);
         GameScene gameScene = new GameScene(player, enemy, collisionManager, sr);
-
+        PauseScene pauseMenuScene = new PauseScene(batch);
         sceneManager.addScene("MainMenu", mainMenuScene);
         sceneManager.addScene("Game", gameScene);
-
+        //sceneManager.addScene("PauseMenu", pauseMenuScene);
+        
         // Load the initial scene (e.g., main menu)
         sceneManager.loadScene("MainMenu");
     }
@@ -69,12 +70,12 @@ public class GameMaster extends ApplicationAdapter {
     @Override
     public void render() {
     	
-    	// Update and render the current scene
+    	
+        ScreenUtils.clear(0, 0, 0.2f, 1);
+        
+     // Update and render the current scene
         sceneManager.update();
         sceneManager.render();
-        
-        
-        ScreenUtils.clear(0, 0, 0.2f, 1);
 
         sr.begin(ShapeRenderer.ShapeType.Filled);
         	em.draw(batch, sr);
