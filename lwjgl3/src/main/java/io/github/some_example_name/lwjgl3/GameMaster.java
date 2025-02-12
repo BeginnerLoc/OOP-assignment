@@ -93,6 +93,7 @@ public class GameMaster extends ApplicationAdapter {
     private CollisionManager collisionManager;
     private CollidableEntity player;
     private CollidableEntity enemy;
+    private SceneManager sceneManager;
 
     @Override
     public void create() {
@@ -100,6 +101,7 @@ public class GameMaster extends ApplicationAdapter {
         sr = new ShapeRenderer();
         collisionManager = new CollisionManager();
         ioManager = new IOManager();
+        sceneManager = new SceneManager();
 
         // Initialize player and enemy
         player = new CollidableEntity(100, 100, 50, 50, Color.BLUE, 0);
@@ -113,6 +115,8 @@ public class GameMaster extends ApplicationAdapter {
 
     @Override
     public void render() {
+    	
+    	sceneManager.loadScene(null);
         ScreenUtils.clear(0, 0, 0.2f, 1);
 
         sr.begin(ShapeRenderer.ShapeType.Filled);
