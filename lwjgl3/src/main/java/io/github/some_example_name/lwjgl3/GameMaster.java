@@ -18,6 +18,8 @@ public class GameMaster extends ApplicationAdapter {
     private CollidableEntity player;
     private CollidableEntity enemy;
     private SceneManager sceneManager;
+    
+    private EntityManager em;
 
     @Override
     public void create() {
@@ -26,10 +28,16 @@ public class GameMaster extends ApplicationAdapter {
         collisionManager = new CollisionManager();
         ioManager = new IOManager();
         sceneManager = new SceneManager();
-
+        em = new EntityManager();
+        
         // Initialize player and enemy
         player = new CollidableEntity(100, 100, 50, 50, Color.BLUE, 0);
         enemy = new CollidableEntity(300, 300, 50, 50, Color.RED, 0);
+        
+        em.addEntity(new Circle(300, 400, 20, Color.RED, 3)); // WASD Movement
+        em.addEntity(new Triangle(500, 400, Color.GREEN, 2)); // Arrow Key Movement
+        em.addEntity(player);
+        em.addEntity(enemy);
 
         // Register entities for collision detection
         collisionManager.register(player);
@@ -44,8 +52,7 @@ public class GameMaster extends ApplicationAdapter {
         ScreenUtils.clear(0, 0, 0.2f, 1);
 
         sr.begin(ShapeRenderer.ShapeType.Filled);
-        player.draw(sr);
-        enemy.draw(sr);
+        	em.draw(batch, sr);
         sr.end();
 
         // Handle player movement
