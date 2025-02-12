@@ -8,29 +8,35 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class Circle extends Entity{
+	
 	private float radius;
 	
-	Circle(){
-		super(70,70,Color.GREEN,2);
-		this.radius = 0; 
-	}
+	// Default Constructor
+    public Circle() 
+    {
+        
+    }
 	
-	Circle(float inputX, float inputY, float inputRadius, Color inputColour, float inputSpeed){ 
-		super(inputX,inputY,inputColour,inputSpeed);
-		this.radius = inputRadius;
-	}
+ 	// Parameterized Constructor
+    public Circle(float x, float y, float speed, float radius, Color color) 
+    {
+        super(x, y, color, speed);
+        this.radius = radius;
+    }
 	
-	void setRadius(float x) {
-		radius = x;
-	}
-	
-	public float getRadius() {
-		return radius;
-	}
+    public float getRadius() 
+    {
+        return radius;
+    }
+
+    public void setRadius(float radius) 
+    {
+    	this.radius = radius;
+    }
 	
 	public void draw(ShapeRenderer shape) {
-		shape.setColor(this.getColor());
-		shape.circle(getX(),getY(),radius);
+		shape.setColor(getColor());
+		shape.circle(getX(), getY(), getRadius());
 	}
 	
 	@Override
