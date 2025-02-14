@@ -20,6 +20,8 @@ public abstract class Entity {
 		this.y = y;
 		this.speed = speed;
 		this.color = color;
+		
+		
 	}
 
 
