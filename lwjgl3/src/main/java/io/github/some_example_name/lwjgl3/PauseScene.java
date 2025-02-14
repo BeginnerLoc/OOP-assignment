@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.ScreenUtils;
 
 public class PauseScene extends Scene {
     private BitmapFont font;
@@ -25,7 +26,7 @@ public class PauseScene extends Scene {
 
     @Override
     public void update() {
-        if (Gdx.input.isKeyPressed(Keys.P)) {
+        if (Gdx.input.isKeyPressed(Keys.SPACE)) {
             sceneManager.loadScene("Game"); // Load GameScene when 'P' is pressed
         } else if (Gdx.input.isKeyPressed(Keys.Q)) {
             sceneManager.loadScene("MainMenu"); // Load MainMenu when 'Q' is pressed
@@ -34,9 +35,10 @@ public class PauseScene extends Scene {
 
     @Override
     public void render() {
+    	ScreenUtils.clear(0, 0, 0, 1);
         batch.begin();
         font.draw(batch, "Paused", 300, 400);
-        font.draw(batch, "Press P to resume.", 200, 300);
+        font.draw(batch, "Press SPACE to resume.", 200, 300);
         font.draw(batch, "Press Q to quit to main menu.", 200, 250);
         batch.end();
     }
