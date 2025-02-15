@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -32,6 +33,7 @@ public class GameMaster extends ApplicationAdapter {
     public void create() {
         batch = new SpriteBatch();
         sr = new ShapeRenderer();
+        BitmapFont font = new BitmapFont();
         collisionManager = new CollisionManager();
         ioManager = new IOManager();
         sceneManager = new SceneManager();
@@ -62,17 +64,24 @@ public class GameMaster extends ApplicationAdapter {
         movementManager.setEntitySpeed(movingEnemy, 200f);
 
         
-     // Create and add scenes to the SceneManager
-        MainMenuScene mainMenuScene = new MainMenuScene(batch);
-        GameScene gameScene = new GameScene(player, nonMovingEnemy, collisionManager, sr, sceneManager);
-        PauseScene pauseMenuScene = new PauseScene(batch, sceneManager);
+// Create and add scenes to the SceneManager
+        
+        MainMenuScene mainMenuScene = new MainMenuScene(batch, font, sceneManager);
+        GameScene gameScene = new GameScene(batch, font, sceneManager, sr);
+        PauseScene pauseMenuScene = new PauseScene(batch, font, sceneManager);
+        GameOverScene gameOverScene = new GameOverScene(batch, font, sceneManager);
+        
+        //extra scene
+        SoundAdjustScene soundAdjustScene = new SoundAdjustScene(batch, font, sceneManager);
+        
         sceneManager.addScene("MainMenu", mainMenuScene);
         sceneManager.addScene("Game", gameScene);
         sceneManager.addScene("PauseMenu", pauseMenuScene);
+        sceneManager.addScene("GameOver", gameOverScene);
+        sceneManager.addScene("SoundAdjustMenu", soundAdjustScene);
         
         // Load the initial scene (e.g., main menu)
         sceneManager.loadScene("MainMenu");
-        
             }
 
     @Override
@@ -116,14 +125,6 @@ public class GameMaster extends ApplicationAdapter {
         
         movementManager.moveEntity(player, Gdx.graphics.getDeltaTime(), direction.isZero() ? null : direction);
 
-
-        
-        //scene
-        if (Gdx.input.isKeyPressed(Keys.SPACE)) {
-            sceneManager.loadScene("Game");
-        } else if (Gdx.input.isKeyPressed(Keys.Q)) {
-            sceneManager.loadScene("MainMenu");
-        }
     }
 
     @Override
