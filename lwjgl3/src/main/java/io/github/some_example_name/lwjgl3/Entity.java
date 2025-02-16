@@ -21,7 +21,6 @@ public abstract class Entity {
 		this.speed = speed;
 		this.color = color;
 		
-		
 	}
 
 
