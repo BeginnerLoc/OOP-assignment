@@ -65,10 +65,6 @@ public abstract class Entity {
 		
 	}
 	
-	public void movement() {
-		
-	}
 	
-	public abstract void update();
 	
 }
