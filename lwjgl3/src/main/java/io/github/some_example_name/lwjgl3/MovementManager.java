@@ -15,12 +15,11 @@ private List<Movable> movingEntities;
 private Movable player;
 private Map<Movable, Float> speedMap;
 
-public MovementManager(Movable player, List<Movable> movingEntities) {
-	if (player == null || movingEntities == null) {
+public MovementManager(List<Movable> movingEntities) {
+	if (movingEntities == null) {
         throw new IllegalArgumentException("Player and movingEntities cannot be null");
     }
 
-	this.player = player;
     this.movingEntities = movingEntities;
     this.speedMap = new HashMap<>();
 }
@@ -54,11 +53,13 @@ public enum Direction {
 
 
 public void moveEntity(Movable entity, float deltaTime, Vector2 direction) {
-    float speed = speedMap.getOrDefault(entity, 1.0f); // Default speed if not set
+    
+	if (direction == null) return; 
+	float speed = speedMap.getOrDefault(entity, 1.0f); // Default speed if not set
     float oldX = entity.getX();
     float oldY = entity.getY();
     
-    //entity.movement(deltaTime, direction);
+    entity.translate(direction.x * speed * deltaTime, direction.y * speed * deltaTime);
 
     
     System.out.println(entity + " moved from (" + oldX + "," + oldY + ") to (" + entity.getX() + "," + entity.getY() + ")");
@@ -67,7 +68,7 @@ public void moveEntity(Movable entity, float deltaTime, Vector2 direction) {
 
 public void updatePositions(float deltaTime) {
 	for (Movable entity : movingEntities) {
-        float speed = speedMap.getOrDefault(entity, 1.0f);
+        float speed = speedMap.getOrDefault(entity, 100.0f);
         if (speed != 0) {
             Vector2 direction = new Vector2(-1, 0); // Assuming leftward movement
             entity.translate(direction.x * speed * deltaTime, direction.y * speed * deltaTime);

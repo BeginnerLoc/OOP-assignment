@@ -59,10 +59,11 @@ public class GameMaster extends ApplicationAdapter {
         collisionManager.register(movingEnemy);
 
         List<Movable> movingEntities = new ArrayList<>();
+        
         movingEntities.add(movingEnemy);  // Example enemy
-        movementManager = new MovementManager(player, movingEntities);
-        movementManager.setEntitySpeed(movingEnemy, 200f);
-
+        movementManager = new MovementManager(movingEntities);
+        movementManager.setEntitySpeed(movingEnemy, 0f);
+        movementManager.setPlayerSpeed(player, 700f);
         
 // Create and add scenes to the SceneManager
         
