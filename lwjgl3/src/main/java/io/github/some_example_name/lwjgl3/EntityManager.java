@@ -17,14 +17,17 @@ public class EntityManager {
 	}
 	
 	public void draw(SpriteBatch sb, ShapeRenderer sr) {
-		for (Entity entity: this.entityList) {
-			entity.draw(sb);
-			entity.draw(sr);
-		}
-	}
-	
-	public void movement() {
-		
+		sb.begin();
+        for (Entity entity : entityList) {
+            entity.draw(sb);
+        }
+        sb.end();
+        
+        sr.begin(ShapeRenderer.ShapeType.Filled); 
+        for (Entity entity : entityList) {
+            entity.draw(sr);
+        }
+        sr.end();
 	}
 	
 	public void update() {
