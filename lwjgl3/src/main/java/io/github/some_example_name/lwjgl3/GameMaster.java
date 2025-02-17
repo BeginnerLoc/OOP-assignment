@@ -38,17 +38,23 @@ public class GameMaster extends ApplicationAdapter {
 
         player = new Player(100, 0, Color.BLUE, 10.0f);
         enemy = new Enemy(300, 0, 2.0f, Color.RED);
-        
         enemy.setTarget(player);
+
+        
+        //entity
         entityManager.addEntity(player);
         entityManager.addEntity(enemy);
+        
+        //movement
         movementManager.addMovingEntity(player);
         movementManager.addMovingEntity(enemy);
+        movementManager.addAIEntities(enemy);
+
         
+        //collision
         collisionManager.register(player);
         collisionManager.register(enemy);
-        
-        
+      
         player.setCollisionAction(Collidable -> {
         	if(Collidable.getClass() == enemy.getClass()) {
             	player.setColor(Color.PINK);
@@ -73,10 +79,9 @@ public class GameMaster extends ApplicationAdapter {
         sceneManager.update();
         sceneManager.render();
 
-        
-        enemy.followEntity();
-        
+               
         collisionManager.checkCollisions();
+        movementManager.followEntity();
         movementManager.updatePositions();
         entityManager.draw(batch, sr);
         movementManager.followWorldRule(gravity);

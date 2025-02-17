@@ -5,6 +5,7 @@ import java.util.List;
 
 public class MovementManager {
     private final List<Movable> movingEntities = new ArrayList<>();
+    private final List<AIMovable> AIentities = new ArrayList<>();
 
     public MovementManager() {}
 
@@ -22,6 +23,12 @@ public class MovementManager {
     		}
     	}
     }
+    
+    public void followEntity() {
+        for (AIMovable entity : AIentities) {
+        	entity.followEntity();
+        }
+    }
 
     public List<Movable> getMovingEntities() {
         return movingEntities;
@@ -35,5 +42,9 @@ public class MovementManager {
 
     public void removeMovingEntity(Movable entity) {
         movingEntities.remove(entity);
+    }
+    
+    public void addAIEntities(AIMovable entity) {
+    	AIentities.add(entity);
     }
 }
