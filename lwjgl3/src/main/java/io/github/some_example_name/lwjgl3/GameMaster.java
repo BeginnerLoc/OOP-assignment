@@ -71,6 +71,10 @@ public class GameMaster extends ApplicationAdapter {
 
         // Register InputManager
         Gdx.input.setInputProcessor(ioManager.getInputManager());
+        
+        ioManager.getSoundManager().loadSound("Game Start", "alone-296348.mp3");
+    	ioManager.getSoundManager().playSound("Game Start");
+
     }
 
     @Override
