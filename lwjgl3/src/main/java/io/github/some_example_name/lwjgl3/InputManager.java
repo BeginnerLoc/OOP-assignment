@@ -4,8 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class InputManager extends InputAdapter {
 
@@ -14,13 +16,12 @@ public class InputManager extends InputAdapter {
     // Maps for subscribing callbacks to keyDown or keyUp
     private final Map<Integer, Runnable> keyDownCallbacks = new HashMap<>();
     private final Map<Integer, Runnable> keyUpCallbacks   = new HashMap<>();
+    private final Set<Integer> activeKeys = new HashSet<>();
 
-    /** Register a CustomButton for click detection. */
     public void registerClickable(CustomButton button) {
         clickableObjects.add(button);
     }
 
-    /** Subscribe a callback to a particular key press. */
     public void subscribeKeyDown(int key, Runnable callback) {
         keyDownCallbacks.put(key, callback);
     }
@@ -46,6 +47,7 @@ public class InputManager extends InputAdapter {
 
     @Override
     public boolean keyDown(int keycode) {
+      activeKeys.add(keycode);
         Runnable callback = keyDownCallbacks.get(keycode);
         if (callback != null) {
             callback.run();
@@ -56,11 +58,22 @@ public class InputManager extends InputAdapter {
 
     @Override
     public boolean keyUp(int keycode) {
+      activeKeys.remove(keycode);
         Runnable callback = keyUpCallbacks.get(keycode);
         if (callback != null) {
             callback.run();
             return true;
         }
         return false;
+    }
+    
+    // Call this in your game's update loop
+    public void update() {
+        for (Integer key : activeKeys) {
+            Runnable callback = keyDownCallbacks.get(key);
+            if (callback != null) {
+                callback.run();
+            }
+        }
     }
 }

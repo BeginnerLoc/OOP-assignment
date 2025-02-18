@@ -36,8 +36,8 @@ public class GameMaster extends ApplicationAdapter {
         entityManager = new EntityManager();
         movementManager = new MovementManager();
 
-        player = new Player(100, 0, Color.BLUE, 10.0f);
-        enemy = new Enemy(300, 0, 2.0f, Color.RED);
+        player = new Player(100, 0, Color.BLUE, 3.0f);
+        enemy = new Enemy(1000, 0, 2.0f, Color.RED);
         enemy.setTarget(player);
 
         
@@ -64,16 +64,23 @@ public class GameMaster extends ApplicationAdapter {
 
         // Subscribe keyDown events for player movement
         ioManager.getInputManager().subscribeKeyDown(Keys.W, () -> player.setDirection(0, 1));
+//        ioManager.getInputManager().subscribeKeyHold(Keys.W, () -> player.setDirection(0, 1));
+
         ioManager.getInputManager().subscribeKeyDown(Keys.S, () -> player.setDirection(0, -1));
+//        ioManager.getInputManager().subscribeKeyHold(Keys.S, () -> player.setDirection(0, -1));
+        
+        
         ioManager.getInputManager().subscribeKeyDown(Keys.A, () -> player.setDirection(-1, 0));
+//        ioManager.getInputManager().subscribeKeyHold(Keys.A, () -> player.setDirection(-1, 0));
+
         ioManager.getInputManager().subscribeKeyDown(Keys.D, () -> player.setDirection(1, 0));
         ioManager.getInputManager().subscribeKeyDown(Keys.SPACE, () -> player.jump(30));
 
         // Register InputManager
         Gdx.input.setInputProcessor(ioManager.getInputManager());
         
-        ioManager.getSoundManager().loadSound("Game Start", "alone-296348.mp3");
-    	ioManager.getSoundManager().playSound("Game Start");
+//        ioManager.getSoundManager().loadSound("Game Start", "alone-296348.mp3");
+//    	ioManager.getSoundManager().playSound("Game Start");
 
     }
 
@@ -87,8 +94,12 @@ public class GameMaster extends ApplicationAdapter {
         collisionManager.checkCollisions();
         movementManager.followEntity();
         movementManager.updatePositions();
+        ioManager.getInputManager().update();  
+
         entityManager.draw(batch, sr);
         movementManager.followWorldRule(gravity);
+        
+        
     }
 
     @Override
