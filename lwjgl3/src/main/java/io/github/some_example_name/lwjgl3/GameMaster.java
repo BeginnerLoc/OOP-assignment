@@ -9,77 +9,43 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class GameMaster extends ApplicationAdapter {
-
-    private SpriteBatch batch;
-    private ShapeRenderer sr;
     private IOManager ioManager;
     private CollisionManager collisionManager;
     private SceneManager sceneManager;
     private EntityManager entityManager;
     private MovementManager movementManager;
-    private Player player;
-    private Enemy enemy;
-    
-    private int gravity;
-    
+   
+       
     @Override
-    public void create() {
-    	
-    	
-    	gravity = 0;
-    	
-        batch = new SpriteBatch();
-        sr = new ShapeRenderer();
+    public void create() {    	
+    
         collisionManager = new CollisionManager();
         ioManager = new IOManager();
-        sceneManager = new SceneManager();
-        entityManager = new EntityManager();
         movementManager = new MovementManager();
-
-        player = new Player(100, 0, Color.BLUE, 3.0f);
-        enemy = new Enemy(1000, 0, 2.0f, Color.RED);
-        enemy.setTarget(player);
-
-        
-        //entity
-        entityManager.addEntity(player);
-        entityManager.addEntity(enemy);
-        
-        //movement
-        movementManager.addMovingEntity(player);
-        movementManager.addMovingEntity(enemy);
-        movementManager.addAIEntities(enemy);
-
-        
-        //collision
-        collisionManager.register(player);
-        collisionManager.register(enemy);
-      
-        player.setCollisionAction(Collidable -> {
-        	if(Collidable.getClass() == enemy.getClass()) {
-            	player.setColor(Color.PINK);
-        	}
-        });
-        
-
-        // Subscribe keyDown events for player movement
-        ioManager.getInputManager().subscribeKeyDown(Keys.W, () -> player.setDirection(0, 1));
-//        ioManager.getInputManager().subscribeKeyHold(Keys.W, () -> player.setDirection(0, 1));
-
-        ioManager.getInputManager().subscribeKeyDown(Keys.S, () -> player.setDirection(0, -1));
-//        ioManager.getInputManager().subscribeKeyHold(Keys.S, () -> player.setDirection(0, -1));
+        sceneManager = new SceneManager();
         
         
-        ioManager.getInputManager().subscribeKeyDown(Keys.A, () -> player.setDirection(-1, 0));
-//        ioManager.getInputManager().subscribeKeyHold(Keys.A, () -> player.setDirection(-1, 0));
+        ServiceLocator.register(SpriteBatch.class, new SpriteBatch());
+        ServiceLocator.register(ShapeRenderer.class, new ShapeRenderer());
+        entityManager = new EntityManager();
+        ServiceLocator.register(CollisionManager.class, collisionManager);
+        ServiceLocator.register(EntityManager.class, entityManager);
+        ServiceLocator.register(MovementManager.class, movementManager);
+        ServiceLocator.register(IOManager.class, ioManager);
+        ServiceLocator.register(SceneManager.class, sceneManager);
+        
+        sceneManager.registerScene(MainMenuScene.class, new MainMenuScene("Menu"));
+        sceneManager.registerScene(GameScene.class, new GameScene("Game"));
+        
+        // Start with the menu scene
+        sceneManager.setScene(GameScene.class);
 
-        ioManager.getInputManager().subscribeKeyDown(Keys.D, () -> player.setDirection(1, 0));
-        ioManager.getInputManager().subscribeKeyDown(Keys.SPACE, () -> player.jump(30));
 
-        // Register InputManager
+
         Gdx.input.setInputProcessor(ioManager.getInputManager());
+
         
-//        ioManager.getSoundManager().loadSound("Game Start", "alone-296348.mp3");
+//       ioManager.getSoundManager().loadSound("Game Start", "alone-296348.mp3");
 //    	ioManager.getSoundManager().playSound("Game Start");
 
     }
@@ -87,24 +53,16 @@ public class GameMaster extends ApplicationAdapter {
     @Override
     public void render() {
         ScreenUtils.clear(0, 0, 0.2f, 1);
-        sceneManager.update();
-        sceneManager.render();
-
-               
-        collisionManager.checkCollisions();
-        movementManager.followEntity();
-        movementManager.updatePositions();
-        ioManager.getInputManager().update();  
-
-        entityManager.draw(batch, sr);
-        movementManager.followWorldRule(gravity);
-        
-        
+        sceneManager.render();        
     }
 
     @Override
     public void dispose() {
-        batch.dispose();
-        sr.dispose();
+        ServiceLocator.get(EntityManager.class).draw();
+        ServiceLocator.get(CollisionManager.class).checkCollisions();
+        ServiceLocator.get(MovementManager.class).followEntity();
+        ServiceLocator.get(MovementManager.class).updatePositions();
+        ServiceLocator.get(IOManager.class).getInputManager().update();
     }
+    
 }

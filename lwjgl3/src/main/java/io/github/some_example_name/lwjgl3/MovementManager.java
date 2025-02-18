@@ -9,42 +9,74 @@ public class MovementManager {
 
     public MovementManager() {}
 
+    /** Updates the position of all moving entities */
     public void updatePositions() {
         for (Movable entity : movingEntities) {
             entity.move();
         }
     }
-    
+
+    /** Applies gravity to entities */
     public void followWorldRule(int gravity) {
-    	for (Movable entity: movingEntities) {
-    		Entity entity1 =  (Entity) entity;
-    		if(entity1.getY() > gravity) {
-    			entity1.setY(entity1.getY() - (entity1.getSpeed()/10));
-    		}
-    	}
-    }
-    
-    public void followEntity() {
-        for (AIMovable entity : AIentities) {
-        	entity.followEntity();
+        for (Movable entity : movingEntities) {
+            Entity entity1 = (Entity) entity;
+            if (entity1.getY() > gravity) {
+                entity1.setY(entity1.getY() - (entity1.getSpeed() / 10));
+            }
         }
     }
 
+    /** Updates AI-controlled entity movement */
+    public void followEntity() {
+        for (AIMovable entity : AIentities) {
+            entity.followEntity();
+        }
+    }
+
+    /** Returns all moving entities */
     public List<Movable> getMovingEntities() {
         return movingEntities;
     }
 
+    /** Adds a single moving entity */
     public void addMovingEntity(Movable entity) {
         if (entity != null) {
             movingEntities.add(entity);
         }
     }
 
+    /** Adds multiple moving entities */
+    public void addAllMovingEntities(List<Movable> entities) {
+        movingEntities.addAll(entities);
+    }
+
+    /** Removes a single moving entity */
     public void removeMovingEntity(Movable entity) {
         movingEntities.remove(entity);
     }
-    
-    public void addAIEntities(AIMovable entity) {
-    	AIentities.add(entity);
+
+    /** Removes multiple moving entities */
+    public void removeAllMovingEntities(List<Movable> entities) {
+        movingEntities.removeAll(entities);
+    }
+
+    /** Adds a single AI-controlled entity */
+    public void addAIEntity(AIMovable entity) {
+        AIentities.add(entity);
+    }
+
+    /** Adds multiple AI-controlled entities */
+    public void addAllAIEntities(List<AIMovable> entities) {
+        AIentities.addAll(entities);
+    }
+
+    /** Removes a single AI-controlled entity */
+    public void removeAIEntity(AIMovable entity) {
+        AIentities.remove(entity);
+    }
+
+    /** Removes multiple AI-controlled entities */
+    public void removeAllAIEntities(List<AIMovable> entities) {
+        AIentities.removeAll(entities);
     }
 }

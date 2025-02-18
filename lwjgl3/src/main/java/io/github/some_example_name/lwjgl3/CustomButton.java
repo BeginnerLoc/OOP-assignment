@@ -1,16 +1,19 @@
 package io.github.some_example_name.lwjgl3;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
-public class CustomButton implements Clickable {
+public class CustomButton extends Entity implements Clickable {
     private Texture texture;
     private Rectangle bounds;
     private Runnable action;
 
     public CustomButton(String imagePath, float x, float y, float width, float height) {
+		super(x, y, Color.RED, 0);
+
         texture = new Texture(Gdx.files.internal(imagePath));
         bounds = new Rectangle(x, y, width, height);
     }

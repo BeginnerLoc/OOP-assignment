@@ -36,14 +36,18 @@ public class InputManager extends InputAdapter {
         float touchX = screenX;
         float touchY = Gdx.graphics.getHeight() - screenY;
 
+        Gdx.app.log("InputManager", "Touch at: (" + touchX + ", " + touchY + ")");
+
         for (CustomButton clickable : clickableObjects) {
             if (clickable.isClicked(touchX, touchY)) {
+                Gdx.app.log("InputManager", "Button Clicked");
                 clickable.onMouseClick();
                 return true;
             }
         }
         return false;
     }
+
 
     @Override
     public boolean keyDown(int keycode) {

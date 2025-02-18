@@ -6,10 +6,27 @@ import java.util.List;
 public class CollisionManager {
     private final List<Collidable> collidables = new ArrayList<>();
 
+    /** Registers a single collidable entity */
     public void register(Collidable collidable) {
         collidables.add(collidable);
     }
 
+    /** Registers multiple collidable entities */
+    public void addAll(List<Collidable> newCollidables) {
+        collidables.addAll(newCollidables);
+    }
+
+    /** Removes a single collidable entity */
+    public void remove(Collidable collidable) {
+        collidables.remove(collidable);
+    }
+
+    /** Removes multiple collidable entities */
+    public void removeAll(List<Collidable> collidablesToRemove) {
+        collidables.removeAll(collidablesToRemove);
+    }
+
+    /** Checks for collisions and calls collision handlers */
     public void checkCollisions() {
         for (int i = 0; i < collidables.size(); i++) {
             Collidable a = collidables.get(i);

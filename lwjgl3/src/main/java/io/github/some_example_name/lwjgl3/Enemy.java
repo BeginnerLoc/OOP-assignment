@@ -28,6 +28,7 @@ public class Enemy extends Entity implements AIMovable, Collidable {
 
     @Override
     public void followEntity() {
+    	    	
         if (target != null) {
             Vector2 direction = new Vector2(target.getX() - getX(), target.getY() - getY());
 
@@ -45,6 +46,7 @@ public class Enemy extends Entity implements AIMovable, Collidable {
         setX(getX() + dx * getSpeed());
         setY(getY() + dy * getSpeed());
         bounds.setPosition(getX(), getY());
+       
     }
 
     @Override
