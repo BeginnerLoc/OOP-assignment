@@ -15,15 +15,29 @@ public class Player extends Entity implements PlayerMovable, Collidable {
 
     public Player(float x, float y, Color color, float speed) {
         super(x, y, color, speed);
-        this.bounds = new Rectangle(x, y, 50, 50); // Default size
+        this.bounds = new Rectangle(x, y, 50, 50);
     }
 
     @Override
     public void move() {
+        float screenWidth = com.badlogic.gdx.Gdx.graphics.getWidth();
+        float screenHeight = com.badlogic.gdx.Gdx.graphics.getHeight();
+
+        // Update position
         setX(getX() + dx * getSpeed());
         setY(getY() + dy * getSpeed());
+
+        // Ensure Enemy stays within the screen bounds
+        float clampedX = Math.max(0, Math.min(getX(), screenWidth - bounds.width));
+        float clampedY = Math.max(0, Math.min(getY(), screenHeight - bounds.height));
+
+        setX(clampedX);
+        setY(clampedY);
+
+        // Update bounds position
         bounds.setPosition(getX(), getY());
     }
+
 
     @Override
     public void setDirection(float dx, float dy) {

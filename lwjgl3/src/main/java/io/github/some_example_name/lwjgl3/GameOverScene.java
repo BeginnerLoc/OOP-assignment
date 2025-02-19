@@ -1,6 +1,4 @@
 package io.github.some_example_name.lwjgl3;
-
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -24,14 +22,16 @@ public class GameOverScene extends Scene{
         word1 = new Word(200, 300, 0.1f, Color.WHITE, "Press R to restart the game.");
         word2 = new Word(200, 250, 0.1f, Color.WHITE, "Press Q to go main Menu .");
         
-        ServiceLocator.get(EntityManager.class).addWord(word);
-        ServiceLocator.get(EntityManager.class).addWord(word1);
-        ServiceLocator.get(EntityManager.class).addWord(word2);
-        ServiceLocator.get(IOManager.class).getInputManager().subscribeKeyDown(Keys.R, () -> 
+        this.entityManager.addWord(word);
+        this.entityManager.addWord(word1);
+        this.entityManager.addWord(word2);
+        
+        this.ioManager.getInputManager().subscribeKeyDown(Keys.R, () -> 
         ServiceLocator.get(SceneManager.class).setScene(GameScene.class));
-        ServiceLocator.get(IOManager.class).getInputManager().subscribeKeyDown(Keys.Q, () -> 
+      
+        this.ioManager.getInputManager().subscribeKeyDown(Keys.Q, () -> 
         ServiceLocator.get(SceneManager.class).setScene(MainMenuScene.class));
-
+ 
     }
 
  

@@ -80,4 +80,11 @@ public class InputManager extends InputAdapter {
             }
         }
     }
+    
+    public void dispose() {
+    	clickableObjects.clear();
+    	keyDownCallbacks.clear();
+    	activeKeys.clear();
+    	
+    }
 }

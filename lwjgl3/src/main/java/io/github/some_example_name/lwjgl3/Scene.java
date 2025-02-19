@@ -1,18 +1,25 @@
 package io.github.some_example_name.lwjgl3;
-import java.util.Map;
-import java.util.HashMap;
+
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 
 public class Scene {
-    private String name;
-    
+    protected String name;
+    protected IOManager ioManager;
+    protected CollisionManager collisionManager;
+    protected SceneManager sceneManager;
+    protected EntityManager entityManager;
+    protected MovementManager movementManager;
 
     public Scene(String name) {
         this.name = name;
+        this.collisionManager = ServiceLocator.get(CollisionManager.class);
+        this.ioManager = ServiceLocator.get(IOManager.class);
+        this.movementManager = ServiceLocator.get(MovementManager.class);
+        this.sceneManager = ServiceLocator.get(SceneManager.class);
+        this.entityManager = ServiceLocator.get(EntityManager.class);
     }
 
     // Getters and Setters
@@ -28,17 +35,18 @@ public class Scene {
 
     public void render()
     {
-    	ServiceLocator.get(EntityManager.class).draw();
-        ServiceLocator.get(CollisionManager.class).checkCollisions();
-        ServiceLocator.get(MovementManager.class).updatePositions();
-        ServiceLocator.get(MovementManager.class).followEntity();
-        ServiceLocator.get(IOManager.class).getInputManager().update();
+    	this.entityManager.draw();
+    	this.collisionManager.checkCollisions();
+    	this.movementManager.updatePositions();
+    	this.movementManager.followEntity();
+    	this.ioManager.getInputManager().update();
     }
     
     public void dispose() {
-    	ServiceLocator.get(CollisionManager.class).dispose();
-    	 ServiceLocator.get(MovementManager.class).dispose();
-    	 ServiceLocator.get(EntityManager.class).dispose();
+    	this.entityManager.dispose();
+    	this.collisionManager.dispose();
+    	this.movementManager.dispose();
+    	this.ioManager.getInputManager().dispose();
     	 
     }
 }

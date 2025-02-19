@@ -37,17 +37,11 @@ public class GameMaster extends ApplicationAdapter {
         sceneManager.registerScene(MainMenuScene.class, new MainMenuScene("Menu"));
         sceneManager.registerScene(GameScene.class, new GameScene("Game"));
         sceneManager.registerScene(GameOverScene.class, new GameOverScene("GameOver"));
-        
+        Gdx.input.setInputProcessor(ioManager.getInputManager());
+
         // Start with the menu scene
         sceneManager.setScene(MainMenuScene.class);
-
-
-
-        Gdx.input.setInputProcessor(ioManager.getInputManager());
     
-        
-
-        
 
     }
 
@@ -59,11 +53,7 @@ public class GameMaster extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-        ServiceLocator.get(EntityManager.class).draw();
-        ServiceLocator.get(CollisionManager.class).checkCollisions();
-        ServiceLocator.get(MovementManager.class).followEntity();
-        ServiceLocator.get(MovementManager.class).updatePositions();
-        ServiceLocator.get(IOManager.class).getInputManager().update();
+
     }
     
 }
