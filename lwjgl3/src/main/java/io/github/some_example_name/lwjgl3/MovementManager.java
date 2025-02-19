@@ -50,16 +50,7 @@ public class MovementManager {
         movingEntities.addAll(entities);
     }
 
-    /** Removes a single moving entity */
-    public void removeMovingEntity(Movable entity) {
-        movingEntities.remove(entity);
-    }
-
-    /** Removes multiple moving entities */
-    public void removeAllMovingEntities(List<Movable> entities) {
-        movingEntities.removeAll(entities);
-    }
-
+ 
     /** Adds a single AI-controlled entity */
     public void addAIEntity(AIMovable entity) {
         AIentities.add(entity);
@@ -70,13 +61,15 @@ public class MovementManager {
         AIentities.addAll(entities);
     }
 
-    /** Removes a single AI-controlled entity */
-    public void removeAIEntity(AIMovable entity) {
-        AIentities.remove(entity);
-    }
 
     /** Removes multiple AI-controlled entities */
     public void removeAllAIEntities(List<AIMovable> entities) {
         AIentities.removeAll(entities);
     }
+    
+    public void dispose() {
+    	AIentities.clear();
+    	movingEntities.clear();
+    }
+    
 }

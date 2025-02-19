@@ -36,17 +36,18 @@ public class GameMaster extends ApplicationAdapter {
         
         sceneManager.registerScene(MainMenuScene.class, new MainMenuScene("Menu"));
         sceneManager.registerScene(GameScene.class, new GameScene("Game"));
+        sceneManager.registerScene(GameOverScene.class, new GameOverScene("GameOver"));
         
         // Start with the menu scene
-        sceneManager.setScene(GameScene.class);
+        sceneManager.setScene(MainMenuScene.class);
 
 
 
         Gdx.input.setInputProcessor(ioManager.getInputManager());
+    
+        
 
         
-//       ioManager.getSoundManager().loadSound("Game Start", "alone-296348.mp3");
-//    	ioManager.getSoundManager().playSound("Game Start");
 
     }
 

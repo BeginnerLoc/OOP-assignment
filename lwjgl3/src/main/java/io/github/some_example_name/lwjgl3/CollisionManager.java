@@ -21,11 +21,6 @@ public class CollisionManager {
         collidables.remove(collidable);
     }
 
-    /** Removes multiple collidable entities */
-    public void removeAll(List<Collidable> collidablesToRemove) {
-        collidables.removeAll(collidablesToRemove);
-    }
-
     /** Checks for collisions and calls collision handlers */
     public void checkCollisions() {
         for (int i = 0; i < collidables.size(); i++) {
@@ -38,5 +33,9 @@ public class CollisionManager {
                 }
             }
         }
+    }
+    
+    public void dispose() {
+    	collidables.clear();
     }
 }

@@ -22,12 +22,12 @@ public class SceneManager {
         }
     }
 
-    /** Update the active scene */
-    public void update(float delta) {
-        if (currentScene != null) {
-            currentScene.update(delta);
-        }
-    }
+//    /** Update the active scene */
+//    public void update(float delta) {
+//        if (currentScene != null) {
+//            currentScene.update(delta);
+//        }
+//    }
 
     /** Render the active scene */
     public void render() {

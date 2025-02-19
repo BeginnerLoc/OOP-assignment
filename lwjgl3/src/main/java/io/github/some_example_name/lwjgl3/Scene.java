@@ -7,8 +7,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public abstract class Scene {
+public class Scene {
     private String name;
+    
 
     public Scene(String name) {
         this.name = name;
@@ -19,12 +20,25 @@ public abstract class Scene {
         return name;
     }
 
-    // Abstract methods to be implemented by subclasses
+ 
     public void create() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
     };
-    public abstract void update(float delta);
-    public abstract void render();
-    public abstract void dispose();
+
+    public void render()
+    {
+    	ServiceLocator.get(EntityManager.class).draw();
+        ServiceLocator.get(CollisionManager.class).checkCollisions();
+        ServiceLocator.get(MovementManager.class).updatePositions();
+        ServiceLocator.get(MovementManager.class).followEntity();
+        ServiceLocator.get(IOManager.class).getInputManager().update();
+    }
+    
+    public void dispose() {
+    	ServiceLocator.get(CollisionManager.class).dispose();
+    	 ServiceLocator.get(MovementManager.class).dispose();
+    	 ServiceLocator.get(EntityManager.class).dispose();
+    	 
+    }
 }
