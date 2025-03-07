@@ -59,6 +59,7 @@ public class InputManager extends InputAdapter {
         }
         return false;
     }
+    
 
     @Override
     public boolean keyUp(int keycode) {

@@ -20,7 +20,7 @@ public class GameScene extends Scene {
        
     	System.out.println("Game Scene");
     	
-        player = new Player(100, 0, Color.PINK, 3.0f);
+        player = new Player(100, 300, "broccoli.png", 3.0f);
         enemy = new Enemy(500, 0, 1.5f, Color.RED);
         enemy.setTarget(player);
         
@@ -41,7 +41,8 @@ public class GameScene extends Scene {
         this.ioManager.getInputManager().subscribeKeyDown(Keys.S, () -> player.setDirection(0, -1));
         this.ioManager.getInputManager().subscribeKeyDown(Keys.A, () -> player.setDirection(-1, 0));
         this.ioManager.getInputManager().subscribeKeyDown(Keys.D, () -> player.setDirection(1, 0));
-        this.ioManager.getInputManager().subscribeKeyDown(Keys.SPACE, () -> player.jump(8));
+        this.ioManager.getInputManager().subscribeKeyDown(Keys.SPACE, () -> player.jump(2));
+
 
         
         player.setCollisionAction(Collidable -> {

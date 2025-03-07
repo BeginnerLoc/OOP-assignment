@@ -21,7 +21,7 @@ public class MovementManager {
         for (Movable entity : movingEntities) {
             Entity entity1 = (Entity) entity;
             if (entity1.getY() > gravity) {
-                entity1.setY(entity1.getY() - (entity1.getSpeed() / 10));
+                entity1.setY(entity1.getY() - (entity1.getSpeed() / 2));
             }
         }
     }

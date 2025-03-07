@@ -1,8 +1,7 @@
 package io.github.some_example_name.lwjgl3;
 
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import java.util.function.Consumer;
 
@@ -12,10 +11,22 @@ public class Player extends Entity implements PlayerMovable, Collidable {
     private boolean isSprinting;
     private Consumer<Collidable> collisionAction;
     private Rectangle bounds;
+    private Texture texture; // Player's texture
 
-    public Player(float x, float y, Color color, float speed) {
-        super(x, y, color, speed);
-        this.bounds = new Rectangle(x, y, 50, 50);
+    public Player(float x, float y, String texturePath, float speed) {
+        super(x, y, null, speed); // No need for color when using a texture
+        this.bounds = new Rectangle(x, y, 64, 64); // Player size
+        this.texture = new Texture(texturePath); // Load texture dynamically
+    }
+
+    public void applyGravity(float gravity) {
+        dy += gravity;
+        move();
+    }
+
+    public void setVelocity(float dx, float dy) {
+        this.dx = dx;
+        this.dy = dy;
     }
 
     @Override
@@ -27,7 +38,7 @@ public class Player extends Entity implements PlayerMovable, Collidable {
         setX(getX() + dx * getSpeed());
         setY(getY() + dy * getSpeed());
 
-        // Ensure Enemy stays within the screen bounds
+        // Ensure Player stays within screen bounds
         float clampedX = Math.max(0, Math.min(getX(), screenWidth - bounds.width));
         float clampedY = Math.max(0, Math.min(getY(), screenHeight - bounds.height));
 
@@ -38,14 +49,11 @@ public class Player extends Entity implements PlayerMovable, Collidable {
         bounds.setPosition(getX(), getY());
     }
 
-
     @Override
     public void setDirection(float dx, float dy) {
-        setX(getX() + dx * getSpeed());
-        setY(getY() + dy * getSpeed());
-        bounds.setPosition(getX(), getY());
+        this.dx = dx;
+        this.dy = dy;
     }
-
 
     @Override
     public void stop() {
@@ -72,8 +80,7 @@ public class Player extends Entity implements PlayerMovable, Collidable {
 
     @Override
     public void jump(int height) {
-        setY(getY() + height);
-        bounds.setPosition(getX(), getY());
+        this.dy = height; // Apply vertical velocity instead of setting position directly
     }
 
     @Override
@@ -90,13 +97,8 @@ public class Player extends Entity implements PlayerMovable, Collidable {
     }
 
     @Override
-    public void draw(ShapeRenderer rd) {
-        rd.setColor(getColor());
-        rd.rect(getX(), getY(), bounds.width, bounds.height);
+    public void draw(SpriteBatch batch) {
+        batch.draw(texture, getX(), getY(), bounds.width, bounds.height);
     }
 
-    @Override
-    public void draw(SpriteBatch sb) {
-        // Draw player texture here if applicable
-    }
 }
