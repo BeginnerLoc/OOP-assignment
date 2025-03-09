@@ -72,13 +72,13 @@ public class MainMenuScene extends Scene {
     private SceneManager sceneManager;
     private SpriteBatch spriteBatch;
 
-    // ✅ Alternative Fix: Constructor without SceneManager
+    
     public MainMenuScene(String name) {
         super(name);
         this.sceneManager = null; // Can be assigned later
     }
 
-    // ✅ Original Constructor with SceneManager
+    
     public MainMenuScene(String name, SceneManager sceneManager) {
         super(name);
         this.sceneManager = sceneManager;
@@ -87,7 +87,7 @@ public class MainMenuScene extends Scene {
     @Override
     public void create() {
         super.create();
-        spriteBatch = new SpriteBatch(); // ✅ Initialize SpriteBatch
+        spriteBatch = new SpriteBatch(); 
 
         //Load Background Image
         background = new BackgroundEntity("OVERTRASHED3.png", 0, 0);
@@ -102,7 +102,7 @@ public class MainMenuScene extends Scene {
 //        this.ioManager.getInputManager().registerClickable(playButton);
         
 
-        // ✅ Optional Buttons (Uncomment if needed)
+        
         /*
         // About Button
         aboutButton = new CustomButton("assets/about_button.png", 300.0f, 320.0f, 200.0f, 50.0f);
@@ -130,15 +130,15 @@ public class MainMenuScene extends Scene {
     public void render() {
         super.render();
 
-        if (!spriteBatch.isDrawing()) { // ✅ Prevent multiple begin() calls
+        if (!spriteBatch.isDrawing()) { 
             spriteBatch.begin();
         }
 
         if (background != null) {
-            background.draw(spriteBatch); // ✅ Background is drawn correctly
+            background.draw(spriteBatch);
         }
 
-        spriteBatch.end(); // ✅ Ensure end() is called only once
+        spriteBatch.end(); 
     }
 
 }
