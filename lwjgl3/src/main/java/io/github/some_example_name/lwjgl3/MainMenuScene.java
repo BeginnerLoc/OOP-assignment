@@ -2,6 +2,12 @@ package io.github.some_example_name.lwjgl3;
 
 public class  MainMenuScene extends Scene {
 	private CustomButton customButton;
+	
+	private CustomButton playButton;
+	private CustomButton aboutButton;
+	private CustomButton settingsButton;
+	
+	//private mainMenuBg mainMenuBg;
 
     public MainMenuScene(String name) {
 		super(name);
@@ -9,17 +15,38 @@ public class  MainMenuScene extends Scene {
 
 	@Override
     public void create() {
-       
-        super.create();;
-        customButton = new CustomButton("click_me.png", 200.0f, 200.0f, 200.0f, 100.0f);
+        super.create();
         
-        customButton.setOnClickAction(() -> {
+        // DELETE ME CustomButton(String imagePath, float x, float y, float width, float height)
+        
+        // Play Button
+        playButton = new CustomButton("play_button.png", 200.0f, 200.0f, 200.0f, 50.0f);
+        playButton.setOnClickAction(() -> {
         	this.sceneManager.setScene(GameScene.class);
-            
         });
+        this.entityManager.addEntity(playButton);
+        this.ioManager.getInputManager().registerClickable(playButton);
         
-        this.entityManager.addEntity(customButton);
-        this.ioManager.getInputManager().registerClickable(customButton);
+        /**
+        // Settings Button
+        settingsButton = new CustomButton("settings_button.png", 200.0f, 100.0f, 200.0f, 50.0f);
+        settingsButton.setOnClickAction(() -> {
+            this.sceneManager.setScene(SettingsScene.class);
+        });
+        this.entityManager.addEntity(settingsButton);
+        this.ioManager.getInputManager().registerClickable(settingsButton);
+
+        
+        // Exit Button
+        exitButton = new CustomButton("exit_button.png", 200.0f, 400.0f, 200.0f, 50.0f);
+        exitButton.setOnClickAction(() -> {
+            System.exit(0);
+        });
+        this.entityManager.addEntity(exitButton);
+        this.ioManager.getInputManager().registerClickable(exitButton);
+        **/
+        
+        //mainMenuBg = new mainMenuBg("waste_screenshot.png", 200.0f, 200.0f, 200.0f, 100.0f);
 
     
     }
