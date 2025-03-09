@@ -93,13 +93,13 @@ public class MainMenuScene extends Scene {
         background = new BackgroundEntity("OVERTRASHED3.png", 0, 0);
         this.entityManager.addEntity(background);
 
-//     // Play Button
-//        playButton = new CustomButton("play_button.png", 200.0f, 200.0f, 200.0f, 50.0f);
-//        playButton.setOnClickAction(() -> {
-//        	this.sceneManager.setScene(GameScene.class);
-//        });
-//        this.entityManager.addEntity(playButton);
-//        this.ioManager.getInputManager().registerClickable(playButton);
+     // Play Button
+        playButton = new CustomButton("play_button.png", 200.0f, 200.0f, 200.0f, 50.0f);
+        playButton.setOnClickAction(() -> {
+        	this.sceneManager.setScene(GameScene.class);
+        });
+        this.entityManager.addEntity(playButton);
+        this.ioManager.getInputManager().registerClickable(playButton);
         
 
         
@@ -128,7 +128,6 @@ public class MainMenuScene extends Scene {
 
     @Override
     public void render() {
-        super.render();
 
         if (!spriteBatch.isDrawing()) { 
             spriteBatch.begin();
@@ -139,6 +138,7 @@ public class MainMenuScene extends Scene {
         }
 
         spriteBatch.end(); 
+        super.render();
     }
 
 }
