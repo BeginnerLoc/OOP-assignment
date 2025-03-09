@@ -62,23 +62,13 @@
 //}
 package io.github.some_example_name.lwjgl3;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
 public class MainMenuScene extends Scene {
     private BackgroundEntity background;
     private CustomButton playButton;
     private CustomButton aboutButton;
     private CustomButton settingsButton;
     private SceneManager sceneManager;
-    private SpriteBatch spriteBatch;
 
-    // ✅ Alternative Fix: Constructor without SceneManager
-    public MainMenuScene(String name) {
-        super(name);
-        this.sceneManager = null; // Can be assigned later
-    }
-
-    // ✅ Original Constructor with SceneManager
     public MainMenuScene(String name, SceneManager sceneManager) {
         super(name);
         this.sceneManager = sceneManager;
@@ -87,23 +77,23 @@ public class MainMenuScene extends Scene {
     @Override
     public void create() {
         super.create();
-        spriteBatch = new SpriteBatch(); // ✅ Initialize SpriteBatch
 
         // Load Background Image
-//        background = new BackgroundEntity("OVERTRASHED2.png", 0, 0);
-//        this.entityManager.addEntity(background);
+        background = new BackgroundEntity("assets/overtrashed.png", 0, 0);
+        this.entityManager.addEntity(background);
 
-     // Play Button
-        playButton = new CustomButton("play_button.png", 200.0f, 200.0f, 200.0f, 50.0f);
+        // Play Button
+        playButton = new CustomButton("assets/play_button.png", 300.0f, 250.0f, 200.0f, 50.0f);
         playButton.setOnClickAction(() -> {
-        	this.sceneManager.setScene(GameScene.class);
+            if (sceneManager != null) {
+                sceneManager.setScene(GameScene.class);
+            } else {
+                System.err.println("SceneManager is null, cannot switch scene!");
+            }
         });
         this.entityManager.addEntity(playButton);
         this.ioManager.getInputManager().registerClickable(playButton);
-        
 
-        // ✅ Optional Buttons (Uncomment if needed)
-        /*
         // About Button
         aboutButton = new CustomButton("assets/about_button.png", 300.0f, 320.0f, 200.0f, 50.0f);
         aboutButton.setOnClickAction(() -> {
@@ -123,22 +113,13 @@ public class MainMenuScene extends Scene {
         });
         this.entityManager.addEntity(settingsButton);
         this.ioManager.getInputManager().registerClickable(settingsButton);
-        */
     }
 
     @Override
     public void render() {
         super.render();
-
-        if (!spriteBatch.isDrawing()) { // ✅ Prevent multiple begin() calls
-            spriteBatch.begin();
-        }
-
         if (background != null) {
-            background.draw(spriteBatch); // ✅ Background is drawn correctly
+            background.draw(new SpriteBatch()); // Use SpriteBatch to render
         }
-
-        spriteBatch.end(); // ✅ Ensure end() is called only once
     }
-
 }
