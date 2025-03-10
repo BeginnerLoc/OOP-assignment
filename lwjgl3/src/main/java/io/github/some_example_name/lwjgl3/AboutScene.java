@@ -23,14 +23,14 @@ public class AboutScene extends Scene {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
 
-        // ✅ Adjusted Text Positioning for Centering
-        float textX = screenWidth / 2 - 250;  // Center align text
-        float textY = screenHeight / 2 + 80;
+        // Adjusted Text Positioning for Centering
+        float textX = screenWidth / 2 - 400;  // Center align text
+        float textY = screenHeight / 2 + 200;
 
-        // ✅ Increase Font Size by Changing `scale` (Larger Numbers = Bigger Text)
-        word = new Word(textX, textY, 0.1f, Color.WHITE, 
-                        "OverTrashed is a fun and educational game!\nAvoid enemies & save the environment!", 2.5f);
-        word1 = new Word(textX, textY - 80, 0.1f, Color.WHITE, 
+        // Increase Font Size by Changing `scale` (Larger Numbers = Bigger Text)
+        word = new Word(textX, textY, 0.1f, Color.BLACK, 
+                        "OverTrashed is a fun and educational game!Avoid enemies &\n save the environment!", 2.0f);
+        word1 = new Word(textX, textY - 80, 0.1f, Color.BLACK, 
                         "Credits: (P2T2) Gregory, Cavell, Wenjing, Royston, Aish, Luke", 2.0f);
 
         this.entityManager.addWord(word);
