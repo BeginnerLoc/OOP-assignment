@@ -17,7 +17,18 @@ public class CustomButton extends Entity implements Clickable {
         texture = new Texture(Gdx.files.internal(imagePath));
         bounds = new Rectangle(x, y, width, height);
     }
-
+    
+    // Method to change the button's image
+    // TO CHECK IF IT ALIGNS W OOP PRINCIPLES
+    public void setImage(String newImagePath) {
+        // Dispose of the current texture to free memory
+        if (texture != null) {
+            texture.dispose();
+        }
+        // Load the new texture
+        texture = new Texture(Gdx.files.internal(newImagePath));
+    }
+    
     public boolean isClicked(float touchX, float touchY) {
         return bounds.contains(touchX, touchY);
     }

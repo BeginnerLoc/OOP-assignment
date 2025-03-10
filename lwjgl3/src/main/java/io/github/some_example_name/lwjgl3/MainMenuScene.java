@@ -85,7 +85,7 @@ public class MainMenuScene extends Scene {
         float screenHeight = Gdx.graphics.getHeight();
 
         // Load Background Image
-        background = new BackgroundEntity("OVERTRASHED3.png", 0, 0);
+        background = new BackgroundEntity("OVERTRASHED4.png", 0, 0);
         this.entityManager.addEntity(background);
 
         // Play Button - Dimensions and Position as Percentage of Screen
@@ -105,16 +105,6 @@ public class MainMenuScene extends Scene {
         
         // About Button
         aboutButton = new CustomButton("about_button.png", buttonX, buttonY - 100f, buttonWidth, buttonHeight);
-        
-        this.entityManager.addEntity(aboutButton);
-        
-    }
-
-        
-        
-        /*
-        // About Button
-        aboutButton = new CustomButton("assets/about_button.png", 300.0f, 320.0f, 200.0f, 50.0f);
         aboutButton.setOnClickAction(() -> {
             if (sceneManager != null) {
                 sceneManager.setScene(AboutScene.class);
@@ -122,9 +112,9 @@ public class MainMenuScene extends Scene {
         });
         this.entityManager.addEntity(aboutButton);
         this.ioManager.getInputManager().registerClickable(aboutButton);
-
+        
         // Settings Button
-        settingsButton = new CustomButton("assets/settings_button.png", 300.0f, 390.0f, 200.0f, 50.0f);
+        settingsButton = new CustomButton("settings_button.png", buttonX, buttonY - 200f, buttonWidth, buttonHeight);
         settingsButton.setOnClickAction(() -> {
             if (sceneManager != null) {
                 sceneManager.setScene(SettingsScene.class);
@@ -132,9 +122,10 @@ public class MainMenuScene extends Scene {
         });
         this.entityManager.addEntity(settingsButton);
         this.ioManager.getInputManager().registerClickable(settingsButton);
-        */
-    
+        
+    }
 
+        
     @Override
     public void render() {
         super.render();

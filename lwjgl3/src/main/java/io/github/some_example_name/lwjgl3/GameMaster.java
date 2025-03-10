@@ -38,6 +38,8 @@ public class GameMaster extends ApplicationAdapter {
         sceneManager.registerScene(MainMenuScene.class, new MainMenuScene("Menu"));
         sceneManager.registerScene(GameScene.class, new GameScene("Game"));
         sceneManager.registerScene(GameOverScene.class, new GameOverScene("GameOver"));
+        sceneManager.registerScene(AboutScene.class, new AboutScene("About"));
+        sceneManager.registerScene(SettingsScene.class, new SettingsScene("Settings"));
         
         
         Gdx.input.setInputProcessor(ioManager.getInputManager());
