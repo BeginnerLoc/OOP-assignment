@@ -60,48 +60,57 @@
 //    
 //
 //}
+
 package io.github.some_example_name.lwjgl3;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.Gdx;
 
 public class MainMenuScene extends Scene {
     private BackgroundEntity background;
     private CustomButton playButton;
     private CustomButton aboutButton;
     private CustomButton settingsButton;
-    private SceneManager sceneManager;
-    private SpriteBatch spriteBatch;
 
-    
+
     public MainMenuScene(String name) {
         super(name);
-        this.sceneManager = null; // Can be assigned later
-    }
-
-    
-    public MainMenuScene(String name, SceneManager sceneManager) {
-        super(name);
-        this.sceneManager = sceneManager;
     }
 
     @Override
     public void create() {
         super.create();
-        spriteBatch = new SpriteBatch(); 
 
-        //Load Background Image
+        // Get screen dimensions
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+
+        // Load Background Image
         background = new BackgroundEntity("OVERTRASHED3.png", 0, 0);
         this.entityManager.addEntity(background);
 
-     // Play Button
-        playButton = new CustomButton("play_button.png", 200.0f, 200.0f, 200.0f, 50.0f);
+        // Play Button - Dimensions and Position as Percentage of Screen
+        float buttonWidth = screenWidth * 0.15f;  // 25% of screen width
+        float buttonHeight = screenHeight * 0.04f;  // 8% of screen height
+        float buttonX = screenWidth * 0.5f - (buttonWidth)/2;  // Centered horizontally (50% - 25%/2)
+        float buttonY = screenHeight * 0.5f - (buttonHeight / 2);  // Centered vertically (50% - buttonHeight/2)
+
+        playButton = new CustomButton("play_button.png", buttonX, buttonY, buttonWidth, buttonHeight);
         playButton.setOnClickAction(() -> {
-        	this.sceneManager.setScene(GameScene.class);
+            this.sceneManager.setScene(GameScene.class);
         });
         this.entityManager.addEntity(playButton);
         this.ioManager.getInputManager().registerClickable(playButton);
-        
 
+        // Additional buttons can be defined similarly using relative dimensions.
+        
+        // About Button
+        aboutButton = new CustomButton("about_button.png", buttonX, buttonY - 100f, buttonWidth, buttonHeight);
+        
+        this.entityManager.addEntity(aboutButton);
+        
+    }
+
+        
         
         /*
         // About Button
@@ -124,20 +133,10 @@ public class MainMenuScene extends Scene {
         this.entityManager.addEntity(settingsButton);
         this.ioManager.getInputManager().registerClickable(settingsButton);
         */
-    }
+    
 
     @Override
     public void render() {
-
-        if (!spriteBatch.isDrawing()) { 
-            spriteBatch.begin();
-        }
-
-        if (background != null) {
-            background.draw(spriteBatch);
-        }
-
-        spriteBatch.end(); 
         super.render();
     }
 

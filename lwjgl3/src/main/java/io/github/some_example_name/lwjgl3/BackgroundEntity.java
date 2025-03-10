@@ -9,8 +9,8 @@ public class BackgroundEntity extends Entity {
     private float height;
 
     // Define screen width & height constants 
-    private static final int SCREEN_WIDTH = 640;  
-    private static final int SCREEN_HEIGHT = 500; 
+    private static final int SCREEN_WIDTH = 1080;  
+    private static final int SCREEN_HEIGHT = 1080; 
 
     public BackgroundEntity(String texturePath, float x, float y) {
         super(x, y, null, 0); 
