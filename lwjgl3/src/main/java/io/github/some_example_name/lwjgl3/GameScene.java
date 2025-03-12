@@ -8,6 +8,8 @@ public class GameScene extends Scene {
 	private Player player;
 	private Enemy enemy;
 	
+	private BackgroundEntity background;
+	
     public GameScene(String name) {
 		super(name);
 	}
@@ -20,8 +22,13 @@ public class GameScene extends Scene {
        
     	System.out.println("Game Scene");
     	
-        player = new Player(100, 300, "broccoli.png", 3.0f);
-        enemy = new Enemy(500, 0, 1.5f, Color.RED);
+    	// Load Background Image
+        background = new BackgroundEntity("brickwall.png", 0, 0);
+        this.entityManager.addEntity(background);
+    	
+        // Creation of player & enemy
+        player = new Player(100, 300, "mrbean.png", 3.0f, 65f, 90f);
+        enemy = new Enemy(500, 0, "grandmother.png", 1.5f, 75f, 85f);
         enemy.setTarget(player);
         
         this.collisionManager.register(enemy);

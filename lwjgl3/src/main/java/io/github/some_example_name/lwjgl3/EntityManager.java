@@ -41,10 +41,14 @@ public class EntityManager {
             entity.draw(sb);
         }
         for (Word word : wordList) {
-        	font.getData().setScale(word.getScale()); // Dynamically adjust the scale for the word
-        	font.setColor(word.getColor());
-        	font.draw(sb, word.getWord(), word.getX(), word.getY());
-        	
+            float scale = word.getScale();
+
+            // Safeguard against invalid scales
+            if (scale <= 0) scale = 1;
+
+            font.getData().setScale(scale);
+            font.setColor(word.getColor());
+            font.draw(sb, word.getWord(), word.getX(), word.getY());
         }
         sb.end();
 
