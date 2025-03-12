@@ -40,7 +40,7 @@ public class GameMaster extends ApplicationAdapter {
         sceneManager.registerScene(GameOverScene.class, new GameOverScene("GameOver"));
         sceneManager.registerScene(AboutScene.class, new AboutScene("About"));
         sceneManager.registerScene(SettingsScene.class, new SettingsScene("Settings"));
-        sceneManager.registerScene(InstructionsScene.class, new InstructionsScene("Instructions", sceneManager));
+        sceneManager.registerScene(InstructionsScene.class, new InstructionsScene("Instructions"));
 
         
         
