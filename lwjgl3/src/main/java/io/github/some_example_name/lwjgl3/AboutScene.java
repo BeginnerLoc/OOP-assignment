@@ -25,7 +25,7 @@ public class AboutScene extends Scene {
         float screenHeight = Gdx.graphics.getHeight();
 
         // Adjusted Text Positioning for Centering
-        float textX = screenWidth / 2 - 365;  // Center align text
+        float textX = screenWidth / 2 - 310;  // Center align text
         float textY = screenHeight / 2 - 50;
 
         // CHECK IF NEED TO CENTRALISE
@@ -33,7 +33,7 @@ public class AboutScene extends Scene {
         word = new Word(textX, textY, 0.1f, Color.BLACK, 
                         "OverTrashed is a fun and educational game! \nAvoid enemies & save the environment!", 2.0f);
         word1 = new Word(textX, textY - 80, 0.1f, Color.BLACK, 
-                        "Credits: (P2T2) \nGregory, Cavell, Wenjing, Royston, Aish, Luke", 2.0f);
+                        "Credits: (P2T2) \nGregory, Cavell, Wenjing, Royston, Aish, Luke", 1.5f);
 
         this.entityManager.addWord(word);
         this.entityManager.addWord(word1);
@@ -66,10 +66,12 @@ public class AboutScene extends Scene {
         float buttonY1 = screenHeight * 0.27f - (buttonHeight / 2);  // Centered vertically (50% - buttonHeight/2)
 
         infoButton = new CustomButton("instructions_button.png", buttonX1, buttonY1, buttonWidth1, buttonHeight1);
-        // LINK THE INSTRUCTION BUTTON
-//        infoButton.setOnClickAction(() -> {
-//            this.sceneManager.setScene(GameScene.class);
-//        });
+        infoButton.setOnClickAction(() -> {
+            this.sceneManager.setScene(InstructionsScene.class);
+        });
+        this.entityManager.addEntity(infoButton);
+        this.ioManager.getInputManager().registerClickable(infoButton);
+
         this.entityManager.addEntity(infoButton);
 //        this.ioManager.getInputManager().registerClickable(infoButton);
 //
