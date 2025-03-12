@@ -11,11 +11,8 @@ public class InstructionsScene extends Scene {
     private CustomButton dismissButton;
     private SpriteBatch spriteBatch;
     private BitmapFont font;
-//    private String[] instructions;
     private Word word;
-    
-    float screenWidth = Gdx.graphics.getWidth();
-    float screenHeight = Gdx.graphics.getHeight();
+   
 
     public InstructionsScene(String name) {
         super(name);
@@ -26,7 +23,8 @@ public class InstructionsScene extends Scene {
     public void create() {
         super.create();
 //        spriteBatch = new SpriteBatch();
-        
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
         
 
         // ✅ Load Background Image
@@ -45,7 +43,8 @@ public class InstructionsScene extends Scene {
         float textY = screenHeight / 2 - 50;
 
         word = new Word(textX, textY, 0.1f, Color.BLACK, 
-                "OverTrashed is a fun and educational game! \\nAvoid enemies & save the environmen", 2.0f);
+                "Use mouse to move\nAvoid enemy\n Collect recyclable items and throw in the correct bins\n Try to score as much before time runs out! ", 2.0f);
+        this.entityManager.addWord(word);
 
      // Dismiss Button - Dimensions and Position as Percentage of Screen
         float buttonWidth = screenWidth * 0.06f;  // 25% of screen width
