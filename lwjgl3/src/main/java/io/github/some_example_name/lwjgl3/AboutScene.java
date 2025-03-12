@@ -43,7 +43,7 @@ public class AboutScene extends Scene {
 //        float screenHeight = Gdx.graphics.getHeight();
 
         // Load Background Image
-        background = new BackgroundEntity("about_bg2.png", 0, 0);
+        background = new BackgroundEntity("about_bg.png", 0, 0);
         this.entityManager.addEntity(background);
 
         // Dismiss Button - Dimensions and Position as Percentage of Screen
