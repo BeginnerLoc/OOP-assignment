@@ -85,14 +85,14 @@ public class MainMenuScene extends Scene {
         float screenHeight = Gdx.graphics.getHeight();
 
         // Load Background Image
-        background = new BackgroundEntity("OVERTRASHED4.png", 0, 0);
+        background = new BackgroundEntity("OVERTRASHED.png", 0, 0);
         this.entityManager.addEntity(background);
 
         // Play Button - Dimensions and Position as Percentage of Screen
-        float buttonWidth = screenWidth * 0.15f;  // 25% of screen width
-        float buttonHeight = screenHeight * 0.04f;  // 8% of screen height
-        float buttonX = screenWidth * 0.5f - (buttonWidth)/2;  // Centered horizontally (50% - 25%/2)
-        float buttonY = screenHeight * 0.5f - (buttonHeight / 2);  // Centered vertically (50% - buttonHeight/2)
+        float buttonWidth = screenWidth * 0.20f;  
+        float buttonHeight = screenHeight * 0.07f;  
+        float buttonX = screenWidth * 0.5f - (buttonWidth)/2;  
+        float buttonY = screenHeight * 0.5f - (buttonHeight / 2);  
 
         playButton = new CustomButton("play_button.png", buttonX, buttonY, buttonWidth, buttonHeight);
         playButton.setOnClickAction(() -> {

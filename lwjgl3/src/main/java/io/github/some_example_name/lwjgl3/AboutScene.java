@@ -26,7 +26,7 @@ public class AboutScene extends Scene {
 
         // Adjusted Text Positioning for Centering
         float textX = screenWidth / 2 - 310;  // Center align text
-        float textY = screenHeight / 2 - 50;
+        float textY = screenHeight / 2 - 70;
 
         // CHECK IF NEED TO CENTRALISE
         // Increase Font Size by Changing `scale` (Larger Numbers = Bigger Text)
@@ -47,10 +47,10 @@ public class AboutScene extends Scene {
         this.entityManager.addEntity(background);
 
         // Dismiss Button - Dimensions and Position as Percentage of Screen
-        float buttonWidth = screenWidth * 0.06f;  // 25% of screen width
-        float buttonHeight = screenHeight * 0.06f;  // 8% of screen height
-        float buttonX = screenWidth * 0.93f - (buttonWidth)/2;  // Centered horizontally (50% - 25%/2)
-        float buttonY = screenHeight * 0.93f - (buttonHeight / 2);  // Centered vertically (50% - buttonHeight/2)
+        float buttonWidth = screenWidth * 0.06f;  
+        float buttonHeight = screenHeight * 0.06f;  
+        float buttonX = screenWidth * 0.93f - (buttonWidth)/2;  
+        float buttonY = screenHeight * 0.93f - (buttonHeight / 2);  
 
         dismissButton = new CustomButton("dismiss_button.png", buttonX, buttonY, buttonWidth, buttonHeight);
         dismissButton.setOnClickAction(() -> {
@@ -59,11 +59,11 @@ public class AboutScene extends Scene {
         this.entityManager.addEntity(dismissButton);
         this.ioManager.getInputManager().registerClickable(dismissButton);
         
-        // Play Button - Dimensions and Position as Percentage of Screen
-        float buttonWidth1 = screenWidth * 0.15f;  // 25% of screen width
-        float buttonHeight1 = screenHeight * 0.05f;  // 8% of screen height
-        float buttonX1 = screenWidth * 0.45f - (buttonWidth)/2;  // Centered horizontally (50% - 25%/2)
-        float buttonY1 = screenHeight * 0.27f - (buttonHeight / 2);  // Centered vertically (50% - buttonHeight/2)
+        // INFO Button
+        float buttonWidth1 = screenWidth * 0.15f;  
+        float buttonHeight1 = screenHeight * 0.05f;  
+        float buttonX1 = screenWidth * 0.45f - (buttonWidth)/2;  
+        float buttonY1 = screenHeight * 0.27f - (buttonHeight / 2);  
 
         infoButton = new CustomButton("instructions_button.png", buttonX1, buttonY1, buttonWidth1, buttonHeight1);
         infoButton.setOnClickAction(() -> {
