@@ -73,8 +73,9 @@ public class Player extends Entity implements PlayerMovable, Collidable {
 
     @Override
     public void setDirection(float dx, float dy) {
-        this.dx = dx;
-        this.dy = dy;
+        setX(getX() + dx * getSpeed());
+        setY(getY() + dy * getSpeed());
+        bounds.setPosition(getX(), getY());
     }
 
     @Override
