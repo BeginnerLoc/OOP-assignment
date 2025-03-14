@@ -8,8 +8,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class GameScene extends Scene {
     private Player player;
@@ -36,7 +35,6 @@ public class GameScene extends Scene {
 
     @Override
     public void create() {
-    	
     	super.create();
        
     	System.out.println("Game Scene");
@@ -45,37 +43,20 @@ public class GameScene extends Scene {
         background = new BackgroundEntity("brickwall.png", 0, 0);
         this.entityManager.addEntity(background);
     	
-        // Creation of player & enemy
+        // Creation of player
         player = new Player(100, 300, "mrbean.png", 3.0f, 65f, 90f);
-        enemy = new Enemy(500, 0, "grandmother.png", 1.5f, 75f, 85f);
-        enemy.setTarget(player);
-        
-        this.collisionManager.register(enemy);
-        this.collisionManager.register(player);
-        
-        this.entityManager.addEntity(enemy);
         this.entityManager.addEntity(player);
-        int screenWidth = Gdx.graphics.getWidth();
-        int screenHeight = Gdx.graphics.getHeight();
-        bins.add(new Bin(0, 0, "plastic", "plastic_bin.png"));
-        bins.add(new Bin(screenWidth - 100, 0, "metal", "metal_bin.png"));
-        bins.add(new Bin(0, screenHeight - 100, "paper", "paper_bin.png"));
-        bins.add(new Bin(screenWidth - 100, screenHeight - 100, "general", "general_bin.png"));
-
-        for (Bin bin : bins) {
-            this.collisionManager.register(bin);
-            this.entityManager.addEntity(bin);
-        }
-
-
-        
+        this.collisionManager.register(player);
         this.movementManager.addMovingEntity(player);
-        this.movementManager.addMovingEntity(enemy);
-        this.movementManager.addAIEntity(enemy);
-    
-
-        // Create initial enemies
-        spawnEnemies();
+        
+        // Create initial enemy (grandmother)
+        Enemy firstEnemy = new Enemy(500, 0, "grandmother.png", 1.5f, 75f, 85f);
+        firstEnemy.setTarget(player);
+        enemies.add(firstEnemy);
+        this.entityManager.addEntity(firstEnemy);
+        this.collisionManager.register(firstEnemy);
+        this.movementManager.addMovingEntity(firstEnemy);
+        this.movementManager.addAIEntity(firstEnemy);
 
         // Create trash bins at corners
         createTrashBins();
@@ -83,33 +64,30 @@ public class GameScene extends Scene {
         // Create initial trash
         spawnTrash();
 
+        // Create additional enemies based on level
+        spawnEnemies();
+
         setupCollisions();
         setupControls();
-
-        // Add entities to managers
-        this.entityManager.addEntity(player);
-        enemies.forEach(enemy -> this.entityManager.addEntity(enemy));
-        bins.forEach(bin -> this.entityManager.addEntity(bin));
-        trashItems.forEach(trash -> this.entityManager.addEntity(trash));
-
-        this.collisionManager.register(player);
-        enemies.forEach(enemy -> this.collisionManager.register(enemy));
-        bins.forEach(bin -> this.collisionManager.register(bin));
-        trashItems.forEach(trash -> this.collisionManager.register(trash));
-
-        this.movementManager.addMovingEntity(player);
-        enemies.forEach(enemy -> this.movementManager.addMovingEntity(enemy));
-        enemies.forEach(enemy -> this.movementManager.addAIEntity(enemy));
 
         font = new BitmapFont();
         font.setColor(Color.WHITE);
     }
 
     private void createTrashBins() {
-        bins.add(new TrashBin(50, 50, Trash.TrashType.PLASTIC, "broccoli.png"));
-        bins.add(new TrashBin(550, 50, Trash.TrashType.PAPER, "broccoli.png"));
-        bins.add(new TrashBin(50, 400, Trash.TrashType.METAL, "broccoli.png"));
-        bins.add(new TrashBin(550, 400, Trash.TrashType.GLASS, "broccoli.png"));
+        int screenWidth = Gdx.graphics.getWidth();
+        int screenHeight = Gdx.graphics.getHeight();
+        
+        bins.add(new TrashBin(0, 0, Trash.TrashType.PLASTIC, "plastic_bin.png"));
+        bins.add(new TrashBin(screenWidth - 100, 0, Trash.TrashType.METAL, "metal_bin.png"));
+        bins.add(new TrashBin(0, screenHeight - 100, Trash.TrashType.PAPER, "paper_bin.png"));
+        bins.add(new TrashBin(screenWidth - 100, screenHeight - 100, Trash.TrashType.GLASS, "general_bin.png"));
+        
+        // Register bins with managers
+        for (TrashBin bin : bins) {
+            this.collisionManager.register(bin);
+            this.entityManager.addEntity(bin);
+        }
     }
 
     private void spawnTrash() {
@@ -121,16 +99,37 @@ public class GameScene extends Scene {
         trashItems.add(new Trash(centerX + 50, centerY, Trash.TrashType.PAPER, "broccoli.png"));
         trashItems.add(new Trash(centerX, centerY - 50, Trash.TrashType.METAL, "broccoli.png"));
         trashItems.add(new Trash(centerX, centerY + 50, Trash.TrashType.GLASS, "broccoli.png"));
+        
+        // Register trash items with managers
+        for (Trash trash : trashItems) {
+            this.entityManager.addEntity(trash);
+            this.collisionManager.register(trash);
+        }
     }
 
     private void spawnEnemies() {
-        enemies.clear();
-        for (int i = 0; i < level; i++) {
+        // Clear all but the first enemy (grandmother)
+        if (enemies.size() > 1) {
+            for (int i = enemies.size() - 1; i > 0; i--) {
+                Enemy enemy = enemies.remove(i);
+                this.entityManager.removeEntity(enemy);
+                this.collisionManager.remove(enemy);            
+            }
+        }
+        
+        // Add new enemies based on level
+        for (int i = 0; i < level-1; i++) {
             float x = (float) (Math.random() * Gdx.graphics.getWidth());
             float y = (float) (Math.random() * Gdx.graphics.getHeight());
-            Enemy enemy = new Enemy(x, y, GameState.getEnemySpeed(), Color.RED);
+            Enemy enemy = new Enemy(x, y, "grandmother.png", GameState.getEnemySpeed(), 75f, 85f);
             enemy.setTarget(player);
             enemies.add(enemy);
+            
+            // Register with managers
+            this.entityManager.addEntity(enemy);
+            this.collisionManager.register(enemy);
+            this.movementManager.addMovingEntity(enemy);
+            this.movementManager.addAIEntity(enemy);
         }
     }
 
