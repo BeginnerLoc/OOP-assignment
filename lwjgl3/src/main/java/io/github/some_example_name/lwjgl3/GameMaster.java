@@ -41,9 +41,16 @@ public class GameMaster extends ApplicationAdapter {
 //        ioManager.getSoundManager().loadSound("wrong", "broccoli.png");
 //        ioManager.getSoundManager().loadSound("game_over", "broccoli.png");
         
+        // Defining Scenes in Game
         sceneManager.registerScene(MainMenuScene.class, new MainMenuScene("Menu"));
         sceneManager.registerScene(GameScene.class, new GameScene("Game"));
         sceneManager.registerScene(GameOverScene.class, new GameOverScene("GameOver"));
+        sceneManager.registerScene(AboutScene.class, new AboutScene("About"));
+        sceneManager.registerScene(SettingsScene.class, new SettingsScene("Settings"));
+        sceneManager.registerScene(InstructionsScene.class, new InstructionsScene("Instructions"));
+
+        
+        
         Gdx.input.setInputProcessor(ioManager.getInputManager());
 
         // Start with the menu scene

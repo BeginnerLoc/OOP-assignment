@@ -3,6 +3,7 @@ package io.github.some_example_name.lwjgl3;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -35,13 +36,23 @@ public class EntityManager {
     	wordList.add(word);
     }
 
+    
+    
+
     public void draw() {
         sb.begin();
         for (Entity entity : entityList) {
             entity.draw(sb);
         }
         for (Word word : wordList) {
-        	font.draw(sb, word.getWord(), word.getX(), word.getY());
+            float scale = word.getScale();
+
+            // Safeguard against invalid scales
+            if (scale <= 0) scale = 1;
+
+            font.getData().setScale(scale);
+            font.setColor(word.getColor());
+            font.draw(sb, word.getWord(), word.getX(), word.getY());
         }
         sb.end();
 

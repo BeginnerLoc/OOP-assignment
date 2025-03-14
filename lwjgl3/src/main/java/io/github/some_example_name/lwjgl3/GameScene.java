@@ -27,13 +27,30 @@ public class GameScene extends Scene {
     private int playerHealth = 3;
     private float powerUpSpawnTimer = 0;
 
+	private Player player;
+	private Enemy enemy;
+	
+	private BackgroundEntity background;
+	
     public GameScene(String name) {
         super(name);
     }
 
     @Override
     public void create() {
-        super.create();
+    	
+    	super.create();
+       
+    	System.out.println("Game Scene");
+    	
+    	// Load Background Image
+        background = new BackgroundEntity("brickwall.png", 0, 0);
+        this.entityManager.addEntity(background);
+    	
+        // Creation of player & enemy
+        player = new Player(100, 300, "mrbean.png", 3.0f, 65f, 90f);
+        enemy = new Enemy(500, 0, "grandmother.png", 1.5f, 75f, 85f);
+        enemy.setTarget(player);
         
         // Create player
         player = new Player(320, 240, "broccoli.png", GameState.getPlayerSpeed());

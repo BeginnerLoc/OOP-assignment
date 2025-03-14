@@ -14,10 +14,24 @@ public class Player extends Entity implements PlayerMovable, Collidable {
     private Texture texture; // Player's texture
     private Trash heldTrash;
     private int health = 3;
+    
+    private float width;
+    private float height;
+
 
     public Player(float x, float y, String texturePath, float speed) {
         super(x, y, null, speed); // No need for color when using a texture
         this.bounds = new Rectangle(x, y, 64, 64); // Player size
+        this.texture = new Texture(texturePath); // Load texture dynamically
+    }
+    
+    public Player(float x, float y, String texturePath, float speed, float width, float height) {
+        super(x, y, null, speed); // No need for color when using a texture
+        
+        this.width = width;
+        this.height = height;
+        
+        this.bounds = new Rectangle(x, y, width, height); // Player size
         this.texture = new Texture(texturePath); // Load texture dynamically
     }
 
@@ -30,6 +44,14 @@ public class Player extends Entity implements PlayerMovable, Collidable {
         this.dx = dx;
         this.dy = dy;
     }
+    
+    
+    public void setDimensions(float width, float height) {
+        this.width = width;
+        this.height = height;
+        this.bounds.setSize(width, height); // Update the rectangle size
+    }
+
 
     @Override
     public void move() {
@@ -58,8 +80,9 @@ public class Player extends Entity implements PlayerMovable, Collidable {
 
     @Override
     public void setDirection(float dx, float dy) {
-        this.dx = dx;
-        this.dy = dy;
+        setX(getX() + dx * getSpeed());
+        setY(getY() + dy * getSpeed());
+        bounds.setPosition(getX(), getY());
     }
 
     @Override
@@ -135,7 +158,7 @@ public class Player extends Entity implements PlayerMovable, Collidable {
 
     @Override
     public void draw(SpriteBatch batch) {
-        batch.draw(texture, getX(), getY(), bounds.width, bounds.height);
+        batch.draw(texture, getX(), getY(), width, height);
     }
 
 }
