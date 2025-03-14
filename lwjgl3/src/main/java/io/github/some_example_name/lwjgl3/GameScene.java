@@ -1,4 +1,6 @@
 package io.github.some_example_name.lwjgl3;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -26,10 +28,6 @@ public class GameScene extends Scene {
     private float levelTimer = 0;
     private int playerHealth = 3;
     private float powerUpSpawnTimer = 0;
-
-	private Player player;
-	private Enemy enemy;
-	
 	private BackgroundEntity background;
 	
     public GameScene(String name) {
@@ -52,8 +50,29 @@ public class GameScene extends Scene {
         enemy = new Enemy(500, 0, "grandmother.png", 1.5f, 75f, 85f);
         enemy.setTarget(player);
         
-        // Create player
-        player = new Player(320, 240, "broccoli.png", GameState.getPlayerSpeed());
+        this.collisionManager.register(enemy);
+        this.collisionManager.register(player);
+        
+        this.entityManager.addEntity(enemy);
+        this.entityManager.addEntity(player);
+        int screenWidth = Gdx.graphics.getWidth();
+        int screenHeight = Gdx.graphics.getHeight();
+        bins.add(new Bin(0, 0, "plastic", "plastic_bin.png"));
+        bins.add(new Bin(screenWidth - 100, 0, "metal", "metal_bin.png"));
+        bins.add(new Bin(0, screenHeight - 100, "paper", "paper_bin.png"));
+        bins.add(new Bin(screenWidth - 100, screenHeight - 100, "general", "general_bin.png"));
+
+        for (Bin bin : bins) {
+            this.collisionManager.register(bin);
+            this.entityManager.addEntity(bin);
+        }
+
+
+        
+        this.movementManager.addMovingEntity(player);
+        this.movementManager.addMovingEntity(enemy);
+        this.movementManager.addAIEntity(enemy);
+    
 
         // Create initial enemies
         spawnEnemies();
