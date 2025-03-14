@@ -1,0 +1,15 @@
+bottle_waste.png
+canfood_waste.png
+catfoodCan_waste.png
+ColaCan_waste.png
+cup_waste.png
+glassbottle1_waste.png
+glassbottle2_waste.png
+glassjar_waste.png
+jug1_waste.png
+jug2_waste.png
+newspaper_waste.png
+paperbag_waste.png
+parcelbox_waste.png
+pizzabox_waste.png
+SprayCan_waste.png
