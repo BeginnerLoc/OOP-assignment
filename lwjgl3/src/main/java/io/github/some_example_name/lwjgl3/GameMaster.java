@@ -34,6 +34,13 @@ public class GameMaster extends ApplicationAdapter {
         ServiceLocator.register(IOManager.class, ioManager);
         ServiceLocator.register(SceneManager.class, sceneManager);
         
+        // Register sound effects using broccoli.png as placeholder sound files
+        // In a real game, you'd add proper sound files
+//        ioManager.getSoundManager().loadSound("pickup", "broccoli.png");
+//        ioManager.getSoundManager().loadSound("correct", "broccoli.png");
+//        ioManager.getSoundManager().loadSound("wrong", "broccoli.png");
+//        ioManager.getSoundManager().loadSound("game_over", "broccoli.png");
+        
         sceneManager.registerScene(MainMenuScene.class, new MainMenuScene("Menu"));
         sceneManager.registerScene(GameScene.class, new GameScene("Game"));
         sceneManager.registerScene(GameOverScene.class, new GameOverScene("GameOver"));
@@ -41,8 +48,6 @@ public class GameMaster extends ApplicationAdapter {
 
         // Start with the menu scene
         sceneManager.setScene(MainMenuScene.class);
-    
-
     }
 
     @Override
@@ -53,7 +58,9 @@ public class GameMaster extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-
+        // Clean up resources
+        ServiceLocator.get(SpriteBatch.class).dispose();
+        ServiceLocator.get(ShapeRenderer.class).dispose();
+        ioManager.dispose();
     }
-    
 }

@@ -27,6 +27,10 @@ public class EntityManager {
         entityList.add(entity);
     }
     
+    public void removeEntity(Entity entity) {
+        entityList.remove(entity);
+    }
+    
     public void addWord (Word word) {
     	wordList.add(word);
     }

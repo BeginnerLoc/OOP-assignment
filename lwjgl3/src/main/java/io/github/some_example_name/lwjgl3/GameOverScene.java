@@ -18,7 +18,7 @@ public class GameOverScene extends Scene{
     public void create() {
 		super.create();
         
-        word = new Word(200, 350, 0.1f, Color.WHITE, "Game Over!!!");
+        word = new Word(200, 350, 0.1f, Color.WHITE, "Game Over! Score: " + GameState.getScore());
         word1 = new Word(200, 300, 0.1f, Color.WHITE, "Press R to restart the game.");
         word2 = new Word(200, 250, 0.1f, Color.WHITE, "Press Q to go main Menu .");
         

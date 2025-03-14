@@ -12,6 +12,8 @@ public class Player extends Entity implements PlayerMovable, Collidable {
     private Consumer<Collidable> collisionAction;
     private Rectangle bounds;
     private Texture texture; // Player's texture
+    private Trash heldTrash;
+    private int health = 3;
 
     public Player(float x, float y, String texturePath, float speed) {
         super(x, y, null, speed); // No need for color when using a texture
@@ -47,6 +49,11 @@ public class Player extends Entity implements PlayerMovable, Collidable {
 
         // Update bounds position
         bounds.setPosition(getX(), getY());
+
+        if (heldTrash != null) {
+            heldTrash.setX(getX() + 16);
+            heldTrash.setY(getY() + 16);
+        }
     }
 
     @Override
@@ -94,6 +101,36 @@ public class Player extends Entity implements PlayerMovable, Collidable {
         setX(getX() + dx * 20);
         setY(getY() + dy * 20);
         bounds.setPosition(getX(), getY());
+    }
+
+    public void pickupTrash(Trash trash) {
+        if (heldTrash == null) {
+            heldTrash = trash;
+        }
+    }
+
+    public void dropTrash() {
+        if (heldTrash != null) {
+            heldTrash.setPickedUp(false);
+            heldTrash.setX(getX());
+            heldTrash.setY(getY());
+            heldTrash = null;
+        }
+    }
+
+    public Trash getHeldTrash() {
+        return heldTrash;
+    }
+
+    public void restoreHealth(int amount) {
+        health += amount;
+        if (health > 3) {
+            health = 3;
+        }
+    }
+
+    public int getHealth() {
+        return health;
     }
 
     @Override

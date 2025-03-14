@@ -39,7 +39,7 @@ public class Scene {
     	this.collisionManager.checkCollisions();
     	this.movementManager.updatePositions();
     	this.movementManager.followEntity();
-    	this.movementManager.followWorldRule(0);
+//    	this.movementManager.followWorldRule(0);
     	this.ioManager.getInputManager().update();
     }
     
