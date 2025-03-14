@@ -1,4 +1,8 @@
 package io.github.some_example_name.lwjgl3;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -7,7 +11,8 @@ public class GameScene extends Scene {
 
 	private Player player;
 	private Enemy enemy;
-	
+	private List<Bin> bins = new ArrayList<>();
+
 	private BackgroundEntity background;
 	
     public GameScene(String name) {
@@ -36,7 +41,19 @@ public class GameScene extends Scene {
         
         this.entityManager.addEntity(enemy);
         this.entityManager.addEntity(player);
-        
+        int screenWidth = Gdx.graphics.getWidth();
+        int screenHeight = Gdx.graphics.getHeight();
+        bins.add(new Bin(0, 0, "plastic", "plastic_bin.png"));
+        bins.add(new Bin(screenWidth - 100, 0, "metal", "metal_bin.png"));
+        bins.add(new Bin(0, screenHeight - 100, "paper", "paper_bin.png"));
+        bins.add(new Bin(screenWidth - 100, screenHeight - 100, "general", "general_bin.png"));
+
+        for (Bin bin : bins) {
+            this.collisionManager.register(bin);
+            this.entityManager.addEntity(bin);
+        }
+
+
         
         this.movementManager.addMovingEntity(player);
         this.movementManager.addMovingEntity(enemy);
