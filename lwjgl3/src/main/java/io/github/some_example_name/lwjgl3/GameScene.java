@@ -117,20 +117,20 @@ public class GameScene extends Scene {
             }
         }
         
-        // Add new enemies based on level
-        for (int i = 0; i < level-1; i++) {
-            float x = (float) (Math.random() * Gdx.graphics.getWidth());
-            float y = (float) (Math.random() * Gdx.graphics.getHeight());
-            Enemy enemy = new Enemy(x, y, "grandmother.png", GameState.getEnemySpeed(), 75f, 85f);
-            enemy.setTarget(player);
-            enemies.add(enemy);
-            
-            // Register with managers
-            this.entityManager.addEntity(enemy);
-            this.collisionManager.register(enemy);
-            this.movementManager.addMovingEntity(enemy);
-            this.movementManager.addAIEntity(enemy);
-        }
+//        // Add new enemies based on level
+//        for (int i = 0; i < level-1; i++) {
+//            float x = (float) (Math.random() * Gdx.graphics.getWidth());
+//            float y = (float) (Math.random() * Gdx.graphics.getHeight());
+//            Enemy enemy = new Enemy(x, y, "grandmother.png", GameState.getEnemySpeed(), 75f, 85f);
+//            enemy.setTarget(player);
+//            enemies.add(enemy);
+//            
+//            // Register with managers
+//            this.entityManager.addEntity(enemy);
+//            this.collisionManager.register(enemy);
+//            this.movementManager.addMovingEntity(enemy);
+//            this.movementManager.addAIEntity(enemy);
+//        }
     }
 
     private void spawnPowerUp() {
@@ -153,7 +153,8 @@ public class GameScene extends Scene {
             }
             else if (other instanceof Trash) {
                 Trash trash = (Trash) other;
-                if (!trash.isPickedUp() && player.getHeldTrash() == null) {
+                System.out.println("Trash Detected");
+                if (!trash.isPickedUp() && player.getHeldTrash() == null && player.droppedTrash() != trash) {
                     trash.setPickedUp(true);
                     player.pickupTrash(trash);
                     this.ioManager.getSoundManager().playSound("pickup");
@@ -162,19 +163,22 @@ public class GameScene extends Scene {
             else if (other instanceof TrashBin && trashCooldown <= 0) {
                 TrashBin bin = (TrashBin) other;
                 Trash heldTrash = player.getHeldTrash();
-                if (heldTrash != null && heldTrash != lastTrashDropped) {
+                if (heldTrash != null ) {
                     boolean correct = bin.getAcceptedType() == heldTrash.getType();
                     GameState.updateScore(correct);
                     if (correct) {
                         applySpeedBoost();
-                        this.ioManager.getSoundManager().playSound("correct");
+                        System.out.println("Trash placed correct");
+//                        this.ioManager.getSoundManager().playSound("correct");
                     } else {
                         applySpeedPenalty();
-                        this.ioManager.getSoundManager().playSound("wrong");
+                        System.out.println("Trash placed Wrongly this is the " + bin.getAcceptedType() + " Bin");
+//                        this.ioManager.getSoundManager().playSound("wrong");
                     }
                     lastTrashDropped = heldTrash;
-                    trashCooldown = 0.5f; // Prevent multiple triggers
+                    trashCooldown = 0.2f; // Prevent multiple triggers
                     player.dropTrash();
+                    this.entityManager.removeEntity((Entity) heldTrash);
                     spawnNewTrash();
                 }
             }
@@ -200,14 +204,14 @@ public class GameScene extends Scene {
         isSpeedBoosted = true;
         isSpeedPenalized = false; // Cancel penalty if active
         speedBoostTimer = 5; // 5 seconds
-        player.setSpeed(GameState.getPlayerSpeed() * 1.1f);
+        player.setSpeed(GameState.getPlayerSpeed() * 1.5f);
     }
 
     private void applySpeedPenalty() {
         isSpeedPenalized = true;
         isSpeedBoosted = false; // Cancel boost if active
         speedPenaltyTimer = 2; // 2 seconds
-        player.setSpeed(GameState.getPlayerSpeed() * 0.9f);
+        player.setSpeed(GameState.getPlayerSpeed() * 0.6f);
     }
 
     private void spawnNewTrash() {

@@ -13,6 +13,7 @@ public class Player extends Entity implements PlayerMovable, Collidable {
     private Rectangle bounds;
     private Texture texture; // Player's texture
     private Trash heldTrash;
+    private Trash droppedTrash;
     private int health = 3;
     
     private float width;
@@ -131,12 +132,17 @@ public class Player extends Entity implements PlayerMovable, Collidable {
             heldTrash = trash;
         }
     }
+    
+    public Trash droppedTrash() {
+    	return droppedTrash;
+    }
 
     public void dropTrash() {
         if (heldTrash != null) {
+            heldTrash.setX(getX()+100);
+            heldTrash.setY(getY()+100);
             heldTrash.setPickedUp(false);
-            heldTrash.setX(getX());
-            heldTrash.setY(getY());
+            droppedTrash = heldTrash;
             heldTrash = null;
         }
     }

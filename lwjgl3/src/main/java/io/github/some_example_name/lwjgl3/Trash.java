@@ -26,6 +26,7 @@ public class Trash extends Entity implements Collidable {
 
     @Override
     public Rectangle getBounds() {
+    	this.bounds = new Rectangle(super.getX(), super.getY(), 32, 32);
         return bounds;
     }
 
@@ -44,7 +45,7 @@ public class Trash extends Entity implements Collidable {
     }
 
     public void setPickedUp(boolean pickedUp) {
-        isPickedUp = pickedUp;
+        this.isPickedUp = pickedUp;
     }
 
     public boolean isPickedUp() {
