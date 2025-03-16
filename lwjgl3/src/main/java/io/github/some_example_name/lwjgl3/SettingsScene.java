@@ -25,8 +25,9 @@ public class SettingsScene extends Scene {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
 
-        // Load Background Image
-        background = new BackgroundEntity("settings_bg.png", 0, 0);
+     // Load Background Image with a scaling factor
+        float backgroundScale = 1f; // Adjust this value to scale the background image
+        background = new BackgroundEntity("settings_bg.png", -35, 0, backgroundScale);
         this.entityManager.addEntity(background);
 
         // Dismiss Button - Dimensions and Position as Percentage of Screen

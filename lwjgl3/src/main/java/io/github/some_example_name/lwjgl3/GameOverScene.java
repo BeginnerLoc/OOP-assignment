@@ -43,8 +43,9 @@ public class GameOverScene extends Scene{
       float screenWidth = Gdx.graphics.getWidth();
       float screenHeight = Gdx.graphics.getHeight();
 
-      // Load Background Image
-      background = new BackgroundEntity("gameover_bg.png", 0, 0);
+   // Load Background Image with a scaling factor
+      float backgroundScale = .95f; // Adjust this value to scale the background image
+      background = new BackgroundEntity("gameover_bg.png", -10, -5, backgroundScale);
       this.entityManager.addEntity(background);
       
       // YES Button 

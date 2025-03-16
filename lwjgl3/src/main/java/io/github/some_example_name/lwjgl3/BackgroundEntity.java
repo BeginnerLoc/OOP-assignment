@@ -7,22 +7,27 @@ public class BackgroundEntity extends Entity {
     private Texture texture;
     private float width;
     private float height;
+    private float scale;
 
-    // Define screen width & height constants 
-    private static final int SCREEN_WIDTH = 1080;  
-    private static final int SCREEN_HEIGHT = 1080; 
-
-    public BackgroundEntity(String texturePath, float x, float y) {
+    public BackgroundEntity(String texturePath, float x, float y, float scale) {
         super(x, y, null, 0); 
         this.texture = new Texture(texturePath); // Load image
-        this.width = SCREEN_WIDTH;  // Set background width to fit screen
-        this.height = SCREEN_HEIGHT; // Set background height to fit screen
+        this.scale = scale;
+        this.width = texture.getWidth() * scale;
+        this.height = texture.getHeight() * scale;
     }
 
     @Override
     public void draw(SpriteBatch sb) {
         if (texture != null) {
             sb.draw(texture, getX(), getY(), width, height); 
+        }
+    }
+
+    @Override
+    public void dispose() {
+        if (texture != null) {
+            texture.dispose();
         }
     }
 }

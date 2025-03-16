@@ -84,27 +84,32 @@ public class MainMenuScene extends Scene {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
 
-        // Load Background Image
-        background = new BackgroundEntity("OVERTRASHED.png", 0, 0);
+        // Load Background Image with a scaling factor
+        float backgroundScale = .95f; // Adjust this value to scale the background image
+        background = new BackgroundEntity("OVERTRASHED.png", -10, -5, backgroundScale);
         this.entityManager.addEntity(background);
 
-        // Play Button - Dimensions and Position as Percentage of Screen
-        float buttonWidth = screenWidth * 0.20f;  
-        float buttonHeight = screenHeight * 0.07f;  
-        float buttonX = screenWidth * 0.5f - (buttonWidth)/2;  
-        float buttonY = screenHeight * 0.5f - (buttonHeight / 2);  
+        
+     // Play Button - Set specific dimensions
+        float playButtonWidth = 450f;  
+        float playButtonHeight = 250f;  
+        float playButtonX = screenWidth * 0.5f - (playButtonWidth)/2;  
+        float playButtonY = screenHeight * 0.55f - (playButtonHeight / 2);  
 
-        playButton = new CustomButton("play_button.png", buttonX, buttonY, buttonWidth, buttonHeight);
+        playButton = new CustomButton("play_button.png", playButtonX, playButtonY, playButtonWidth, playButtonHeight);
         playButton.setOnClickAction(() -> {
             this.sceneManager.setScene(GameScene.class);
         });
         this.entityManager.addEntity(playButton);
         this.ioManager.getInputManager().registerClickable(playButton);
 
-        // Additional buttons can be defined similarly using relative dimensions.
-        
-        // About Button
-        aboutButton = new CustomButton("about_button.png", buttonX, buttonY - 100f, buttonWidth, buttonHeight);
+        // About Button - Set specific dimensions
+        float aboutButtonWidth = 660f;  
+        float aboutButtonHeight = 350f;  
+        float aboutButtonX = screenWidth * 0.5f - (aboutButtonWidth)/2;  
+        float aboutButtonY = playButtonY - 150f;  
+
+        aboutButton = new CustomButton("about_button.png", aboutButtonX, aboutButtonY, aboutButtonWidth, aboutButtonHeight);
         aboutButton.setOnClickAction(() -> {
             if (sceneManager != null) {
                 sceneManager.setScene(AboutScene.class);
@@ -112,9 +117,14 @@ public class MainMenuScene extends Scene {
         });
         this.entityManager.addEntity(aboutButton);
         this.ioManager.getInputManager().registerClickable(aboutButton);
-        
-        // Settings Button
-        settingsButton = new CustomButton("settings_button.png", buttonX, buttonY - 200f, buttonWidth, buttonHeight);
+
+        // Settings Button - Set specific dimensions
+        float settingsButtonWidth = 330f;  
+        float settingsButtonHeight = 180f;  
+        float settingsButtonX = screenWidth * 0.5f - (settingsButtonWidth)/2;  
+        float settingsButtonY = aboutButtonY - 30f;  
+
+        settingsButton = new CustomButton("settings_button.png", settingsButtonX, settingsButtonY, settingsButtonWidth, settingsButtonHeight);
         settingsButton.setOnClickAction(() -> {
             if (sceneManager != null) {
                 sceneManager.setScene(SettingsScene.class);
@@ -122,7 +132,6 @@ public class MainMenuScene extends Scene {
         });
         this.entityManager.addEntity(settingsButton);
         this.ioManager.getInputManager().registerClickable(settingsButton);
-        
     }
 
         

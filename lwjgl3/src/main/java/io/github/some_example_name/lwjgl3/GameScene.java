@@ -40,7 +40,9 @@ public class GameScene extends Scene {
     	System.out.println("Game Scene");
     	
     	// Load Background Image
-        background = new BackgroundEntity("brickwall.png", 0, 0);
+    	// Load Background Image with a scaling factor
+        float backgroundScale = .95f; // Adjust this value to scale the background image
+        background = new BackgroundEntity("brickwall.png", -10, -5, backgroundScale);
         this.entityManager.addEntity(background);
     	
         // Creation of player
@@ -95,15 +97,17 @@ public class GameScene extends Scene {
         float centerX = Gdx.graphics.getWidth() / 2f;
         float centerY = Gdx.graphics.getHeight() / 2f;
         
-        trashItems.add(new Trash(centerX - 50, centerY, Trash.TrashType.PLASTIC, "broccoli.png"));
-        trashItems.add(new Trash(centerX + 50, centerY, Trash.TrashType.PAPER, "broccoli.png"));
-        trashItems.add(new Trash(centerX, centerY - 50, Trash.TrashType.METAL, "broccoli.png"));
-        trashItems.add(new Trash(centerX, centerY + 50, Trash.TrashType.GLASS, "broccoli.png"));
+        trashItems.add(new Trash(centerX - 50, centerY, Trash.TrashType.PLASTIC, "bottle_waste.png"));
+        trashItems.add(new Trash(centerX + 50, centerY, Trash.TrashType.PAPER, "newspaper_waste.png"));
+        trashItems.add(new Trash(centerX, centerY - 50, Trash.TrashType.METAL, "ColaCan_waste.png"));
+        trashItems.add(new Trash(centerX, centerY + 50, Trash.TrashType.GLASS, "glassbottle1_waste.png"));
         
         // Register trash items with managers
         for (Trash trash : trashItems) {
             this.entityManager.addEntity(trash);
             this.collisionManager.register(trash);
+            
+            
         }
     }
 
@@ -214,6 +218,7 @@ public class GameScene extends Scene {
         player.setSpeed(GameState.getPlayerSpeed() * 0.6f);
     }
 
+    
     private void spawnNewTrash() {
         float centerX = Gdx.graphics.getWidth() / 2f + (float)(Math.random() * 100 - 50);
         float centerY = Gdx.graphics.getHeight() / 2f + (float)(Math.random() * 100 - 50);
@@ -299,3 +304,5 @@ public class GameScene extends Scene {
         font.dispose();
     }
 }
+
+

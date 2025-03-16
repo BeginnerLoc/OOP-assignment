@@ -29,6 +29,7 @@ public class CustomButton extends Entity implements Clickable {
         texture = new Texture(Gdx.files.internal(newImagePath));
     }
     
+
     public boolean isClicked(float touchX, float touchY) {
         return bounds.contains(touchX, touchY);
     }

@@ -63,6 +63,11 @@ public abstract class Entity {
 	public void draw(SpriteBatch sb) {
 		
 	}
+
+	public void dispose() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 	
