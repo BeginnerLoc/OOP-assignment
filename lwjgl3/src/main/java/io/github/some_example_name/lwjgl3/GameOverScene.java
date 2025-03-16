@@ -49,9 +49,9 @@ public class GameOverScene extends Scene{
       this.entityManager.addEntity(background);
       
       // YES Button 
-      float buttonWidth = screenWidth * 0.15f;  
-      float buttonHeight = screenHeight * 0.10f;  
-      float buttonX = screenWidth * 0.3f - (buttonWidth)/2;  
+      float buttonWidth = screenWidth * 0.4f;  
+      float buttonHeight = screenHeight * 0.25f;  
+      float buttonX = screenWidth * 0.35f - (buttonWidth)/2;  
       float buttonY = screenHeight * 0.3f - (buttonHeight / 2);  
 
       yesButton = new CustomButton("yes_button.png", buttonX, buttonY, buttonWidth, buttonHeight);
@@ -62,7 +62,7 @@ public class GameOverScene extends Scene{
       this.ioManager.getInputManager().registerClickable(yesButton);
       
       // NO Button
-      noButton = new CustomButton("no_button.png", buttonX + 400f, buttonY, buttonWidth, buttonHeight);
+      noButton = new CustomButton("no_button.png", buttonX + 200f, buttonY, buttonWidth, buttonHeight);
       noButton.setOnClickAction(() -> {
           this.sceneManager.setScene(MainMenuScene.class);
       });

@@ -31,8 +31,8 @@ public class SettingsScene extends Scene {
         this.entityManager.addEntity(background);
 
         // Dismiss Button - Dimensions and Position as Percentage of Screen
-        float buttonWidth = screenWidth * 0.06f;  // 25% of screen width
-        float buttonHeight = screenHeight * 0.06f;  // 8% of screen height
+        float buttonWidth = screenWidth * 0.08f;  // 25% of screen width
+        float buttonHeight = screenHeight * 0.08f;  // 8% of screen height
         float buttonX = screenWidth * 0.93f - (buttonWidth)/2;  // Centered horizontally (50% - 25%/2)
         float buttonY = screenHeight * 0.93f - (buttonHeight / 2);  // Centered vertically (50% - buttonHeight/2)
 
@@ -46,18 +46,19 @@ public class SettingsScene extends Scene {
         // Additional buttons can be defined similarly using relative dimensions.
         
         // Easy Level Button
-        easylvlButton = new CustomButton("easy_level.png", buttonX - 890f, buttonY - 450f, buttonWidth, buttonHeight);
+        easylvlButton = new CustomButton("easy_level.png", buttonX - 550f, buttonY - 250f, buttonWidth, buttonHeight);
         easylvlButton.setOnClickAction(() -> {
         	
         	// Change the button's image to another emoji when clicked
         	easylvlButton.setImage("easy_level2.png");
+        	//set to default game mode
 
         });
         this.entityManager.addEntity(easylvlButton);
         this.ioManager.getInputManager().registerClickable(easylvlButton);
         
         // Medium Level Button
-        mediumlvlButton = new CustomButton("medium_level.png", buttonX - 790f, buttonY - 450f, buttonWidth, buttonHeight);
+        mediumlvlButton = new CustomButton("medium_level.png", buttonX - 450f, buttonY - 250f, buttonWidth, buttonHeight);
         mediumlvlButton.setOnClickAction(() -> {
         	
         	// Change the button's image to another emoji when clicked
@@ -68,7 +69,7 @@ public class SettingsScene extends Scene {
         this.ioManager.getInputManager().registerClickable(mediumlvlButton);
         
      // Hard Level Button
-        hardlvlButton = new CustomButton("hard_level.png", buttonX - 690f, buttonY - 450f, buttonWidth, buttonHeight);
+        hardlvlButton = new CustomButton("hard_level.png", buttonX - 350f, buttonY - 250f, buttonWidth, buttonHeight);
         hardlvlButton.setOnClickAction(() -> {
         	
         	// Change the button's image to another emoji when clicked
