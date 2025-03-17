@@ -1,13 +1,16 @@
 package io.github.some_example_name.lwjgl3;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 
 
 public class GameScene extends Scene {
@@ -28,6 +31,12 @@ public class GameScene extends Scene {
     private int playerHealth = 3;
     private float powerUpSpawnTimer = 0;
 	private BackgroundEntity background;
+	
+	// Define image arrays as class-level variables & each type of trash with their respective image filenames
+	private String[] plasticTrashImages = {"bottle_waste.png", "jug1_waste.png", "jug2_waste.png"};
+	private String[] paperTrashImages = {"newspaper_waste.png", "cup_waste.png", "paperbag_waste.png", "parcelbox_waste.png", "pizzabox_waste.png"};
+	private String[] metalTrashImages = {"ColaCan_waste.png", "canfood_waste.png", "SprayCan_waste.png", "catfoodCan_waste.png"};
+	private String[] glassTrashImages = {"glassbottle1_waste.png", "glassbottle2_waste.png", "glassjar_waste.png"};
 	
     public GameScene(String name) {
         super(name);
@@ -94,22 +103,75 @@ public class GameScene extends Scene {
 
     private void spawnTrash() {
         // Spawn one of each type in middle area
+//        float centerX = Gdx.graphics.getWidth() / 2f;
+//        float centerY = Gdx.graphics.getHeight() / 2f;
+//        
+//        trashItems.add(new Trash(centerX - 50, centerY, Trash.TrashType.PLASTIC, "bottle_waste.png"));
+//        trashItems.add(new Trash(centerX + 50, centerY, Trash.TrashType.PAPER, "newspaper_waste.png"));
+//        trashItems.add(new Trash(centerX, centerY - 50, Trash.TrashType.METAL, "ColaCan_waste.png"));
+//        trashItems.add(new Trash(centerX, centerY + 50, Trash.TrashType.GLASS, "glassbottle1_waste.png"));
+//        
+//        // Register trash items with managers
+//        for (Trash trash : trashItems) {
+//            this.entityManager.addEntity(trash);
+//            this.collisionManager.register(trash);
+            
+            
+        //}
+    
+        
+     // Define the number of trash items to spawn for each type
+        int numPlasticTrash = 2;
+        int numPaperTrash = 2;
+        int numMetalTrash = 2;
+        int numGlassTrash = 2;
+
         float centerX = Gdx.graphics.getWidth() / 2f;
         float centerY = Gdx.graphics.getHeight() / 2f;
-        
-        trashItems.add(new Trash(centerX - 50, centerY, Trash.TrashType.PLASTIC, "bottle_waste.png"));
-        trashItems.add(new Trash(centerX + 50, centerY, Trash.TrashType.PAPER, "newspaper_waste.png"));
-        trashItems.add(new Trash(centerX, centerY - 50, Trash.TrashType.METAL, "ColaCan_waste.png"));
-        trashItems.add(new Trash(centerX, centerY + 50, Trash.TrashType.GLASS, "glassbottle1_waste.png"));
-        
+
+        Random random = new Random();
+
+        // Spawn plastic trash
+        for (int i = 0; i < numPlasticTrash; i++) {
+            String imageName = plasticTrashImages[random.nextInt(plasticTrashImages.length)];
+            float x = centerX + (random.nextFloat() - 0.5f) * Gdx.graphics.getWidth() * 0.4f;
+            float y = centerY + (random.nextFloat() - 0.5f) * Gdx.graphics.getHeight() * 0.4f;
+            trashItems.add(new Trash(x, y, Trash.TrashType.PLASTIC, imageName));
+        }
+
+        // Spawn paper trash
+        for (int i = 0; i < numPaperTrash; i++) {
+            String imageName = paperTrashImages[random.nextInt(paperTrashImages.length)];
+            float x = centerX + (random.nextFloat() - 0.5f) * Gdx.graphics.getWidth() * 0.4f;
+            float y = centerY + (random.nextFloat() - 0.5f) * Gdx.graphics.getHeight() * 0.4f;
+            trashItems.add(new Trash(x, y, Trash.TrashType.PAPER, imageName));
+        }
+
+        // Spawn metal trash
+        for (int i = 0; i < numMetalTrash; i++) {
+            String imageName = metalTrashImages[random.nextInt(metalTrashImages.length)];
+            float x = centerX + (random.nextFloat() - 0.5f) * Gdx.graphics.getWidth() * 0.4f;
+            float y = centerY + (random.nextFloat() - 0.5f) * Gdx.graphics.getHeight() * 0.4f;
+            trashItems.add(new Trash(x, y, Trash.TrashType.METAL, imageName));
+        }
+
+        // Spawn glass trash
+        for (int i = 0; i < numGlassTrash; i++) {
+            String imageName = glassTrashImages[random.nextInt(glassTrashImages.length)];
+            float x = centerX + (random.nextFloat() - 0.5f) * Gdx.graphics.getWidth() * 0.4f;
+            float y = centerY + (random.nextFloat() - 0.5f) * Gdx.graphics.getHeight() * 0.4f;
+            trashItems.add(new Trash(x, y, Trash.TrashType.GLASS, imageName));
+        }
+
         // Register trash items with managers
         for (Trash trash : trashItems) {
             this.entityManager.addEntity(trash);
             this.collisionManager.register(trash);
-            
-            
         }
-    }
+        
+        
+    } 
+    
 
     private void spawnEnemies() {
         // Clear all but the first enemy (grandmother)
@@ -220,10 +282,47 @@ public class GameScene extends Scene {
 
     
     private void spawnNewTrash() {
+		/*
+		 * float centerX = Gdx.graphics.getWidth() / 2f + (float)(Math.random() * 100 -
+		 * 50); float centerY = Gdx.graphics.getHeight() / 2f + (float)(Math.random() *
+		 * 100 - 50); Trash newTrash = new Trash(centerX, centerY,
+		 * Trash.TrashType.values()[(int)(Math.random() * 4)], "broccoli.png");
+		 * trashItems.add(newTrash); this.entityManager.addEntity(newTrash);
+		 * this.collisionManager.register(newTrash);
+		 */
+    	
+    	
+    	// Randomly determine the position of the new trash item
         float centerX = Gdx.graphics.getWidth() / 2f + (float)(Math.random() * 100 - 50);
         float centerY = Gdx.graphics.getHeight() / 2f + (float)(Math.random() * 100 - 50);
-        Trash newTrash = new Trash(centerX, centerY, 
-            Trash.TrashType.values()[(int)(Math.random() * 4)], "broccoli.png");
+
+        // Randomly select a trash type
+        Trash.TrashType randomType = Trash.TrashType.values()[(int)(Math.random() * 4)];
+
+        // Select the appropriate image array based on the random type
+        String imageName;
+        switch (randomType) {
+            case PLASTIC:
+                imageName = plasticTrashImages[new Random().nextInt(plasticTrashImages.length)];
+                break;
+            case PAPER:
+                imageName = paperTrashImages[new Random().nextInt(paperTrashImages.length)];
+                break;
+            case METAL:
+                imageName = metalTrashImages[new Random().nextInt(metalTrashImages.length)];
+                break;
+            case GLASS:
+                imageName = glassTrashImages[new Random().nextInt(glassTrashImages.length)];
+                break;
+            default:
+                imageName = ""; // Fallback in case of unexpected type
+                break;
+        }
+
+        // Create a new Trash object with the random type and image
+        Trash newTrash = new Trash(centerX, centerY, randomType, imageName);
+
+        // Add the new trash item to the list and register it with managers
         trashItems.add(newTrash);
         this.entityManager.addEntity(newTrash);
         this.collisionManager.register(newTrash);
@@ -285,10 +384,42 @@ public class GameScene extends Scene {
         font.draw(batch, "Score: " + GameState.getScore(), 10, 470);
         font.draw(batch, "Health: " + playerHealth, 10, 450);
         font.draw(batch, "Level: " + level, 10, 430);
+        
         Trash held = player.getHeldTrash();
         if (held != null) {
-            font.draw(batch, "Holding: " + held.getType(), 10, 410);
+//            font.draw(batch, "Holding: " + held.getType(), 10, 410);
+        	// Define position and size for the trash image
+//            float iconX = 10; // X position for the trash image
+//            float iconY = 300; // Y position for the trash image
+//            float iconSize = 30; // Size of the trash image
+//
+//         // Use GlyphLayout to measure the width of the text "Holding:"
+//            GlyphLayout glyphLayout = new GlyphLayout();
+//            glyphLayout.setText(font, "Holding:");
+//            float textWidth = glyphLayout.width;
+//
+//            // Draw the text "Holding:"
+//            font.draw(batch, "Holding:", iconX, iconY + iconSize / 2); // Adjust Y position to center the text vertically
+//
+//            // Draw the trash image next to the text
+//            batch.draw(held.getImage(), iconX + textWidth + 5, iconY, iconSize, iconSize);
+        	
+        	// Define position for the text "Holding:"
+            float textX = 10; // X position for the text
+            float textY = 410; // Y position for the text
+
+            // Draw the text "Holding:"
+            font.draw(batch, "Holding:", textX, textY);
+
+            // Define position and size for the trash image
+            float iconX = textX + 50; // Fixed offset from the text
+            float iconY = 390; // Y position for the trash image
+            float iconSize = 32; // Size of the trash image
+
+            // Draw the trash image
+            batch.draw(held.getImage(), iconX, iconY, iconSize, iconSize);
         }
+        
         if (isSpeedBoosted) {
             font.draw(batch, "Speed Boost: " + String.format("%.1f", speedBoostTimer), 10, 390);
         }
@@ -302,6 +433,7 @@ public class GameScene extends Scene {
     public void dispose() {
         super.dispose();
         font.dispose();
+        
     }
 }
 

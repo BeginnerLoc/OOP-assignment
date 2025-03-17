@@ -1,5 +1,6 @@
 package io.github.some_example_name.lwjgl3;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
@@ -21,7 +22,7 @@ public class Trash extends Entity implements Collidable {
         super(x, y, null, 0);
         this.type = type;
         this.bounds = new Rectangle(x, y, 32, 32);
-        this.texture = new Texture(texturePath);
+        this.texture = new Texture(Gdx.files.internal(texturePath));
     }
 
     @Override
@@ -57,5 +58,8 @@ public class Trash extends Entity implements Collidable {
         if (!isPickedUp) {
             batch.draw(texture, getX(), getY(), bounds.width, bounds.height);
         }
+    }
+    public Texture getImage() {
+        return texture;
     }
 }
