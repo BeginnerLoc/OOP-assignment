@@ -49,8 +49,8 @@ public class GameOverScene extends Scene{
       this.entityManager.addEntity(background);
       
       // YES Button 
-      float buttonWidth = screenWidth * 0.4f;  
-      float buttonHeight = screenHeight * 0.25f;  
+      float buttonWidth = screenWidth * 0.2f;  
+      float buttonHeight = screenHeight * 0.15f;  
       float buttonX = screenWidth * 0.35f - (buttonWidth)/2;  
       float buttonY = screenHeight * 0.3f - (buttonHeight / 2);  
 

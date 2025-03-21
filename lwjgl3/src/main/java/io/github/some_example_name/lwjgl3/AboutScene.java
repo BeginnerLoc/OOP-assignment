@@ -61,10 +61,10 @@ public class AboutScene extends Scene {
         this.ioManager.getInputManager().registerClickable(dismissButton);
         
         // INFO Button
-        float buttonWidth1 = screenWidth * 0.6f;  
-        float buttonHeight1 = screenHeight * 0.4f;  
-        float buttonX1 = screenWidth * 0.25f - (buttonWidth)/2;  
-        float buttonY1 = screenHeight * 0f - (buttonHeight / 2);  
+        float buttonWidth1 = screenWidth * 0.20f;  
+        float buttonHeight1 = screenHeight * 0.09f;  
+        float buttonX1 = screenWidth * 0.45f - (buttonWidth)/2;  
+        float buttonY1 = screenHeight * 0.2f - (buttonHeight / 2);  
 
         infoButton = new CustomButton("instructions_button.png", buttonX1, buttonY1, buttonWidth1, buttonHeight1);
         infoButton.setOnClickAction(() -> {

@@ -6,9 +6,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+//import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class CustomButton extends Entity implements Clickable {
     private Texture texture;
+    private TextureRegion textureRegion;
+    //private ShapeRenderer shapeRenderer = new ShapeRenderer();
+
     private Rectangle bounds;
     private Runnable action;
   
@@ -18,7 +22,10 @@ public class CustomButton extends Entity implements Clickable {
 
         texture = new Texture(Gdx.files.internal(imagePath));
         texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        
+        
         bounds = new Rectangle(x, y, width, height);
+        textureRegion = new TextureRegion(texture);
         Gdx.app.log("CustomButton", "Texture width: " + texture.getWidth() + ", height: " + texture.getHeight());
         Gdx.app.log("CustomButton", "Bounds width: " + bounds.width + ", height: " + bounds.height);
       
@@ -54,7 +61,18 @@ public class CustomButton extends Entity implements Clickable {
     }
 
     public void draw(SpriteBatch batch) {
-        batch.draw(texture, bounds.x, bounds.y, bounds.width, bounds.height);
+        batch.draw(textureRegion, bounds.x, bounds.y, bounds.width, bounds.height);
+        //batch.end();
+        /*shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
+        shapeRenderer.end();
+        batch.begin(); // Restart SpriteBatch*/
+
+    }
+    public Rectangle getBounds() {
+        return bounds;
     }
 
     public void dispose() {
