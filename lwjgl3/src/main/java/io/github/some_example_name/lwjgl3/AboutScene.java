@@ -37,7 +37,7 @@ public class AboutScene extends Scene {
         // CHECK IF NEED TO CENTRALISE
         // Increase Font Size by Changing `scale` (Larger Numbers = Bigger Text)
         word = new Word(textX, textY, 0.1f, Color.BLACK, 
-                        "OverTrashed is a fun and educational game! \nAvoid enemies & save the environment!", 1.5f);
+                        "OverTrashed is a fun and educational game! \nAvoid the GRANDMA & Save the Environment!", 1.5f);
         word1 = new Word(textX, textY - 80, 0.1f, Color.BLACK, 
                         "Credits: (P2T2) \nGregory, Cavell, Wenjing, Royston, Aish, Luke", 1f);
 

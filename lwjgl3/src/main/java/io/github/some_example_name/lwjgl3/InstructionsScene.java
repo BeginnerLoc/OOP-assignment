@@ -25,8 +25,8 @@ public class InstructionsScene extends Scene {
         }
         
      // Load Background Image with a scaling factor
-        float backgroundScale = 1.01f; // Adjust this value to scale the background image
-        background = new BackgroundEntity("instructions_bg.png", -35, 1, backgroundScale);
+        float backgroundScale = 0.97f; // Adjust this value to scale the background image
+        background = new BackgroundEntity("instructions.PNG", -35, 1, backgroundScale);
         this.entityManager.addEntity(background);
 
 //        // ✅ Define Game Instructions (Bullet Points)
@@ -37,13 +37,13 @@ public class InstructionsScene extends Scene {
 //            "• Try to score as much before time runs out!"
 //        };
 
-        float textX = screenWidth / 2 - 200;  // Center align text
-        float textY = screenHeight / 2 + 100;
-        
-        word = new Word(textX, textY, 0.1f, Color.BLACK, 
-                "Use W,A,S,D to move\nAvoid enemy\nCollect recyclable items and throw in the correct bins\nTry to score as much before time runs out! ", 1f);
-        this.entityManager.addWord(word);
-        
+//        float textX = screenWidth / 2 - 200;  // Center align text
+//        float textY = screenHeight / 2 + 100;
+//        
+//        word = new Word(textX, textY, 0.1f, Color.BLACK, 
+//                "Use W,A,S,D to move\nAvoid enemy\nCollect recyclable items and throw in the correct bins\nTry to score as much before time runs out! ", 1f);
+//        this.entityManager.addWord(word);
+//        
         float buttonWidth = screenWidth * 0.06f;  
         float buttonHeight = screenHeight * 0.06f;  
         float buttonX = screenWidth * 0.95f - (buttonWidth)/2;  
