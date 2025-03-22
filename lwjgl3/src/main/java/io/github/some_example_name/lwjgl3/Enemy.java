@@ -17,26 +17,27 @@ public class Enemy extends Entity implements AIMovable, Collidable {
     private float dy = 0;
     private Consumer<Collidable> collisionAction;
     
-    private Texture texture; // Player's texture
+    private Texture texture;
     private float width;
     private float height;
-
+    private boolean isActive = true;
 
     public Enemy(float x, float y, String texturePath, float speed) {
-    	super(x, y, null, speed); // No need for color when using a texture
-    	this.bounds = new Rectangle(x, y, 64, 64); // Player size
-        this.texture = new Texture(texturePath); // Load texture dynamically
+    	super(x, y, null, speed);
+    	this.width = 64;
+    	this.height = 64;
+    	this.bounds = new Rectangle(x, y, width, height);
+        this.texture = new Texture(texturePath);
     }
     
-    
     public Enemy(float x, float y, String texturePath, float speed, float width, float height) {
-        super(x, y, null, speed); // No need for color when using a texture
+        super(x, y, null, speed);
         
         this.width = width;
         this.height = height;
         
-        this.bounds = new Rectangle(x, y, width, height); // Player size
-        this.texture = new Texture(texturePath); // Load texture dynamically
+        this.bounds = new Rectangle(x, y, width, height);
+        this.texture = new Texture(texturePath);
     }
 
     /** Set a target entity to follow (e.g., the Player) */
@@ -46,39 +47,40 @@ public class Enemy extends Entity implements AIMovable, Collidable {
 
     @Override
     public void followEntity() {
-    	    	
-        if (target != null) {
-            Vector2 direction = new Vector2(target.getX() - getX(), target.getY() - getY());
+        if (!isActive || target == null) return;
+            
+        Vector2 direction = new Vector2(target.getX() - getX(), target.getY() - getY());
 
-            if (direction.len() > 10) {
-                direction.nor(); 
-                setDirection(direction.x, direction.y);
-            } else {
-                stop();
-            }
+        if (direction.len() > 10) {
+            direction.nor(); 
+            setDirection(direction.x, direction.y);
+        } else {
+            stop();
         }
     }
 
     @Override
     public void move() {
+        if (!isActive) return;
+        
         float screenWidth = com.badlogic.gdx.Gdx.graphics.getWidth();
         float screenHeight = com.badlogic.gdx.Gdx.graphics.getHeight();
 
         // Update position
         setX(getX() + dx * getSpeed());
         setY(getY() + dy * getSpeed());
-
+        
         // Ensure Enemy stays within the screen bounds
-        float clampedX = Math.max(0, Math.min(getX(), screenWidth - bounds.width));
-        float clampedY = Math.max(0, Math.min(getY(), screenHeight - bounds.height));
+        float clampedX = Math.max(0, Math.min(getX(), screenWidth - width));
+        float clampedY = Math.max(0, Math.min(getY(), screenHeight - height));
 
         setX(clampedX);
         setY(clampedY);
 
         // Update bounds position
+        bounds.setSize(width, height);
         bounds.setPosition(getX(), getY());
     }
-
 
     @Override
     public void setDirection(float dx, float dy) {
@@ -92,19 +94,13 @@ public class Enemy extends Entity implements AIMovable, Collidable {
         this.dy = 0;
     }
 
-//    @Override
-//    public void draw(ShapeRenderer rd) {
-//        rd.setColor(this.getColor());
-//        rd.rect(this.getX(), this.getY(), this.bounds.width, this.bounds.height);
-//    }
-
     public Rectangle getBounds() {
         return bounds;
     }
 
     @Override
     public void onCollision(Collidable other) {
-        if (collisionAction != null) {
+        if (collisionAction != null && isActive) {
             collisionAction.accept(other);
         }
     }
@@ -114,9 +110,24 @@ public class Enemy extends Entity implements AIMovable, Collidable {
         this.collisionAction = action;
     }
     
+    public void setActive(boolean active) {
+        this.isActive = active;
+    }
+    
+    public boolean isActive() {
+        return isActive;
+    }
+    
     @Override
     public void draw(SpriteBatch batch) {
+        if (!isActive) return;
         batch.draw(texture, getX(), getY(), width, height);
     }
-
+    
+    @Override
+    public void dispose() {
+        if (texture != null) {
+            texture.dispose();
+        }
+    }
 }

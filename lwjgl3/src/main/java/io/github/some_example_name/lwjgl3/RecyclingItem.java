@@ -25,36 +25,37 @@ public class RecyclingItem extends Entity implements Collidable {
     public Rectangle getBounds() {
         return bounds;
     }
+
     public boolean isVisible() {
         return visible;
     }
 
     @Override
     public void onCollision(Collidable other) {
-    	//if (other instanceof Player) {
-        //    Player player = (Player) other;
-        //    if (!player.isCarryingItem()) {
-        //        System.out.println("Picked up: " + type.getName());
-        //        player.pickupItem(this); // Give the item to the player
-        //    }
-        //}
+        // Collision handling managed elsewhere
     }
+
     @Override
     public void setCollisionAction(Consumer<Collidable> action) {
-    	
+        // Not needed
     }
+
     @Override
     public void draw(SpriteBatch batch) {
-        // Draw the colored circle
-    	if (!visible) return; // Skip drawing if hidden
-        ShapeRenderer renderer = ServiceLocator.get(ShapeRenderer.class);
-        renderer.begin(ShapeRenderer.ShapeType.Filled);
+        // Don't do any drawing in the SpriteBatch phase
+    }
+    
+    @Override
+    public void draw(ShapeRenderer renderer) {
+        // Only draw using the ShapeRenderer in the ShapeRenderer phase
+        if (!visible) return; // Skip drawing if hidden
+        
+        // Just set color and draw - don't call begin/end here
         renderer.setColor(type.getColor());
         renderer.circle(getX() + 16, getY() + 16, 16);
-        renderer.end();
     }
+
     public void hide() {
         this.visible = false;
     }
-
 }

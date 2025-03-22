@@ -19,10 +19,11 @@ public class Player extends Entity implements PlayerMovable, Collidable {
     private float width;
     private float height;
 
-
     public Player(float x, float y, String texturePath, float speed) {
         super(x, y, null, speed); // No need for color when using a texture
-        this.bounds = new Rectangle(x, y, 64, 64); // Player size
+        this.width = 64;
+        this.height = 64;
+        this.bounds = new Rectangle(x, y, width, height); // Player size
         this.texture = new Texture(texturePath); // Load texture dynamically
     }
     
@@ -46,13 +47,11 @@ public class Player extends Entity implements PlayerMovable, Collidable {
         this.dy = dy;
     }
     
-    
     public void setDimensions(float width, float height) {
         this.width = width;
         this.height = height;
         this.bounds.setSize(width, height); // Update the rectangle size
     }
-
 
     @Override
     public void move() {
@@ -62,20 +61,32 @@ public class Player extends Entity implements PlayerMovable, Collidable {
         // Update position
         setX(getX() + dx * getSpeed());
         setY(getY() + dy * getSpeed());
-
+        
         // Ensure Player stays within screen bounds
-        float clampedX = Math.max(0, Math.min(getX(), screenWidth - bounds.width));
-        float clampedY = Math.max(0, Math.min(getY(), screenHeight - bounds.height));
+        float clampedX = Math.max(0, Math.min(getX(), screenWidth - width));
+        float clampedY = Math.max(0, Math.min(getY(), screenHeight - height));
 
         setX(clampedX);
         setY(clampedY);
 
         // Update bounds position
+        bounds.setSize(width, height);
         bounds.setPosition(getX(), getY());
 
+        // Update held trash position if we have any
+        updateHeldTrashPosition();
+    }
+    
+    // Update held trash positioning
+    private void updateHeldTrashPosition() {
         if (heldTrash != null) {
-            heldTrash.setX(getX() + 16);
-            heldTrash.setY(getY() + 16);
+            // Position trash relative to player
+            float playerCenterX = getX() + width / 2;
+            float playerCenterY = getY() + height / 2;
+            
+            // Position slightly above player's center
+            heldTrash.setX(playerCenterX - 16);
+            heldTrash.setY(playerCenterY + 10);
         }
     }
 
@@ -130,6 +141,8 @@ public class Player extends Entity implements PlayerMovable, Collidable {
     public void pickupTrash(Trash trash) {
         if (heldTrash == null) {
             heldTrash = trash;
+            // Ensure the trash's position is updated immediately
+            updateHeldTrashPosition();
         }
     }
     
@@ -139,8 +152,13 @@ public class Player extends Entity implements PlayerMovable, Collidable {
 
     public void dropTrash() {
         if (heldTrash != null) {
-            heldTrash.setX(getX()+100);
-            heldTrash.setY(getY()+100);
+            // Place trash a bit in front of the player
+            float playerCenterX = getX() + width / 2;
+            float playerCenterY = getY() + height / 2;
+            
+            // Position the dropped trash
+            heldTrash.setX(playerCenterX + 50);
+            heldTrash.setY(playerCenterY);
             heldTrash.setPickedUp(false);
             droppedTrash = heldTrash;
             heldTrash = null;
@@ -166,5 +184,4 @@ public class Player extends Entity implements PlayerMovable, Collidable {
     public void draw(SpriteBatch batch) {
         batch.draw(texture, getX(), getY(), width, height);
     }
-
 }
