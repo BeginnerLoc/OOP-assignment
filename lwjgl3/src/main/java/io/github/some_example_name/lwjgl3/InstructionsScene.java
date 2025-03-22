@@ -25,7 +25,7 @@ public class InstructionsScene extends Scene {
         }
         
      // Load Background Image with a scaling factor
-        float backgroundScale = 0.97f; // Adjust this value to scale the background image
+        float backgroundScale = 0.81f; // Adjust this value to scale the background image
         background = new BackgroundEntity("instructions.PNG", -35, 1, backgroundScale);
         this.entityManager.addEntity(background);
 
