@@ -13,13 +13,17 @@ public class InstructionsScene extends Scene {
 
     public InstructionsScene(String name) {
         super(name);
- 
     }
 
     @Override
     public void create() {
         super.create();
-
+     // Load and play shared background music for MainMenuScene and AboutScene
+        if (!this.ioManager.getSoundManager().isBackgroundMusicPlaying()) {
+            this.ioManager.getSoundManager().loadSound("background_music_MMS", "MainMenu_Under the Sea - Fearless Flyers.mp3");
+            this.ioManager.getSoundManager().playBackgroundMusic("background_music_MMS");
+        }
+        
      // Load Background Image with a scaling factor
         float backgroundScale = 1.01f; // Adjust this value to scale the background image
         background = new BackgroundEntity("instructions_bg.png", -35, 1, backgroundScale);
@@ -47,7 +51,6 @@ public class InstructionsScene extends Scene {
 
         dismissButton = new CustomButton("dismiss_button.png", buttonX, buttonY, buttonWidth, buttonHeight);
         dismissButton.setOnClickAction(() -> {
-        	this.ioManager.getSoundManager().dispose();
             this.sceneManager.setScene(MainMenuScene.class);
         });
         this.entityManager.addEntity(dismissButton);

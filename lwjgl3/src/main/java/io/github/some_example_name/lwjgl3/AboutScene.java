@@ -21,6 +21,12 @@ public class AboutScene extends Scene {
     public void create() {
         super.create();
         
+     // Load and play shared background music for MainMenuScene and AboutScene
+        if (!this.ioManager.getSoundManager().isBackgroundMusicPlaying()) {
+            this.ioManager.getSoundManager().loadSound("background_music_MMS", "MainMenu_Under the Sea - Fearless Flyers.mp3");
+            this.ioManager.getSoundManager().playBackgroundMusic("background_music_MMS");
+        }
+        
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
 
@@ -60,20 +66,20 @@ public class AboutScene extends Scene {
         this.entityManager.addEntity(dismissButton);
         this.ioManager.getInputManager().registerClickable(dismissButton);
         
-        // INFO Button
-        float buttonWidth1 = screenWidth * 0.20f;  
-        float buttonHeight1 = screenHeight * 0.09f;  
-        float buttonX1 = screenWidth * 0.45f - (buttonWidth)/2;  
-        float buttonY1 = screenHeight * 0.2f - (buttonHeight / 2);  
-
-        infoButton = new CustomButton("instructions_button.png", buttonX1, buttonY1, buttonWidth1, buttonHeight1);
-        infoButton.setOnClickAction(() -> {
-            this.sceneManager.setScene(InstructionsScene.class);
-        });
-        this.entityManager.addEntity(infoButton);
-        this.ioManager.getInputManager().registerClickable(infoButton);
-
-        this.entityManager.addEntity(infoButton);
+//        // INFO Button
+//        float buttonWidth1 = screenWidth * 0.20f;  
+//        float buttonHeight1 = screenHeight * 0.09f;  
+//        float buttonX1 = screenWidth * 0.45f - (buttonWidth)/2;  
+//        float buttonY1 = screenHeight * 0.2f - (buttonHeight / 2);  
+//
+//        infoButton = new CustomButton("instructions_button.png", buttonX1, buttonY1, buttonWidth1, buttonHeight1);
+//        infoButton.setOnClickAction(() -> {
+//            this.sceneManager.setScene(InstructionsScene.class);
+//        });
+//        this.entityManager.addEntity(infoButton);
+//        this.ioManager.getInputManager().registerClickable(infoButton);
+//
+//        this.entityManager.addEntity(infoButton);
 //        this.ioManager.getInputManager().registerClickable(infoButton);
 //
 //        // Additional buttons can be defined similarly using relative dimensions.

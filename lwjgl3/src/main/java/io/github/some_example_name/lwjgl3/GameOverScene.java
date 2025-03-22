@@ -23,7 +23,9 @@ public class GameOverScene extends Scene{
     public void create() {
 		super.create();
 		
-
+		// Stop and dispose of the game scene background music
+	    this.ioManager.getSoundManager().stopSound("background_music_GS");
+	    this.ioManager.getSoundManager().disposeSound("background_music_GS");
         
 //        word = new Word(200, 350, 0.1f, Color.WHITE, "Game Over!!!");
 //        word1 = new Word(200, 300, 0.1f, Color.WHITE, "Press R to restart the game.");
@@ -61,6 +63,7 @@ public class GameOverScene extends Scene{
       this.entityManager.addEntity(yesButton);
       this.ioManager.getInputManager().registerClickable(yesButton);
       
+      
       // NO Button
       noButton = new CustomButton("no_button.png", buttonX + 200f, buttonY, buttonWidth, buttonHeight);
       noButton.setOnClickAction(() -> {
@@ -68,6 +71,8 @@ public class GameOverScene extends Scene{
       });
       this.entityManager.addEntity(noButton);
       this.ioManager.getInputManager().registerClickable(noButton);
+      // Play Background Music in a loop
+
       
     }
 
@@ -76,8 +81,12 @@ public class GameOverScene extends Scene{
     public void render() {
     	 ScreenUtils.clear(0.5f, 0, 0, 1);
     	 super.render();
-    
-       
     }
+    
+    @Override
+    public void dispose() {
+    	 this.ioManager.getSoundManager().disposeSound("game_over");
+    }
+   
 
 }

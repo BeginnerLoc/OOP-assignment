@@ -41,6 +41,24 @@ public class GameMaster extends ApplicationAdapter {
 //        ioManager.getSoundManager().loadSound("wrong", "broccoli.png");
 //        ioManager.getSoundManager().loadSound("game_over", "broccoli.png");
         
+        
+        
+        
+        //Register Sound
+        //Main Menu
+        //this.ioManager.getSoundManager().loadSound("background_music_MMS", "MainMenu_Under the Sea - Fearless Flyers.mp3");
+        
+        //Game
+        //this.ioManager.getSoundManager().loadSound("background_music_GS", "GameScene_BGM Dark Maplemas_ O Holy Fright.mp3");
+        this.ioManager.getSoundManager().loadSound("game_over", "Game Over Sound Effect.mp3");
+        this.ioManager.getSoundManager().loadSound("pickup", "Item Pickup [Sound Effect].mp3");
+        this.ioManager.getSoundManager().loadSound("trash_correct", "Correct Answer sound effect.mp3");
+        this.ioManager.getSoundManager().loadSound("trash_wrong", "Wrong Answer Sound effect.mp3");
+        this.ioManager.getSoundManager().loadSound("Power Up", "powerup.mp3");
+        this.ioManager.getSoundManager().loadSound("click", "Mouse Click Sound Effect.mp3");
+        
+        
+        
         // Defining Scenes in Game
         sceneManager.registerScene(MainMenuScene.class, new MainMenuScene("Menu"));
         sceneManager.registerScene(GameScene.class, new GameScene("Game"));

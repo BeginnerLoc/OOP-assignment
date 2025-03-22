@@ -20,7 +20,12 @@ public class SettingsScene extends Scene {
     @Override
     public void create() {
         super.create();
-
+     // Load and play shared background music for MainMenuScene and AboutScene
+        if (!this.ioManager.getSoundManager().isBackgroundMusicPlaying()) {
+            this.ioManager.getSoundManager().loadSound("background_music_MMS", "MainMenu_Under the Sea - Fearless Flyers.mp3");
+            this.ioManager.getSoundManager().playBackgroundMusic("background_music_MMS");
+        }
+        
         // Get screen dimensions
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();

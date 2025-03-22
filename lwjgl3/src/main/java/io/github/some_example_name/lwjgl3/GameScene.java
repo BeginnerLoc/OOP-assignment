@@ -47,6 +47,11 @@ public class GameScene extends Scene {
     	super.create();
        
     	System.out.println("Game Scene");
+    	// Stop the shared background music
+        
+    	 // Load and play background music for the game scene
+        this.ioManager.getSoundManager().loadSound("background_music_GS", "GameScene_BGM Dark Maplemas_ O Holy Fright.mp3");
+        this.ioManager.getSoundManager().playBackgroundMusic("background_music_GS");
     	
     	// Load Background Image
     	// Load Background Image with a scaling factor
@@ -89,10 +94,10 @@ public class GameScene extends Scene {
         int screenWidth = Gdx.graphics.getWidth();
         int screenHeight = Gdx.graphics.getHeight();
         
-        bins.add(new TrashBin(0, 0, Trash.TrashType.PLASTIC, "plastic_bin.png"));
-        bins.add(new TrashBin(screenWidth - 100, 0, Trash.TrashType.METAL, "metal_bin.png"));
-        bins.add(new TrashBin(0, screenHeight - 100, Trash.TrashType.PAPER, "paper_bin.png"));
-        bins.add(new TrashBin(screenWidth - 100, screenHeight - 100, Trash.TrashType.GLASS, "general_bin.png"));
+        bins.add(new TrashBin(0, 0, Trash.TrashType.PLASTIC, "plastic_bin_updated.png"));
+        bins.add(new TrashBin(screenWidth - 100, 0, Trash.TrashType.METAL, "metal_bin_updated.png"));
+        bins.add(new TrashBin(0, screenHeight - 100, Trash.TrashType.PAPER, "paper_bin_updated.png"));
+        bins.add(new TrashBin(screenWidth - 100, screenHeight - 100, Trash.TrashType.GLASS, "glass_bin_updated.png"));
         
         // Register bins with managers
         for (TrashBin bin : bins) {
@@ -213,16 +218,24 @@ public class GameScene extends Scene {
             if (other instanceof Enemy) {
                 playerHealth--;
                 if (playerHealth <= 0) {
+                	
                     this.ioManager.getSoundManager().playSound("game_over");
+                 // Dispose of the background music
+                   
                     this.sceneManager.setScene(GameOverScene.class);
                 }
             }
+            
+            
+            
+            
             else if (other instanceof Trash) {
                 Trash trash = (Trash) other;
                 System.out.println("Trash Detected");
                 if (!trash.isPickedUp() && player.getHeldTrash() == null && player.droppedTrash() != trash) {
                     trash.setPickedUp(true);
                     player.pickupTrash(trash);
+                    
                     this.ioManager.getSoundManager().playSound("pickup");
                 }
             }
@@ -235,11 +248,13 @@ public class GameScene extends Scene {
                     if (correct) {
                         applySpeedBoost();
                         System.out.println("Trash placed correct");
-//                        this.ioManager.getSoundManager().playSound("correct");
+                       
+                        this.ioManager.getSoundManager().playSound("trash_correct");
                     } else {
                         applySpeedPenalty();
                         System.out.println("Trash placed Wrongly this is the " + bin.getAcceptedType() + " Bin");
-//                        this.ioManager.getSoundManager().playSound("wrong");
+                        
+                        this.ioManager.getSoundManager().playSound("trash_wrong");
                     }
                     lastTrashDropped = heldTrash;
                     trashCooldown = 0.2f; // Prevent multiple triggers
@@ -254,6 +269,8 @@ public class GameScene extends Scene {
                 powerUps.remove(powerUp);
                 this.entityManager.removeEntity(powerUp);
                 this.collisionManager.remove(powerUp);
+                
+                this.ioManager.getSoundManager().playSound("Power Up");
             }
         });
     }
@@ -433,6 +450,11 @@ public class GameScene extends Scene {
     public void dispose() {
         super.dispose();
         font.dispose();
+        this.ioManager.getSoundManager().stopSound("background_music_MMS");
+        
+     this.ioManager.getSoundManager().stopSound("background_music_GS");
+     this.ioManager.getSoundManager().disposeSound("background_music_GS");
+        
         
     }
 }
