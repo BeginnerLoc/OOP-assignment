@@ -12,7 +12,7 @@ public class BananaPeel extends Entity implements Collidable {
     private float stunDuration = 3.0f; // 3 seconds stun
     
     public BananaPeel(float x, float y) {
-        super(x, y, null, 0);
+        super(x, y, null, 0, 5);
         this.bounds = new Rectangle(x, y, 32, 32);
         this.texture = new Texture("banana_peel.png");
     }

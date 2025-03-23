@@ -11,7 +11,7 @@ public class PowerUp extends Entity implements Collidable {
     private Consumer<Collidable> collisionAction;
 
     public PowerUp(float x, float y, String texturePath) {
-        super(x, y, null, 0);
+        super(x, y, null, 0, 10);
         this.bounds = new Rectangle(x, y, 56, 56);
         this.texture = new Texture(texturePath);
     }

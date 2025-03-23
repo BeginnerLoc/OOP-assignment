@@ -10,6 +10,13 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.graphics.GL20;
 
 public class GameScene extends Scene {
+    // Rendering priority constants
+    private static final int BACKGROUND_PRIORITY = 0;
+    private static final int BIN_PRIORITY = 1;
+    private static final int ITEM_PRIORITY = 2;
+    private static final int CHARACTER_PRIORITY = 3;
+    private static final int UI_PRIORITY = 4;
+    
     private GameMechanicsManager mechanics;
     private BitmapFont font;
     private BackgroundRenderer backgroundRenderer;
@@ -63,17 +70,17 @@ public class GameScene extends Scene {
             "mrbean.png",
             3.0f,                   // Speed multiplier
             virtualWidth * 0.08f,   // Width: 8% of virtual width
-            virtualHeight * 0.15f   // Height: 15% of virtual height
+            virtualHeight * 0.15f // Height: 15% of virtual height
         );
-        this.entityManager.addEntity(player);
+        this.entityManager.addEntity(player, CHARACTER_PRIORITY);
         this.collisionManager.register(player);
         this.movementManager.addMovingEntity(player);
         
-        // Initialize game mechanics
+        // Initialize game mechanics with prioritized rendering
         mechanics = new GameMechanicsManager();
         mechanics.initializeGame(player);
         
-        // Initialize UI elements with proper scaling
+        // Initialize UI elements with proper scaling and priority
         font = new BitmapFont();
         font.getData().setScale(virtualWidth / 800f); // Scale font relative to virtual width
         font.setColor(Color.WHITE);
@@ -89,6 +96,7 @@ public class GameScene extends Scene {
         this.ioManager.getInputManager().subscribeKeyDown(Keys.A, () -> mechanics.getPlayer().setDirection(-1, 0));
         this.ioManager.getInputManager().subscribeKeyDown(Keys.D, () -> mechanics.getPlayer().setDirection(1, 0));
         this.ioManager.getInputManager().subscribeKeyDown(Keys.SPACE, () -> mechanics.throwBananaPeel());
+
     }
     
     @Override
@@ -144,7 +152,7 @@ public class GameScene extends Scene {
         
         float barWidth = virtualWidth * 0.2f;    // 20% of screen width
         float barHeight = virtualHeight * 0.03f;  // 3% of screen height
-        float barX = virtualWidth * 0.01f;        // 1% from left edge
+        float barX = virtualWidth * 0.04f;        // 4% from left edge
         float barY = virtualHeight * 0.9f;        // 90% from bottom
         
         shapeRenderer.begin(ShapeType.Filled);

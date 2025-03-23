@@ -9,7 +9,7 @@ public class Word extends Entity {
     private float scale; // Font scale
     
     public Word(float x, float y, float speed, Color color, String word) {
-        super(x, y, color, speed);
+        super(x, y, color, speed, 5);
         this.word = word;
         this.scale = 1.0f;
         
@@ -19,7 +19,7 @@ public class Word extends Entity {
     }
 
     public Word(float x, float y, float speed, Color color, String word, float scale) {
-        super(x, y, color, speed);
+        super(x, y, color, speed, 5);
         this.word = word;
         this.scale = Math.max(scale, 0.1f); // Ensure minimum scale
         

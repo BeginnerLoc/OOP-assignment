@@ -14,7 +14,7 @@ public class CustomButton extends Entity implements Clickable {
     private Runnable action;
     
     public CustomButton(String imagePath, float x, float y, float width, float height) {
-        super(x, y, Color.RED, 0);
+        super(x, y, Color.RED, 0, 5);
         texture = new Texture(Gdx.files.internal(imagePath));
         texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         

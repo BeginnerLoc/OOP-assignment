@@ -22,20 +22,22 @@ public class Enemy extends Entity implements AIMovable, Collidable {
     private boolean isActive = true;
 
     public Enemy(float x, float y, String texturePath, float speed) {
-    	super(x, y, null, speed);
-    	this.width = 48;
-    	this.height = 46;
-    	this.bounds = new Rectangle(x, y, width, height);
+        super(x, y, null, speed, 10);
+        this.width = 36;
+        this.height = 36;
+        // Make collision bounds smaller than the sprite
+        this.bounds = new Rectangle(x + width * 0.25f, y + height * 0.25f, width * 0.5f, height * 0.5f);
         this.texture = new Texture(texturePath);
     }
     
     public Enemy(float x, float y, String texturePath, float speed, float width, float height) {
-        super(x, y, null, speed);
+        super(x, y, null, speed, 10);
         
         this.width = width;
         this.height = height;
         
-        this.bounds = new Rectangle(x, y, width, height);
+        // Make collision bounds smaller than the sprite
+        this.bounds = new Rectangle(x + width * 0.25f, y + height * 0.25f, width * 0.5f, height * 0.5f);
         this.texture = new Texture(texturePath);
     }
 
@@ -78,9 +80,9 @@ public class Enemy extends Entity implements AIMovable, Collidable {
         setX(clampedX);
         setY(clampedY);
 
-        // Update bounds position
-        bounds.setSize(width, height);
-        bounds.setPosition(getX(), getY());
+        // Update bounds position with offset
+        bounds.setSize(width * 0.5f, height * 0.5f);
+        bounds.setPosition(getX() + width * 0.25f, getY() + height * 0.25f);
     }
 
     @Override

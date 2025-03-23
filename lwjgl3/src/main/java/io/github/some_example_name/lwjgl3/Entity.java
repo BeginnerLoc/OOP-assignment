@@ -10,15 +10,18 @@ public abstract class Entity {
     private float y;
     private float speed;
     private Color color;
+    private int renderPriority; // Higher number means render later (on top)
     
     public Entity() {
+        this.renderPriority = 0;
     }
     
-    public Entity(float x, float y, Color color, float speed) {
+    public Entity(float x, float y, Color color, float speed, int renderPriority) {
         this.x = x;
         this.y = y;
         this.speed = speed;
         this.color = color;
+        this.renderPriority = renderPriority;
     }
 
     public float getX() {
@@ -51,6 +54,14 @@ public abstract class Entity {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public int getRenderPriority() {
+        return renderPriority;
+    }
+
+    public void setRenderPriority(int priority) {
+        this.renderPriority = priority;
     }
     
     public void draw(ShapeRenderer rd) {

@@ -27,8 +27,8 @@ public class Lwjgl3Launcher {
         // Get the primary monitor's resolution
         DisplayMode primaryMode = Lwjgl3ApplicationConfiguration.getDisplayMode();
         
-        int windowWidth = 800;
-        int windowHeight = 600;
+        int windowWidth = 1000;
+        int windowHeight = 800;
         
         // Make sure the window isn't larger than the screen
         windowWidth = Math.min(windowWidth, primaryMode.width);

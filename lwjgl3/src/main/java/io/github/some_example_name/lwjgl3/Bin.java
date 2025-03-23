@@ -10,7 +10,7 @@ public class Bin extends Entity implements Collidable {
     private Texture texture;
 
     public Bin(float x, float y, String type, String texturePath) {
-        super(x, y, Color.GRAY, 0); // Bins don't move
+        super(x, y, Color.GRAY, 0, 5);
         this.type = type;
         this.texture = new Texture(texturePath);
         this.bounds = new Rectangle(x, y, 100, 100); // Larger for collision detection

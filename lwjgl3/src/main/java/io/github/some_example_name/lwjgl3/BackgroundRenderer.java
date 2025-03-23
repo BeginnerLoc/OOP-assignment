@@ -11,8 +11,8 @@ public class BackgroundRenderer {
     private OrthographicCamera camera;
     private Viewport viewport;
     
-    public static final float VIRTUAL_WIDTH = 800;
-    public static final float VIRTUAL_HEIGHT = 600;
+    public static final float VIRTUAL_WIDTH = 1000;
+    public static final float VIRTUAL_HEIGHT = 800;
     
     public BackgroundRenderer(String texturePath) {
         this.backgroundTexture = new Texture(texturePath);

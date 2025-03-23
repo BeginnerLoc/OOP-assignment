@@ -10,7 +10,7 @@ public class TrashBin extends Entity implements Collidable {
     private Texture texture;
 
     public TrashBin(float x, float y, Trash.TrashType type, String texturePath) {
-        super(x, y, null, 0);
+        super(x, y, null, 0, 5);
         this.acceptedType = type;
         this.bounds = new Rectangle(x, y, 64, 64);
         this.texture = new Texture(texturePath);

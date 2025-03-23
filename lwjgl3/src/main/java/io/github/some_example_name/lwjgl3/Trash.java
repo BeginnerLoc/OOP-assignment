@@ -21,7 +21,7 @@ public class Trash extends Entity implements Collidable {
     }
 
     public Trash(float x, float y, TrashType type, String texturePath) {
-        super(x, y, null, 0);
+        super(x, y, null, 0, 5);
         this.type = type;
         this.bounds = new Rectangle(x, y, width, height);
         this.texture = new Texture(Gdx.files.internal(texturePath));

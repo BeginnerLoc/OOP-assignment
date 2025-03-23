@@ -31,10 +31,16 @@ public class EntityManager {
         this.viewport = viewport;
     }
 
-    public void addEntity(Entity entity) {
+    public void addEntity(Entity entity, int renderPriority) {
         if (entity != null) {
+            entity.setRenderPriority(renderPriority);
             entityList.add(entity);
         }
+    }
+
+    // Overload for backward compatibility
+    public void addEntity(Entity entity) {
+        addEntity(entity, 0);
     }
     
     public void removeEntity(Entity entity) {
@@ -61,24 +67,27 @@ public class EntityManager {
         sr.setProjectionMatrix(viewport.getCamera().combined);
         sb.setProjectionMatrix(viewport.getCamera().combined);
 
+        // Sort entities by render priority
+        List<Entity> sortedEntities = new ArrayList<>(entityList);
+        sortedEntities.sort((a, b) -> Integer.compare(a.getRenderPriority(), b.getRenderPriority()));
+
         // First draw shapes
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         
         sr.begin(ShapeRenderer.ShapeType.Filled);
-        for (Entity entity : new ArrayList<>(entityList)) {
+        for (Entity entity : sortedEntities) {
             entity.draw(sr);
         }
         sr.end();
         
-        // Then draw sprites and text
+        // Then draw sprites
         sb.begin();
-        // Draw entities that use SpriteBatch
-        for (Entity entity : new ArrayList<>(entityList)) {
+        for (Entity entity : sortedEntities) {
             entity.draw(sb);
         }
-        
-        // Draw text - now the Word class handles its own scaling
+
+        // Draw text last
         for (Word word : new ArrayList<>(wordList)) {
             word.draw(sb);
         }

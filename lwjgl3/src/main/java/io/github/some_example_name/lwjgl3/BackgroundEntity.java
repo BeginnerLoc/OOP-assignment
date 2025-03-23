@@ -14,7 +14,7 @@ public class BackgroundEntity extends Entity {
      * @param texturePath Path to the texture file
      */
     public BackgroundEntity(String texturePath) {
-        super(0, 0, null, 0); 
+        super(0, 0, null, 0, 0); 
         this.texture = new Texture(texturePath);
         // Set the size to match the screen dimensions
         this.width = Gdx.graphics.getWidth();
@@ -29,7 +29,7 @@ public class BackgroundEntity extends Entity {
      * @param scale Scaling factor
      */
     public BackgroundEntity(String texturePath, float x, float y, float scale) {
-        super(x, y, null, 0); 
+        super(x, y, null, 0, 0); 
         this.texture = new Texture(texturePath);
         this.width = texture.getWidth() * scale;
         this.height = texture.getHeight() * scale;

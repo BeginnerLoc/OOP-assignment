@@ -24,6 +24,7 @@ public class GameMechanicsManager {
     private float powerUpSpawnTimer;
     private Map<Enemy, Float> stunnedEnemies;
     private int bananaCharges; // New field for banana charges
+    private float bananaCooldown = 0; // Add cooldown timer for banana throws
 
     private EntityManager entityManager;
     private CollisionManager collisionManager;
@@ -302,7 +303,7 @@ public class GameMechanicsManager {
                 collisionManager.remove(enemy);
                 movementManager.removeMovingEntity(enemy);
                 movementManager.removeAIEntity(enemy);
-                enemy.dispose(); // Properly dispose of textures
+                enemy.dispose(); 
             }
             enemies.clear();
             
@@ -311,7 +312,7 @@ public class GameMechanicsManager {
             for (Trash trash : trashCopy) {
                 entityManager.removeEntity(trash);
                 collisionManager.remove(trash);
-                trash.dispose(); // Properly dispose of textures
+                trash.dispose(); 
             }
             trashItems.clear();
             
@@ -320,7 +321,7 @@ public class GameMechanicsManager {
             for (PowerUp powerUp : powerUpsCopy) {
                 entityManager.removeEntity(powerUp);
                 collisionManager.remove(powerUp);
-                powerUp.dispose(); // Properly dispose of textures
+                powerUp.dispose(); 
             }
             powerUps.clear();
             
@@ -329,7 +330,7 @@ public class GameMechanicsManager {
             for (TrashBin bin : binsCopy) {
                 entityManager.removeEntity(bin);
                 collisionManager.remove(bin);
-                // TrashBin should also have a dispose method if it has resources
+               
             }
             bins.clear();
             
@@ -351,7 +352,6 @@ public class GameMechanicsManager {
                 heldTrash.dispose();
             }
         } catch (Exception e) {
-            // Log any errors but don't crash
             System.err.println("Error during entity cleanup: " + e.getMessage());
             e.printStackTrace();
         }
@@ -407,7 +407,7 @@ public class GameMechanicsManager {
     }
 
     public void throwBananaPeel() {
-        if (bananaCharges > 0) { // Check if player has charges instead of speed boost
+        if (bananaCharges > 0 && bananaCooldown <= 0) { // Only throw if cooldown is up
             float x = player.getX();
             float y = player.getY();
             BananaPeel peel = new BananaPeel(x, y);
@@ -423,6 +423,7 @@ public class GameMechanicsManager {
             entityManager.addEntity(peel);
             collisionManager.register(peel);
             bananaCharges--; // Use up one charge
+            bananaCooldown = 0.5f; // Set cooldown to 0.5 seconds
         }
     }
 
@@ -484,6 +485,11 @@ public class GameMechanicsManager {
             } else {
                 entry.setValue(remainingStunTime);
             }
+        }
+
+        // Update banana cooldown
+        if (bananaCooldown > 0) {
+            bananaCooldown -= delta;
         }
 
         if (trashCooldown > 0) {

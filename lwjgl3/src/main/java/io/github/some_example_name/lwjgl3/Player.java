@@ -21,21 +21,22 @@ public class Player extends Entity implements PlayerMovable, Collidable {
     private float height;
 
     public Player(float x, float y, String texturePath, float speed) {
-        super(x, y, null, speed);
-        this.width = 48;
-        this.height = 48;
-        this.bounds = new Rectangle(x, y, width, height); 
+        super(x, y, null, speed, 10); 
+        this.width = 36;
+        this.height = 36;
+        // Make the collision bounds smaller than the sprite
+        this.bounds = new Rectangle(x + width * 0.25f, y + height * 0.25f, width * 0.5f, height * 0.5f); 
         this.texturePath = texturePath;
         this.texture = new Texture(texturePath); 
     }
     
     public Player(float x, float y, String texturePath, float speed, float width, float height) {
-        super(x, y, null, speed); 
+        super(x, y, null, speed, 10); 
         
         this.width = width;
         this.height = height;
-        this.texturePath = texturePath;
-        this.bounds = new Rectangle(x, y, width, height);
+        // Make the collision bounds smaller than the sprite
+        this.bounds = new Rectangle(x + width * 0.25f, y + height * 0.25f, width * 0.5f, height * 0.5f);
         this.texture = new Texture(texturePath);
     }
 
@@ -72,7 +73,7 @@ public class Player extends Entity implements PlayerMovable, Collidable {
         // Update position and bounds
         setX(newX);
         setY(newY);
-        bounds.setPosition(newX, newY);
+        bounds.setPosition(newX + width * 0.25f, newY + height * 0.25f);
 
         // Update held trash position if we have any
         updateHeldTrashPosition();

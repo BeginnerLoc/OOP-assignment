@@ -12,7 +12,7 @@ public class RecyclingItem extends Entity implements Collidable {
     private boolean visible = true;
 
     public RecyclingItem(float x, float y) {
-        super(x, y, null, 0);
+        super(x, y, null, 0, 5);
         this.type = RecyclingItemType.getRandomType(); // Randomize item type
         this.bounds = new Rectangle(x, y, 32, 32); // Smaller size
     }
