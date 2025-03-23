@@ -147,6 +147,7 @@ public class GameMechanicsManager {
         int enemyCount = Math.min(level + 1, 5); // Cap at 5 enemies maximum
         float virtualWidth = BackgroundRenderer.VIRTUAL_WIDTH;
         float virtualHeight = BackgroundRenderer.VIRTUAL_HEIGHT;
+        Random random = new Random();
 
         for (int i = enemies.size(); i < enemyCount; i++) {
             // Spawn enemy at random position away from the player
@@ -156,7 +157,11 @@ public class GameMechanicsManager {
                 y = (float) (Math.random() * (virtualHeight - 100));
             } while (isNearPlayer(x, y, 200)); // Keep enemies at least 200 units away from player initially
             
-            Enemy enemy = new Enemy(x, y, "grandmother.png", GameState.getEnemySpeed(), 65f, 90f);
+            // Get a random movement pattern
+            EnemyMovePattern[] patterns = EnemyMovePattern.values();
+            EnemyMovePattern randomPattern = patterns[random.nextInt(patterns.length)];
+            
+            Enemy enemy = new Enemy(x, y, "grandmother.png", GameState.getEnemySpeed(), 65f, 90f, randomPattern);
             enemy.setTarget(player);
             
             enemies.add(enemy);
