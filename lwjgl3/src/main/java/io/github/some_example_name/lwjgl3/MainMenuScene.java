@@ -55,6 +55,7 @@ public class MainMenuScene extends Scene {
         // Play Button - topmost
         playButton = new CustomButton("play_button.png", buttonX, startY, buttonWidth, buttonHeight);
         playButton.setOnClickAction(() -> {
+            GameState.reset(); // Reset game state before starting new game
             this.sceneManager.setScene(GameScene.class);
         });
         this.entityManager.addEntity(playButton);

@@ -286,12 +286,9 @@ public class GameMechanicsManager {
     }
     
     /**
-     * Cleans up all game resources and resets the game state when the game is over
+     * Cleans up all game resources when the game is over
      */
     public void cleanupGameResources() {
-        // Reset GameState static data
-        GameState.reset();
-        
         // Clean up all entities
         cleanupEntities();
     }

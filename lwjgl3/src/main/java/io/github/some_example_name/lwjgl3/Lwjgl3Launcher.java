@@ -37,7 +37,7 @@ public class Lwjgl3Launcher {
         configuration.setWindowedMode(windowWidth, windowHeight);
         
         // Enable window resizing
-        configuration.setResizable(false);
+        configuration.setResizable(true);
         
         // Set window icons
         configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png");

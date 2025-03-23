@@ -11,11 +11,7 @@ import com.badlogic.gdx.graphics.GL20;
 
 public class GameScene extends Scene {
     // Rendering priority constants
-    private static final int BACKGROUND_PRIORITY = 0;
-    private static final int BIN_PRIORITY = 1;
-    private static final int ITEM_PRIORITY = 2;
     private static final int CHARACTER_PRIORITY = 3;
-    private static final int UI_PRIORITY = 4;
     
     private GameMechanicsManager mechanics;
     private BitmapFont font;
@@ -31,9 +27,6 @@ public class GameScene extends Scene {
     public void create() {
         super.create();
         System.out.println("Game Scene");
-        
-        // Ensure GameState is reset for a new game
-        GameState.reset();
         
         // Load and play background music
         this.ioManager.getSoundManager().loadSound("background_music_GS", "GameScene_BGM Dark Maplemas_ O Holy Fright.mp3");
@@ -82,7 +75,7 @@ public class GameScene extends Scene {
         
         // Initialize UI elements with proper scaling and priority
         font = new BitmapFont();
-        font.getData().setScale(virtualWidth / 800f); // Scale font relative to virtual width
+        font.getData().setScale(virtualWidth / 700f); // Scale font relative to virtual width
         font.setColor(Color.WHITE);
         
         shapeRenderer = new ShapeRenderer();
@@ -152,7 +145,7 @@ public class GameScene extends Scene {
         
         float barWidth = virtualWidth * 0.2f;    // 20% of screen width
         float barHeight = virtualHeight * 0.03f;  // 3% of screen height
-        float barX = virtualWidth * 0.04f;        // 4% from left edge
+        float barX = virtualWidth * 0.1f;        // 10% from left edge
         float barY = virtualHeight * 0.9f;        // 90% from bottom
         
         shapeRenderer.begin(ShapeType.Filled);

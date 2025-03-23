@@ -1,11 +1,14 @@
 package io.github.some_example_name.lwjgl3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.Color;
 
 public class GameOverScene extends Scene {
     private BackgroundRenderer backgroundRenderer;
     private CustomButton yesButton;
     private CustomButton noButton;
+    private BitmapFont font;
     
     public GameOverScene(String name) {
         super(name);
@@ -21,6 +24,11 @@ public class GameOverScene extends Scene {
         
         // Initialize the background renderer with fixed HD resolution
         backgroundRenderer = new BackgroundRenderer("gameover_bg.png");
+        
+        // Initialize font
+        font = new BitmapFont();
+        font.setColor(Color.WHITE);
+        font.getData().setScale(BackgroundRenderer.VIRTUAL_WIDTH / 600f);
         
         // Pass the background renderer's viewport to both input manager and entity manager
         this.ioManager.getInputManager().setViewport(backgroundRenderer.getViewport());
@@ -46,6 +54,7 @@ public class GameOverScene extends Scene {
         // Yes Button
         yesButton = new CustomButton("yes_button.png", startX, buttonY, buttonWidth, buttonHeight);
         yesButton.setOnClickAction(() -> {
+            GameState.reset(); // Reset game state before transitioning
             this.sceneManager.setScene(GameScene.class);
         });
         this.entityManager.addEntity(yesButton);
@@ -54,6 +63,7 @@ public class GameOverScene extends Scene {
         // No Button
         noButton = new CustomButton("no_button.png", startX + buttonWidth + spacing, buttonY, buttonWidth, buttonHeight);
         noButton.setOnClickAction(() -> {
+            GameState.reset(); // Reset game state before transitioning to main menu as well
             this.sceneManager.setScene(MainMenuScene.class);
         });
         this.entityManager.addEntity(noButton);
@@ -71,6 +81,15 @@ public class GameOverScene extends Scene {
         if (batch != null && backgroundRenderer != null) {
             batch.begin();
             backgroundRenderer.render(batch);
+            
+            // Draw score
+            float virtualWidth = BackgroundRenderer.VIRTUAL_WIDTH;
+            float virtualHeight = BackgroundRenderer.VIRTUAL_HEIGHT;
+            float textX = virtualWidth * 0.5f - 100; // Center the text
+            float textY = virtualHeight * 0.6f;      // Above the buttons
+            
+            font.draw(batch, "Final Score: " + GameState.getScore(), textX, textY);
+            
             batch.end();
         }
         
@@ -89,6 +108,9 @@ public class GameOverScene extends Scene {
     public void dispose() {
         if (backgroundRenderer != null) {
             backgroundRenderer.dispose();
+        }
+        if (font != null) {
+            font.dispose();
         }
         this.ioManager.getSoundManager().disposeSound("game_over");
         
