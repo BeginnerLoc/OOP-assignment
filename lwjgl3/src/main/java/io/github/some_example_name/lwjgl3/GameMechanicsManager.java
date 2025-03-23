@@ -179,6 +179,44 @@ public class GameMechanicsManager {
 
     private void setupCollisions() {
         player.setCollisionAction(other -> handleCollision((Entity)other));
+        
+        // Set up collision handling for enemies
+        for (Enemy enemy : enemies) {
+            enemy.setCollisionAction(other -> {
+                if (other instanceof TrashBin) {
+                    TrashBin bin = (TrashBin) other;
+                    // Calculate centers
+                    float enemyCenterX = enemy.getX() + enemy.getBounds().width / 2;
+                    float enemyCenterY = enemy.getY() + enemy.getBounds().height / 2;
+                    float binCenterX = bin.getX() + bin.getBounds().width / 2;
+                    float binCenterY = bin.getY() + bin.getBounds().height / 2;
+                    
+                    // Calculate direction vector from bin center to enemy center
+                    float dx = enemyCenterX - binCenterX;
+                    float dy = enemyCenterY - binCenterY;
+                    float distance = (float) Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 0.1f) {
+                        // If centers are too close, push directly right
+                        dx = 1;
+                        dy = 0;
+                        distance = 1;
+                    }
+                    
+                    // Calculate minimum distance needed between centers
+                    float minDistance = (enemy.getBounds().width + bin.getBounds().width) / 2;
+                    
+                    if (distance < minDistance) {
+                        // Calculate new position maintaining minimum distance
+                        float pushX = (dx / distance) * (minDistance - distance);
+                        float pushY = (dy / distance) * (minDistance - distance);
+                        
+                        enemy.setX(enemy.getX() + pushX);
+                        enemy.setY(enemy.getY() + pushY);
+                    }
+                }
+            });
+        }
     }
 
     private void handleCollision(Entity other) {
@@ -186,8 +224,38 @@ public class GameMechanicsManager {
             handleEnemyCollision();
         } else if (other instanceof Trash) {
             handleTrashCollision((Trash) other);
-        } else if (other instanceof TrashBin && trashCooldown <= 0) {
+        } else if (other instanceof TrashBin) {
             handleTrashBinCollision((TrashBin) other);
+            TrashBin bin = (TrashBin) other;
+            // Calculate centers of entities
+            float playerCenterX = player.getX() + player.getBounds().width / 2;
+            float playerCenterY = player.getY() + player.getBounds().height / 2;
+            float binCenterX = bin.getX() + bin.getBounds().width / 2;
+            float binCenterY = bin.getY() + bin.getBounds().height / 2;
+            
+            // Calculate direction vector from bin center to player center
+            float dx = playerCenterX - binCenterX;
+            float dy = playerCenterY - binCenterY;
+            float distance = (float) Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < 0.1f) {
+                // If centers are too close, push directly right
+                dx = 1;
+                dy = 0;
+                distance = 1;
+            }
+            
+            // Calculate minimum distance needed between centers
+            float minDistance = (player.getBounds().width + bin.getBounds().width) / 2;
+            
+            if (distance < minDistance) {
+                // Calculate new position maintaining minimum distance
+                float pushX = (dx / distance) * (minDistance - distance);
+                float pushY = (dy / distance) * (minDistance - distance);
+                
+                player.setX(player.getX() + pushX);
+                player.setY(player.getY() + pushY);
+            }
         } else if (other instanceof PowerUp) {
             handlePowerUpCollision((PowerUp) other);
         }

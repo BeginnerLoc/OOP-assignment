@@ -1,6 +1,5 @@
 package io.github.some_example_name.lwjgl3;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -16,14 +15,15 @@ public class AboutScene extends Scene {
 
     @Override
     public void create() {
+        System.out.println("AboutScene created");
         super.create();
         
         // Initialize background with fixed resolution
         backgroundRenderer = new BackgroundRenderer("about_bg.png");
         
-        // Pass the viewport to managers
-        this.ioManager.getInputManager().setViewport(backgroundRenderer.getViewport());
+        // Pass the viewport to managers - removed null check since BackgroundRenderer always creates a valid viewport
         this.entityManager.setViewport(backgroundRenderer.getViewport());
+        this.ioManager.getInputManager().setViewport(backgroundRenderer.getViewport());
         
         // Clear any existing clickable objects
         this.ioManager.getInputManager().clearClickables();
@@ -40,7 +40,7 @@ public class AboutScene extends Scene {
 
         // Center the text using virtual coordinates
         float textX = virtualWidth * 0.5f - 220;  // Center align text
-        float textY = virtualHeight * 0.5f;       // Vertical center
+        float textY = virtualHeight * 0.4f;       // Vertical center
 
         // Add text with proper scaling
         word = new Word(textX, textY, 0.1f, Color.BLACK, 

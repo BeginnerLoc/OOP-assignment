@@ -22,8 +22,8 @@ public class Enemy extends Entity implements AIMovable, Collidable {
 
     public Enemy(float x, float y, String texturePath, float speed) {
     	super(x, y, null, speed);
-    	this.width = 64;
-    	this.height = 64;
+    	this.width = 48;
+    	this.height = 46;
     	this.bounds = new Rectangle(x, y, width, height);
         this.texture = new Texture(texturePath);
     }

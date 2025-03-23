@@ -51,8 +51,11 @@ public class EntityManager {
 
     public void draw() {
         if (viewport == null || viewport.getCamera() == null) {
+            System.out.println("Warning: Viewport or camera is null in EntityManager.draw()");
             return;
         }
+
+        viewport.apply();
 
         // Set projection matrices for consistent rendering
         sr.setProjectionMatrix(viewport.getCamera().combined);
@@ -63,7 +66,7 @@ public class EntityManager {
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         
         sr.begin(ShapeRenderer.ShapeType.Filled);
-        for (Entity entity : entityList) {
+        for (Entity entity : new ArrayList<>(entityList)) {
             entity.draw(sr);
         }
         sr.end();
@@ -71,17 +74,13 @@ public class EntityManager {
         // Then draw sprites and text
         sb.begin();
         // Draw entities that use SpriteBatch
-        for (Entity entity : entityList) {
+        for (Entity entity : new ArrayList<>(entityList)) {
             entity.draw(sb);
         }
         
-        // Draw text
-        for (Word word : wordList) {
-            float scale = word.getScale();
-            if (scale <= 0) scale = 1;
-            font.getData().setScale(scale);
-            font.setColor(word.getColor());
-            font.draw(sb, word.getWord(), word.getX(), word.getY());
+        // Draw text - now the Word class handles its own scaling
+        for (Word word : new ArrayList<>(wordList)) {
+            word.draw(sb);
         }
         sb.end();
         

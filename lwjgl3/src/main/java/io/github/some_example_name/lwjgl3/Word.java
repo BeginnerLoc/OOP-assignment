@@ -9,23 +9,22 @@ public class Word extends Entity {
     private float scale; // Font scale
     
     public Word(float x, float y, float speed, Color color, String word) {
-      super(x, y, color, speed);
-      this.word = word;
-      this.scale = 1.0f;
-      
-      // Initialize with default scale
-      font = new BitmapFont();
-      font.setColor(color);
-	}
+        super(x, y, color, speed);
+        this.word = word;
+        this.scale = 1.0f;
+        
+        // Initialize with default scale
+        font = new BitmapFont();
+        font.setColor(color);
+    }
 
     public Word(float x, float y, float speed, Color color, String word, float scale) {
         super(x, y, color, speed);
         this.word = word;
-        this.scale = scale;
+        this.scale = Math.max(scale, 0.1f); // Ensure minimum scale
         
-        // Initialize BitmapFont with fixed scale
+        // Initialize BitmapFont
         font = new BitmapFont();
-        font.getData().setScale(scale); // Set fixed font size
         font.setColor(color);
     }
 
@@ -42,13 +41,22 @@ public class Word extends Entity {
     }
 
     public void setScale(Float scale) {
-        this.scale = scale;
+        this.scale = Math.max(scale, 0.1f); // Ensure minimum scale
+        font.getData().setScale(this.scale);
     }
 
     @Override
     public void draw(SpriteBatch spriteBatch) {
-        // No need to update scale every frame if it's fixed
+        // Update scale before drawing
+        font.getData().setScale(scale);
         font.draw(spriteBatch, word, getX(), getY());
+    }
+
+    @Override
+    public void dispose() {
+        if (font != null) {
+            font.dispose();
+        }
     }
 }
 

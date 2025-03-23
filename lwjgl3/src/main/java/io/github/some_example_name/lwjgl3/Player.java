@@ -11,32 +11,32 @@ public class Player extends Entity implements PlayerMovable, Collidable {
     private boolean isSprinting;
     private Consumer<Collidable> collisionAction;
     private Rectangle bounds;
-    private Texture texture; // Player's texture
+    private Texture texture; 
     private Trash heldTrash;
     private Trash droppedTrash;
     private int health = 3;
-    private String texturePath; // Track the current texture path
+    private String texturePath; 
     
     private float width;
     private float height;
 
     public Player(float x, float y, String texturePath, float speed) {
-        super(x, y, null, speed); // No need for color when using a texture
-        this.width = 64;
-        this.height = 64;
-        this.bounds = new Rectangle(x, y, width, height); // Player size
+        super(x, y, null, speed);
+        this.width = 48;
+        this.height = 48;
+        this.bounds = new Rectangle(x, y, width, height); 
         this.texturePath = texturePath;
-        this.texture = new Texture(texturePath); // Load texture dynamically
+        this.texture = new Texture(texturePath); 
     }
     
     public Player(float x, float y, String texturePath, float speed, float width, float height) {
-        super(x, y, null, speed); // No need for color when using a texture
+        super(x, y, null, speed); 
         
         this.width = width;
         this.height = height;
         this.texturePath = texturePath;
-        this.bounds = new Rectangle(x, y, width, height); // Player size
-        this.texture = new Texture(texturePath); // Load texture dynamically
+        this.bounds = new Rectangle(x, y, width, height);
+        this.texture = new Texture(texturePath);
     }
 
     public void applyGravity(float gravity) {
@@ -52,7 +52,7 @@ public class Player extends Entity implements PlayerMovable, Collidable {
     public void setDimensions(float width, float height) {
         this.width = width;
         this.height = height;
-        this.bounds.setSize(width, height); // Update the rectangle size
+        this.bounds.setSize(width, height); 
     }
 
     @Override
