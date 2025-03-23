@@ -34,7 +34,6 @@ public class BackgroundRenderer {
             // Set the projection matrix to ensure consistent rendering size
             batch.setProjectionMatrix(camera.combined);
             
-            // Draw background to exactly fill the virtual dimensions
             batch.draw(backgroundTexture, 
                       0, 0,            
                       VIRTUAL_WIDTH, VIRTUAL_HEIGHT); 

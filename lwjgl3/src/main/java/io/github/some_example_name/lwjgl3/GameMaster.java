@@ -2,9 +2,7 @@ package io.github.some_example_name.lwjgl3;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -34,22 +32,6 @@ public class GameMaster extends ApplicationAdapter {
         ServiceLocator.register(IOManager.class, ioManager);
         ServiceLocator.register(SceneManager.class, sceneManager);
         
-        // Register sound effects using broccoli.png as placeholder sound files
-        // In a real game, you'd add proper sound files
-//        ioManager.getSoundManager().loadSound("pickup", "broccoli.png");
-//        ioManager.getSoundManager().loadSound("correct", "broccoli.png");
-//        ioManager.getSoundManager().loadSound("wrong", "broccoli.png");
-//        ioManager.getSoundManager().loadSound("game_over", "broccoli.png");
-        
-        
-        
-        
-        //Register Sound
-        //Main Menu
-        //this.ioManager.getSoundManager().loadSound("background_music_MMS", "MainMenu_Under the Sea - Fearless Flyers.mp3");
-        
-        //Game
-        //this.ioManager.getSoundManager().loadSound("background_music_GS", "GameScene_BGM Dark Maplemas_ O Holy Fright.mp3");
         this.ioManager.getSoundManager().loadSound("game_over", "Game Over Sound Effect.mp3");
         this.ioManager.getSoundManager().loadSound("pickup", "Item Pickup [Sound Effect].mp3");
         this.ioManager.getSoundManager().loadSound("trash_correct", "Correct Answer sound effect.mp3");
