@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class EntityManager {
     private final List<Entity> entityList = new ArrayList<>();
@@ -16,6 +16,7 @@ public class EntityManager {
     private final SpriteBatch sb;
     private final ShapeRenderer sr;
     private BitmapFont font;
+    private Viewport viewport;
 
     public EntityManager() {
         this.sb = ServiceLocator.get(SpriteBatch.class);
@@ -26,19 +27,37 @@ public class EntityManager {
         }
     }
 
+    public void setViewport(Viewport viewport) {
+        this.viewport = viewport;
+    }
+
     public void addEntity(Entity entity) {
-        entityList.add(entity);
+        if (entity != null) {
+            entityList.add(entity);
+        }
     }
     
     public void removeEntity(Entity entity) {
-        entityList.remove(entity);
+        if (entity != null) {
+            entityList.remove(entity);
+        }
     }
     
-    public void addWord (Word word) {
-    	wordList.add(word);
+    public void addWord(Word word) {
+        if (word != null) {
+            wordList.add(word);
+        }
     }
 
     public void draw() {
+        if (viewport == null || viewport.getCamera() == null) {
+            return;
+        }
+
+        // Set projection matrices for consistent rendering
+        sr.setProjectionMatrix(viewport.getCamera().combined);
+        sb.setProjectionMatrix(viewport.getCamera().combined);
+
         // First draw shapes
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -74,8 +93,40 @@ public class EntityManager {
     }
 
     public void dispose() {
+        // Dispose of each entity's resources
+        for (Entity entity : new ArrayList<>(entityList)) {
+            try {
+                entity.dispose();
+            } catch (Exception e) {
+                // Log error but continue cleanup
+                System.err.println("Error disposing entity: " + e.getMessage());
+            }
+        }
+        entityList.clear();
+
+        // Dispose of word resources
+        for (Word word : new ArrayList<>(wordList)) {
+            try {
+                word.dispose();
+            } catch (Exception e) {
+                System.err.println("Error disposing word: " + e.getMessage());
+            }
+        }
+        wordList.clear();
+
+        // Dispose of font
+        if (font != null) {
+            font.dispose();
+            font = null;
+        }
+    }
+    
+    public void clearAllEntities() {
         entityList.clear();
         wordList.clear();
     }
     
+    public List<Entity> getEntities() {
+        return new ArrayList<>(entityList);
+    }
 }

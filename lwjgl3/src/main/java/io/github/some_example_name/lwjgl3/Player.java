@@ -15,6 +15,7 @@ public class Player extends Entity implements PlayerMovable, Collidable {
     private Trash heldTrash;
     private Trash droppedTrash;
     private int health = 3;
+    private String texturePath; // Track the current texture path
     
     private float width;
     private float height;
@@ -24,6 +25,7 @@ public class Player extends Entity implements PlayerMovable, Collidable {
         this.width = 64;
         this.height = 64;
         this.bounds = new Rectangle(x, y, width, height); // Player size
+        this.texturePath = texturePath;
         this.texture = new Texture(texturePath); // Load texture dynamically
     }
     
@@ -32,7 +34,7 @@ public class Player extends Entity implements PlayerMovable, Collidable {
         
         this.width = width;
         this.height = height;
-        
+        this.texturePath = texturePath;
         this.bounds = new Rectangle(x, y, width, height); // Player size
         this.texture = new Texture(texturePath); // Load texture dynamically
     }
@@ -55,23 +57,22 @@ public class Player extends Entity implements PlayerMovable, Collidable {
 
     @Override
     public void move() {
-        float screenWidth = com.badlogic.gdx.Gdx.graphics.getWidth();
-        float screenHeight = com.badlogic.gdx.Gdx.graphics.getHeight();
+        // Use virtual viewport dimensions for bounds
+        float virtualWidth = BackgroundRenderer.VIRTUAL_WIDTH;
+        float virtualHeight = BackgroundRenderer.VIRTUAL_HEIGHT;
 
-        // Update position
-        setX(getX() + dx * getSpeed());
-        setY(getY() + dy * getSpeed());
+        // Calculate new position based on velocity and speed
+        float newX = getX() + dx * getSpeed();
+        float newY = getY() + dy * getSpeed();
         
-        // Ensure Player stays within screen bounds
-        float clampedX = Math.max(0, Math.min(getX(), screenWidth - width));
-        float clampedY = Math.max(0, Math.min(getY(), screenHeight - height));
+        // Clamp position within bounds
+        newX = Math.max(0, Math.min(newX, virtualWidth - width));
+        newY = Math.max(0, Math.min(newY, virtualHeight - height));
 
-        setX(clampedX);
-        setY(clampedY);
-
-        // Update bounds position
-        bounds.setSize(width, height);
-        bounds.setPosition(getX(), getY());
+        // Update position and bounds
+        setX(newX);
+        setY(newY);
+        bounds.setPosition(newX, newY);
 
         // Update held trash position if we have any
         updateHeldTrashPosition();
@@ -92,9 +93,9 @@ public class Player extends Entity implements PlayerMovable, Collidable {
 
     @Override
     public void setDirection(float dx, float dy) {
-        setX(getX() + dx * getSpeed());
-        setY(getY() + dy * getSpeed());
-        bounds.setPosition(getX(), getY());
+        // Set velocity instead of directly updating position
+        this.dx = dx;
+        this.dy = dy;
     }
 
     @Override
@@ -178,6 +179,29 @@ public class Player extends Entity implements PlayerMovable, Collidable {
 
     public int getHealth() {
         return health;
+    }
+
+    /**
+     * Changes the player's texture to a new one
+     * @param newTexturePath Path to the new texture
+     */
+    public void changeTexture(String newTexturePath) {
+        // Dispose of the old texture to avoid memory leaks
+        if (texture != null) {
+            texture.dispose();
+        }
+        
+        // Load and apply the new texture
+        texture = new Texture(newTexturePath);
+        this.texturePath = newTexturePath;
+    }
+    
+    /**
+     * Gets the current texture path
+     * @return The path of the current texture
+     */
+    public String getTexturePath() {
+        return texturePath;
     }
 
     @Override

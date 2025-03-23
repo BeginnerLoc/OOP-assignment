@@ -19,6 +19,10 @@ public class SceneManager {
         currentScene = scenes.get(sceneClass);
         if (currentScene != null) {
             currentScene.create();
+            // Pass the current screen size to the new scene
+            int width = com.badlogic.gdx.Gdx.graphics.getWidth();
+            int height = com.badlogic.gdx.Gdx.graphics.getHeight();
+            currentScene.resize(width, height);
         }
     }
 
@@ -26,6 +30,13 @@ public class SceneManager {
     public void render() {
         if (this.currentScene != null) {
             this.currentScene.render();
+        }
+    }
+    
+    /** Handle resize events and pass them to the current scene */
+    public void resize(int width, int height) {
+        if (this.currentScene != null) {
+            this.currentScene.resize(width, height);
         }
     }
 }

@@ -56,6 +56,7 @@ public class GameMaster extends ApplicationAdapter {
         this.ioManager.getSoundManager().loadSound("trash_wrong", "Wrong Answer Sound effect.mp3");
         this.ioManager.getSoundManager().loadSound("Power Up", "powerup.mp3");
         this.ioManager.getSoundManager().loadSound("click", "Mouse Click Sound Effect.mp3");
+
         
         
         
@@ -79,6 +80,15 @@ public class GameMaster extends ApplicationAdapter {
     public void render() {
         ScreenUtils.clear(0, 0, 0.2f, 1);
         sceneManager.render();        
+    }
+    
+    /**
+     * Handle screen resize events
+     */
+    @Override
+    public void resize(int width, int height) {
+        // Forward resize events to the scene manager
+        sceneManager.resize(width, height);
     }
 
     @Override

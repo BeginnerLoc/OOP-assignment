@@ -2,6 +2,8 @@ package io.github.some_example_name.lwjgl3;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,6 +20,20 @@ public class InputManager extends InputAdapter {
     private final Map<Integer, Runnable> keyUpCallbacks   = new HashMap<>();
     private final Set<Integer> activeKeys = new HashSet<>();
 
+    // Reference to the current scene's viewport
+    private Viewport currentViewport;
+
+    // Vector for coordinate transformation
+    private final Vector3 touchPoint = new Vector3();
+
+    public void setViewport(Viewport viewport) {
+        this.currentViewport = viewport;
+    }
+
+    public Viewport getViewport() {
+        return currentViewport;
+    }
+
     public void registerClickable(CustomButton button) {
         clickableObjects.add(button);
     }
@@ -33,21 +49,21 @@ public class InputManager extends InputAdapter {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        float touchX = screenX;
-        float touchY = Gdx.graphics.getHeight() - screenY;
-
-        Gdx.app.log("InputManager", "Touch at: (" + touchX + ", " + touchY + ")");
-
-        for (CustomButton clickable : clickableObjects) {
-            if (clickable.isClicked(touchX, touchY)) {
-                Gdx.app.log("InputManager", "Button Clicked");
-                clickable.onMouseClick();
-                return true;
+        if (currentViewport != null) {
+            // Convert screen coordinates to world coordinates
+            touchPoint.set(screenX, screenY, 0);
+            currentViewport.unproject(touchPoint);
+            
+            for (CustomButton clickable : clickableObjects) {
+                if (clickable.isClicked(touchPoint.x, touchPoint.y)) {
+                    Gdx.app.log("InputManager", String.format("Button clicked at world coords: (%.2f, %.2f)", touchPoint.x, touchPoint.y));
+                    clickable.onMouseClick();
+                    return true;
+                }
             }
         }
         return false;
     }
-
 
     @Override
     public boolean keyDown(int keycode) {
@@ -87,5 +103,9 @@ public class InputManager extends InputAdapter {
     	keyDownCallbacks.clear();
     	activeKeys.clear();
     	
+    }
+
+    public void clearClickables() {
+        clickableObjects.clear();
     }
 }

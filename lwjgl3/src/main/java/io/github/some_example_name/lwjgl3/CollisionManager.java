@@ -35,7 +35,24 @@ public class CollisionManager {
         }
     }
     
+    /**
+     * Clears all collidable entities
+     */
     public void dispose() {
     	collidables.clear();
+    }
+    
+    /**
+     * Returns the current list of collidable entities (as a copy for safe iteration)
+     */
+    public List<Collidable> getCollidables() {
+        return new ArrayList<>(collidables);
+    }
+    
+    /**
+     * Checks if an entity is registered for collision
+     */
+    public boolean isRegistered(Collidable collidable) {
+        return collidables.contains(collidable);
     }
 }

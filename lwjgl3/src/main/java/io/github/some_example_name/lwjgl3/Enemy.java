@@ -2,10 +2,8 @@ package io.github.some_example_name.lwjgl3;
 
 import java.util.function.Consumer;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -51,8 +49,9 @@ public class Enemy extends Entity implements AIMovable, Collidable {
             
         Vector2 direction = new Vector2(target.getX() - getX(), target.getY() - getY());
 
-        if (direction.len() > 10) {
+        if (direction.len() > 3) {
             direction.nor(); 
+            direction.rotateDeg((float)Math.random() * 10 - 5);
             setDirection(direction.x, direction.y);
         } else {
             stop();
@@ -63,16 +62,17 @@ public class Enemy extends Entity implements AIMovable, Collidable {
     public void move() {
         if (!isActive) return;
         
-        float screenWidth = com.badlogic.gdx.Gdx.graphics.getWidth();
-        float screenHeight = com.badlogic.gdx.Gdx.graphics.getHeight();
+        // Use virtual viewport dimensions instead of raw screen dimensions
+        float virtualWidth = BackgroundRenderer.VIRTUAL_WIDTH;
+        float virtualHeight = BackgroundRenderer.VIRTUAL_HEIGHT;
 
         // Update position
         setX(getX() + dx * getSpeed());
         setY(getY() + dy * getSpeed());
         
-        // Ensure Enemy stays within the screen bounds
-        float clampedX = Math.max(0, Math.min(getX(), screenWidth - width));
-        float clampedY = Math.max(0, Math.min(getY(), screenHeight - height));
+        // Ensure Enemy stays within virtual viewport bounds
+        float clampedX = Math.max(0, Math.min(getX(), virtualWidth - width));
+        float clampedY = Math.max(0, Math.min(getY(), virtualHeight - height));
 
         setX(clampedX);
         setY(clampedY);

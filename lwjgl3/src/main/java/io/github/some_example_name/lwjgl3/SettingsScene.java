@@ -1,17 +1,14 @@
 package io.github.some_example_name.lwjgl3;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class SettingsScene extends Scene {
-    private BackgroundEntity background;
+    private BackgroundRenderer backgroundRenderer;
     private CustomButton dismissButton;
-    private CustomButton aboutButton;
-    private CustomButton settingsButton;
-    
     private CustomButton easylvlButton;
     private CustomButton mediumlvlButton;
     private CustomButton hardlvlButton;
-
 
     public SettingsScene(String name) {
         super(name);
@@ -20,76 +17,101 @@ public class SettingsScene extends Scene {
     @Override
     public void create() {
         super.create();
-     // Load and play shared background music for MainMenuScene and AboutScene
+
+        // Initialize background with fixed resolution
+        backgroundRenderer = new BackgroundRenderer("settings_bg.png");
+
+        // Pass the viewport to managers
+        this.ioManager.getInputManager().setViewport(backgroundRenderer.getViewport());
+        this.entityManager.setViewport(backgroundRenderer.getViewport());
+
+        // Clear any existing clickable objects
+        this.ioManager.getInputManager().clearClickables();
+
+        // Load and play shared background music
         if (!this.ioManager.getSoundManager().isBackgroundMusicPlaying()) {
             this.ioManager.getSoundManager().loadSound("background_music_MMS", "MainMenu_Under the Sea - Fearless Flyers.mp3");
             this.ioManager.getSoundManager().playBackgroundMusic("background_music_MMS");
         }
-        
-        // Get screen dimensions
-        float screenWidth = Gdx.graphics.getWidth();
-        float screenHeight = Gdx.graphics.getHeight();
 
-     // Load Background Image with a scaling factor
-        float backgroundScale = 1f; // Adjust this value to scale the background image
-        background = new BackgroundEntity("settings_bg.png", -35, 0, backgroundScale);
-        this.entityManager.addEntity(background);
+        // Use virtual coordinates for positioning
+        float virtualWidth = BackgroundRenderer.VIRTUAL_WIDTH;
+        float virtualHeight = BackgroundRenderer.VIRTUAL_HEIGHT;
 
-        // Dismiss Button - Dimensions and Position as Percentage of Screen
-        float buttonWidth = screenWidth * 0.08f;  // 25% of screen width
-        float buttonHeight = screenHeight * 0.08f;  // 8% of screen height
-        float buttonX = screenWidth * 0.93f - (buttonWidth)/2;  // Centered horizontally (50% - 25%/2)
-        float buttonY = screenHeight * 0.93f - (buttonHeight / 2);  // Centered vertically (50% - buttonHeight/2)
+        // Common button dimensions
+        float buttonWidth = virtualWidth * 0.1f;
+        float buttonHeight = virtualHeight * 0.1f;
 
-        dismissButton = new CustomButton("dismiss_button.png", buttonX, buttonY, buttonWidth, buttonHeight);
+        // Dismiss button (top-right corner)
+        float dismissX = virtualWidth * 0.95f - buttonWidth;
+        float dismissY = virtualHeight * 0.95f - buttonHeight;
+        dismissButton = new CustomButton("dismiss_button.png", dismissX, dismissY, buttonWidth, buttonHeight);
         dismissButton.setOnClickAction(() -> {
             this.sceneManager.setScene(MainMenuScene.class);
         });
         this.entityManager.addEntity(dismissButton);
         this.ioManager.getInputManager().registerClickable(dismissButton);
 
-        // Additional buttons can be defined similarly using relative dimensions.
-        
-        // Easy Level Button
-        easylvlButton = new CustomButton("easy_level.png", buttonX - 550f, buttonY - 250f, buttonWidth, buttonHeight);
-        easylvlButton.setOnClickAction(() -> {
-        	
-        	// Change the button's image to another emoji when clicked
-        	easylvlButton.setImage("easy_level2.png");
-        	//set to default game mode
+        // Calculate positions for difficulty buttons
+        float difficultyButtonsY = virtualHeight * 0.5f;  // Center vertically
+        float totalButtonsWidth = (buttonWidth * 3) + (virtualWidth * 0.05f * 2);  // 3 buttons + 2 gaps
+        float startX = (virtualWidth - totalButtonsWidth) * 0.5f;  // Center horizontally
+        float spacing = virtualWidth * 0.05f;  // 5% of screen width for spacing
 
+        // Easy Level Button
+        easylvlButton = new CustomButton("easy_level.png", startX, difficultyButtonsY, buttonWidth, buttonHeight);
+        easylvlButton.setOnClickAction(() -> {
+            easylvlButton.setImage("easy_level2.png");
         });
         this.entityManager.addEntity(easylvlButton);
         this.ioManager.getInputManager().registerClickable(easylvlButton);
-        
-        // Medium Level Button
-        mediumlvlButton = new CustomButton("medium_level.png", buttonX - 450f, buttonY - 250f, buttonWidth, buttonHeight);
-        mediumlvlButton.setOnClickAction(() -> {
-        	
-        	// Change the button's image to another emoji when clicked
-        	mediumlvlButton.setImage("medium_level2.png");
 
+        // Medium Level Button
+        mediumlvlButton = new CustomButton("medium_level.png", startX + buttonWidth + spacing, difficultyButtonsY, buttonWidth, buttonHeight);
+        mediumlvlButton.setOnClickAction(() -> {
+            mediumlvlButton.setImage("medium_level2.png");
         });
         this.entityManager.addEntity(mediumlvlButton);
         this.ioManager.getInputManager().registerClickable(mediumlvlButton);
-        
-     // Hard Level Button
-        hardlvlButton = new CustomButton("hard_level.png", buttonX - 350f, buttonY - 250f, buttonWidth, buttonHeight);
-        hardlvlButton.setOnClickAction(() -> {
-        	
-        	// Change the button's image to another emoji when clicked
-        	hardlvlButton.setImage("hard_level2.png");
 
+        // Hard Level Button
+        hardlvlButton = new CustomButton("hard_level.png", startX + (buttonWidth + spacing) * 2, difficultyButtonsY, buttonWidth, buttonHeight);
+        hardlvlButton.setOnClickAction(() -> {
+            hardlvlButton.setImage("hard_level2.png");
         });
         this.entityManager.addEntity(hardlvlButton);
         this.ioManager.getInputManager().registerClickable(hardlvlButton);
-        
-        
     }
 
     @Override
     public void render() {
+        // Get the SpriteBatch from ServiceLocator
+        SpriteBatch batch = ServiceLocator.get(SpriteBatch.class);
+
+        // Render the background first
+        if (batch != null && backgroundRenderer != null) {
+            batch.begin();
+            backgroundRenderer.render(batch);
+            batch.end();
+        }
+
+        // Then render everything else
         super.render();
     }
 
+    @Override
+    public void resize(int width, int height) {
+        if (backgroundRenderer != null) {
+            backgroundRenderer.resize(width, height);
+        }
+    }
+
+    @Override
+    public void dispose() {
+        if (backgroundRenderer != null) {
+            backgroundRenderer.dispose();
+        }
+        this.ioManager.getInputManager().clearClickables();
+        super.dispose();
+    }
 }

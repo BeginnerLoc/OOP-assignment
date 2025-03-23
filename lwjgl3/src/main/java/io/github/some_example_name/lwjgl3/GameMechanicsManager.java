@@ -56,13 +56,13 @@ public class GameMechanicsManager {
     }
 
     public void createTrashBins() {
-        int screenWidth = com.badlogic.gdx.Gdx.graphics.getWidth();
-        int screenHeight = com.badlogic.gdx.Gdx.graphics.getHeight();
+        float virtualWidth = BackgroundRenderer.VIRTUAL_WIDTH;
+        float virtualHeight = BackgroundRenderer.VIRTUAL_HEIGHT;
         
         bins.add(new TrashBin(0, 0, Trash.TrashType.PLASTIC, "plastic_bin_updated.png"));
-        bins.add(new TrashBin(screenWidth - 100, 0, Trash.TrashType.METAL, "metal_bin_updated.png"));
-        bins.add(new TrashBin(0, screenHeight - 100, Trash.TrashType.PAPER, "paper_bin_updated.png"));
-        bins.add(new TrashBin(screenWidth - 100, screenHeight - 100, Trash.TrashType.GLASS, "glass_bin_updated.png"));
+        bins.add(new TrashBin(virtualWidth - 100, 0, Trash.TrashType.METAL, "metal_bin_updated.png"));
+        bins.add(new TrashBin(0, virtualHeight - 100, Trash.TrashType.PAPER, "paper_bin_updated.png"));
+        bins.add(new TrashBin(virtualWidth - 100, virtualHeight - 100, Trash.TrashType.GLASS, "glass_bin_updated.png"));
         
         for (TrashBin bin : bins) {
             entityManager.addEntity(bin);
@@ -71,8 +71,10 @@ public class GameMechanicsManager {
     }
 
     public void spawnTrash() {
-        float centerX = com.badlogic.gdx.Gdx.graphics.getWidth() / 2f;
-        float centerY = com.badlogic.gdx.Gdx.graphics.getHeight() / 2f;
+        float virtualWidth = BackgroundRenderer.VIRTUAL_WIDTH;
+        float virtualHeight = BackgroundRenderer.VIRTUAL_HEIGHT;
+        float centerX = virtualWidth / 2f;
+        float centerY = virtualHeight / 2f;
         Random random = new Random();
 
         spawnTrashOfType(Trash.TrashType.PLASTIC, plasticTrashImages, 2, centerX, centerY, random);
@@ -82,10 +84,13 @@ public class GameMechanicsManager {
     }
 
     private void spawnTrashOfType(Trash.TrashType type, String[] images, int count, float centerX, float centerY, Random random) {
+        float virtualWidth = BackgroundRenderer.VIRTUAL_WIDTH;
+        float virtualHeight = BackgroundRenderer.VIRTUAL_HEIGHT;
+        
         for (int i = 0; i < count; i++) {
             String imageName = images[random.nextInt(images.length)];
-            float x = centerX + (random.nextFloat() - 0.5f) * com.badlogic.gdx.Gdx.graphics.getWidth() * 0.4f;
-            float y = centerY + (random.nextFloat() - 0.5f) * com.badlogic.gdx.Gdx.graphics.getHeight() * 0.4f;
+            float x = centerX + (random.nextFloat() - 0.5f) * virtualWidth * 0.4f;
+            float y = centerY + (random.nextFloat() - 0.5f) * virtualHeight * 0.4f;
             Trash trash = new Trash(x, y, type, imageName);
             trashItems.add(trash);
             entityManager.addEntity(trash);
@@ -94,8 +99,10 @@ public class GameMechanicsManager {
     }
 
     public void spawnNewTrash() {
-        float centerX = com.badlogic.gdx.Gdx.graphics.getWidth() / 2f + (float)(Math.random() * 100 - 50);
-        float centerY = com.badlogic.gdx.Gdx.graphics.getHeight() / 2f + (float)(Math.random() * 100 - 50);
+        float virtualWidth = BackgroundRenderer.VIRTUAL_WIDTH;
+        float virtualHeight = BackgroundRenderer.VIRTUAL_HEIGHT;
+        float centerX = virtualWidth / 2f + (float)(Math.random() * 100 - 50);
+        float centerY = virtualHeight / 2f + (float)(Math.random() * 100 - 50);
         Trash.TrashType randomType = Trash.TrashType.values()[(int)(Math.random() * 4)];
         
         String imageName = getRandomImageForType(randomType);
@@ -130,25 +137,25 @@ public class GameMechanicsManager {
 
         // Create new enemies based on current level
         int enemyCount = Math.min(level + 1, 5); // Cap at 5 enemies maximum
-        float screenWidth = com.badlogic.gdx.Gdx.graphics.getWidth();
-        float screenHeight = com.badlogic.gdx.Gdx.graphics.getHeight();
+        float virtualWidth = BackgroundRenderer.VIRTUAL_WIDTH;
+        float virtualHeight = BackgroundRenderer.VIRTUAL_HEIGHT;
 
         for (int i = enemies.size(); i < enemyCount; i++) {
             // Spawn enemy at random position away from the player
             float x, y;
             do {
-                x = (float) (Math.random() * (screenWidth - 100));
-                y = (float) (Math.random() * (screenHeight - 100));
+                x = (float) (Math.random() * (virtualWidth - 100));
+                y = (float) (Math.random() * (virtualHeight - 100));
             } while (isNearPlayer(x, y, 200)); // Keep enemies at least 200 units away from player initially
             
             Enemy enemy = new Enemy(x, y, "grandmother.png", GameState.getEnemySpeed(), 65f, 90f);
-            enemy.setTarget(player); // Set player as the target to follow
+            enemy.setTarget(player);
             
             enemies.add(enemy);
             entityManager.addEntity(enemy);
             collisionManager.register(enemy);
             movementManager.addMovingEntity(enemy);
-            movementManager.addAIEntity(enemy); // Add to AI entities for proper following behavior
+            movementManager.addAIEntity(enemy);
         }
     }
 
@@ -160,9 +167,11 @@ public class GameMechanicsManager {
     }
 
     public void spawnPowerUp() {
-        float x = (float) (Math.random() * com.badlogic.gdx.Gdx.graphics.getWidth());
-        float y = (float) (Math.random() * com.badlogic.gdx.Gdx.graphics.getHeight());
-        PowerUp powerUp = new PowerUp(x, y, "broccoli.png");
+        float virtualWidth = BackgroundRenderer.VIRTUAL_WIDTH;
+        float virtualHeight = BackgroundRenderer.VIRTUAL_HEIGHT;
+        float x = (float) (Math.random() * (virtualWidth - 32));
+        float y = (float) (Math.random() * (virtualHeight - 32));
+        PowerUp powerUp = new PowerUp(x, y, "teddy.png");
         powerUps.add(powerUp);
         entityManager.addEntity(powerUp);
         collisionManager.register(powerUp);
@@ -185,38 +194,93 @@ public class GameMechanicsManager {
     }
 
     private void handleEnemyCollision() {
-        // Implement invincibility cooldown to prevent multiple collisions at once
-        if (isSpeedPenalized) return; // Player is already in invincibility period
-        
-        try {
-            playerHealth--;
-            
-            // Play sound effect for collision
+        // Immediately end game on enemy collision
+        if (!isSpeedPenalized) {
+            // Play game over sound and end the game
             if (ioManager.getSoundManager() != null) {
-                ioManager.getSoundManager().playSound("enemy_hit");
+                ioManager.getSoundManager().playSound("game_over");
             }
+            cleanupGameResources();
+            ServiceLocator.get(SceneManager.class).setScene(GameOverScene.class);
+        }
+    }
+    
+    /**
+     * Cleans up all game resources and resets the game state when the game is over
+     */
+    public void cleanupGameResources() {
+        // Reset GameState static data
+        GameState.reset();
+        
+        // Clean up all entities
+        cleanupEntities();
+    }
+    
+    /**
+     * Cleans up all game entities to prevent memory leaks and state persistence
+     */
+    private void cleanupEntities() {
+        try {
+            // Use safe iteration with a copy of the list when possible
+            List<Enemy> enemiesCopy = new ArrayList<>(enemies);
+            for (Enemy enemy : enemiesCopy) {
+                entityManager.removeEntity(enemy);
+                collisionManager.remove(enemy);
+                movementManager.removeMovingEntity(enemy);
+                movementManager.removeAIEntity(enemy);
+                enemy.dispose(); // Properly dispose of textures
+            }
+            enemies.clear();
             
-            if (playerHealth <= 0) {
-                if (ioManager.getSoundManager() != null) {
-                    ioManager.getSoundManager().playSound("game_over");
-                }
-                ServiceLocator.get(SceneManager.class).setScene(GameOverScene.class);
-            } else {
-                // Apply visual feedback (speed penalty) on hit
-                applySpeedPenalty();
-                
-                // Add invincibility period to prevent multiple hits at once
-                isSpeedPenalized = true;
-                speedPenaltyTimer = 1.5f;
+            // Clean up trash items
+            List<Trash> trashCopy = new ArrayList<>(trashItems);
+            for (Trash trash : trashCopy) {
+                entityManager.removeEntity(trash);
+                collisionManager.remove(trash);
+                trash.dispose(); // Properly dispose of textures
+            }
+            trashItems.clear();
+            
+            // Clean up power-ups
+            List<PowerUp> powerUpsCopy = new ArrayList<>(powerUps);
+            for (PowerUp powerUp : powerUpsCopy) {
+                entityManager.removeEntity(powerUp);
+                collisionManager.remove(powerUp);
+                powerUp.dispose(); // Properly dispose of textures
+            }
+            powerUps.clear();
+            
+            // Clean up bins
+            List<TrashBin> binsCopy = new ArrayList<>(bins);
+            for (TrashBin bin : binsCopy) {
+                entityManager.removeEntity(bin);
+                collisionManager.remove(bin);
+                // TrashBin should also have a dispose method if it has resources
+            }
+            bins.clear();
+            
+            // Reset all flags and timers
+            speedBoostTimer = 0;
+            speedPenaltyTimer = 0;
+            isSpeedBoosted = false;
+            isSpeedPenalized = false;
+            trashCooldown = 0;
+            level = 1;
+            levelTimer = 0;
+            playerHealth = 3;
+            powerUpSpawnTimer = 0;
+            
+            // Clean up player resources if necessary
+            if (player != null && player.getHeldTrash() != null) {
+                Trash heldTrash = player.getHeldTrash();
+                entityManager.removeEntity(heldTrash);
+                collisionManager.remove(heldTrash);
+                heldTrash.dispose();
             }
         } catch (Exception e) {
-            // Log error but don't crash
-            System.err.println("Error handling enemy collision: " + e.getMessage());
-            
-            // Ensure player doesn't get stuck in a bad state
-            if (playerHealth <= 0) {
-                ServiceLocator.get(SceneManager.class).setScene(GameOverScene.class);
-            }
+            // Log any errors but don't crash
+            System.err.println("Error during entity cleanup: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -256,6 +320,7 @@ public class GameMechanicsManager {
     }
 
     public void applySpeedBoost() {
+        player.changeTexture("car.png");
         isSpeedBoosted = true;
         isSpeedPenalized = false;
         speedBoostTimer = 5;
@@ -263,6 +328,7 @@ public class GameMechanicsManager {
     }
 
     public void applySpeedPenalty() {
+        player.changeTexture("turtle.png");
         isSpeedPenalized = true;
         isSpeedBoosted = false;
         speedPenaltyTimer = 2;
@@ -284,6 +350,9 @@ public class GameMechanicsManager {
             if (speedBoostTimer <= 0) {
                 isSpeedBoosted = false;
                 player.setSpeed(GameState.getPlayerSpeed());
+                
+                player.changeTexture("mrbean.png");
+
             }
         }
         
@@ -291,6 +360,7 @@ public class GameMechanicsManager {
             speedPenaltyTimer -= delta;
             if (speedPenaltyTimer <= 0) {
                 isSpeedPenalized = false;
+                player.changeTexture("mrbean.png");
                 player.setSpeed(GameState.getPlayerSpeed());
             }
         }

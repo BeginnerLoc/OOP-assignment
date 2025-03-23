@@ -37,6 +37,11 @@ public class MovementManager {
     public List<Movable> getMovingEntities() {
         return movingEntities;
     }
+    
+    /** Returns all AI-controlled entities */
+    public List<AIMovable> getAIEntities() {
+        return AIentities;
+    }
 
     /** Adds a single moving entity */
     public void addMovingEntity(Movable entity) {
@@ -67,9 +72,33 @@ public class MovementManager {
         AIentities.removeAll(entities);
     }
     
+    /**
+     * Clears all movement-related entities
+     */
     public void dispose() {
     	AIentities.clear();
     	movingEntities.clear();
     }
     
+    /**
+     * Removes all entities and performs a full cleanup
+     */
+    public void clearAll() {
+        AIentities.clear();
+        movingEntities.clear();
+    }
+    
+    /**
+     * Removes a specific moving entity
+     */
+    public void removeMovingEntity(Movable entity) {
+        movingEntities.remove(entity);
+    }
+    
+    /**
+     * Removes a specific AI entity
+     */
+    public void removeAIEntity(AIMovable entity) {
+        AIentities.remove(entity);
+    }
 }

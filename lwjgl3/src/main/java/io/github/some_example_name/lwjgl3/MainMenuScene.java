@@ -1,125 +1,68 @@
-//package io.github.some_example_name.lwjgl3;
-//
-//public class  MainMenuScene extends Scene {
-//	private CustomButton customButton;
-//	
-//	private CustomButton playButton;
-//	private CustomButton aboutButton;
-//	private CustomButton settingsButton;
-//	
-//	//private mainMenuBg mainMenuBg;
-//
-//    public MainMenuScene(String name) {
-//		super(name);
-//	}
-//
-//	@Override
-//    public void create() {
-//        super.create();
-//        
-//        // DELETE ME CustomButton(String imagePath, float x, float y, float width, float height)
-//        
-//        // Play Button
-//        playButton = new CustomButton("play_button.png", 200.0f, 200.0f, 200.0f, 50.0f);
-//        playButton.setOnClickAction(() -> {
-//        	this.sceneManager.setScene(GameScene.class);
-//        });
-//        this.entityManager.addEntity(playButton);
-//        this.ioManager.getInputManager().registerClickable(playButton);
-//        
-//        /**
-//        // Settings Button
-//        settingsButton = new CustomButton("settings_button.png", 200.0f, 100.0f, 200.0f, 50.0f);
-//        settingsButton.setOnClickAction(() -> {
-//            this.sceneManager.setScene(SettingsScene.class);
-//        });
-//        this.entityManager.addEntity(settingsButton);
-//        this.ioManager.getInputManager().registerClickable(settingsButton);
-//
-//        
-//        // Exit Button
-//        exitButton = new CustomButton("exit_button.png", 200.0f, 400.0f, 200.0f, 50.0f);
-//        exitButton.setOnClickAction(() -> {
-//            System.exit(0);
-//        });
-//        this.entityManager.addEntity(exitButton);
-//        this.ioManager.getInputManager().registerClickable(exitButton);
-//        **/
-//        
-//        //mainMenuBg = new mainMenuBg("waste_screenshot.png", 200.0f, 200.0f, 200.0f, 100.0f);
-//
-//    
-//    }
-//
-// 
-//    @Override
-//    public void render() {
-//    	super.render();
-//
-//    }
-//    
-//
-//}
-
 package io.github.some_example_name.lwjgl3;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class MainMenuScene extends Scene {
-    private BackgroundEntity background;
+    private BackgroundRenderer backgroundRenderer;
     private CustomButton playButton;
     private CustomButton aboutButton;
     private CustomButton settingsButton;
     private CustomButton instructionsButton;
-    private ShapeRenderer shapeRenderer = new ShapeRenderer();
-
-
+    private ShapeRenderer shapeRenderer;
+    
     public MainMenuScene(String name) {
         super(name);
     }
-
+    
     @Override
     public void create() {
         super.create();
      
-     // Load and play shared background music for MainMenuScene and AboutScene
+        // Initialize the background renderer with fixed resolution
+        backgroundRenderer = new BackgroundRenderer("OVERTRASHED.png");
+        
+        // Initialize ShapeRenderer
+        shapeRenderer = new ShapeRenderer();
+        
+        // Pass the background renderer's viewport to the input manager
+        this.ioManager.getInputManager().setViewport(backgroundRenderer.getViewport());
+        this.entityManager.setViewport(backgroundRenderer.getViewport());
+        
+        // Clear any existing clickable objects when creating a new scene
+        this.ioManager.getInputManager().clearClickables();
+        
+        // Load and play background music
         if (!this.ioManager.getSoundManager().isBackgroundMusicPlaying()) {
-            this.ioManager.getSoundManager().loadSound("background_music_MMS", "MainMenu_Under the Sea - Fearless Flyers.mp3");
+            this.ioManager.getSoundManager().loadSound("background_music_MMS", "mrbeansong.mp3");
             this.ioManager.getSoundManager().playBackgroundMusic("background_music_MMS");
         }
         
-        // Get screen dimensions
-        float screenWidth = Gdx.graphics.getWidth();
-        float screenHeight = Gdx.graphics.getHeight();
-
-     // Load Background Image with a scaling factor
-        float backgroundScale = .95f; // Adjust this value to scale the background image
-        background = new BackgroundEntity("OVERTRASHED.png", -5, 0, backgroundScale);
-        this.entityManager.addEntity(background);
-
-     // Play Button - Set specific dimensions
-        float playButtonWidth = screenWidth * 0.3f; 
-        float playButtonHeight = screenHeight * 0.1f;
-        float playButtonX = screenWidth * 0.5f - (playButtonWidth) / 2;
-        float playButtonY = screenHeight - (screenHeight * 0.55f);
-
-        playButton = new CustomButton("play_button.png", playButtonX, playButtonY, playButtonWidth, playButtonHeight);
+        // Use virtual coordinates for positioning
+        float virtualWidth = BackgroundRenderer.VIRTUAL_WIDTH;
+        float virtualHeight = BackgroundRenderer.VIRTUAL_HEIGHT;
+        
+        // Common button dimensions
+        float buttonWidth = virtualWidth * 0.3f;
+        float buttonHeight = virtualHeight * 0.1f;
+        float buttonX = (virtualWidth - buttonWidth) * 0.5f;
+        float spacing = buttonHeight * 0.2f;
+        
+        // Calculate total height of all buttons including spacing
+        float totalButtonsHeight = (buttonHeight * 4) + (spacing * 3);
+        // Start Y position to center all buttons vertically
+        float startY = (virtualHeight + totalButtonsHeight) * 0.4f - buttonHeight;
+        
+        // Play Button - topmost
+        playButton = new CustomButton("play_button.png", buttonX, startY, buttonWidth, buttonHeight);
         playButton.setOnClickAction(() -> {
             this.sceneManager.setScene(GameScene.class);
         });
         this.entityManager.addEntity(playButton);
         this.ioManager.getInputManager().registerClickable(playButton);
    
-
-        // About Button - Set specific dimensions
-        float aboutButtonWidth = screenWidth * 0.3f; 
-        float aboutButtonHeight = screenHeight * 0.1f;
-        float aboutButtonX = screenWidth * 0.5f - (aboutButtonWidth) / 2;
-        float aboutButtonY = screenHeight * 0.38f - (aboutButtonHeight / 2);
-
-        aboutButton = new CustomButton("about_button.png", aboutButtonX, aboutButtonY, aboutButtonWidth, aboutButtonHeight);
+        // About Button
+        float aboutY = startY - spacing - buttonHeight;
+        aboutButton = new CustomButton("about_button.png", buttonX, aboutY, buttonWidth, buttonHeight);
         aboutButton.setOnClickAction(() -> {
             if (sceneManager != null) {
                 sceneManager.setScene(AboutScene.class);
@@ -128,14 +71,9 @@ public class MainMenuScene extends Scene {
         this.entityManager.addEntity(aboutButton);
         this.ioManager.getInputManager().registerClickable(aboutButton);
         
-        
-        // Instruction Button - Set specific dimensions
-        float InstructionButtonWidth = screenWidth * 0.3f; 
-        float InstructionButtonHeight = screenHeight * 0.1f;
-        float InstructionButtonX = screenWidth * 0.5f - (InstructionButtonWidth) / 2;
-        float InstructionButtonY = screenHeight * 0.26f - (InstructionButtonHeight / 2);
-
-        instructionsButton = new CustomButton("instructions_button.png", InstructionButtonX, InstructionButtonY, InstructionButtonWidth, InstructionButtonHeight);
+        // Instructions Button
+        float instructionsY = aboutY - spacing - buttonHeight;
+        instructionsButton = new CustomButton("instructions_button.png", buttonX, instructionsY, buttonWidth, buttonHeight);
         instructionsButton.setOnClickAction(() -> {
             if (sceneManager != null) {
                 sceneManager.setScene(InstructionsScene.class);
@@ -144,14 +82,9 @@ public class MainMenuScene extends Scene {
         this.entityManager.addEntity(instructionsButton);
         this.ioManager.getInputManager().registerClickable(instructionsButton);   
         
-        // Settings Button - Set specific dimensions
-        float settingsButtonWidth = screenWidth * 0.3f; 
-        float settingsButtonHeight = screenHeight * 0.1f;
-        float settingsButtonX = screenWidth * 0.5f - (settingsButtonWidth) / 2;
-        float settingsButtonY = screenHeight * 0.14f - (settingsButtonHeight / 2);
-
-
-        settingsButton = new CustomButton("settings_button.png", settingsButtonX, settingsButtonY, settingsButtonWidth, settingsButtonHeight);
+        // Settings Button - bottommost
+        float settingsY = instructionsY - spacing - buttonHeight;
+        settingsButton = new CustomButton("settings_button.png", buttonX, settingsY, buttonWidth, buttonHeight);
         settingsButton.setOnClickAction(() -> {
             if (sceneManager != null) {
                 sceneManager.setScene(SettingsScene.class);
@@ -159,49 +92,38 @@ public class MainMenuScene extends Scene {
         });
         this.entityManager.addEntity(settingsButton);
         this.ioManager.getInputManager().registerClickable(settingsButton);
-    
     }
-
-        
+    
     @Override
     public void render() {
+        SpriteBatch batch = ServiceLocator.get(SpriteBatch.class);
+        
+        // Render the background first
+        if (batch != null && backgroundRenderer != null) {
+            batch.begin();
+            backgroundRenderer.render(batch);
+            batch.end();
+        }
+        
+        // Then render everything else
         super.render();
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(1, 0, 0, 1); // Red color for bounding boxes
-
-        // Draw bounding boxes for each button
-        drawButtonBounds(playButton);
-        drawButtonBounds(aboutButton);
-        drawButtonBounds(instructionsButton);
-        drawButtonBounds(settingsButton);
-
-        shapeRenderer.end();
-
-
-        shapeRenderer.begin(ShapeType.Line);
-        shapeRenderer.setColor(1, 0, 0, 1); // Red color for bounding boxes
-
-        // Draw bounding boxes for each button
-        drawButtonBounds(playButton);
-        drawButtonBounds(aboutButton);
-        drawButtonBounds(instructionsButton);
-        drawButtonBounds(settingsButton);
-
-        shapeRenderer.end();
-
     }
     
-    private void drawButtonBounds(CustomButton button) {
-        if (button != null) {
-            shapeRenderer.rect(button.getBounds().x, button.getBounds().y, button.getBounds().width, button.getBounds().height);
+    @Override
+    public void resize(int width, int height) {
+        if (backgroundRenderer != null) {
+            backgroundRenderer.resize(width, height);
         }
-
-
-}
+    }
+    
     @Override
     public void dispose() {
+        if (backgroundRenderer != null) {
+            backgroundRenderer.dispose();
+        }
+        if (shapeRenderer != null) {
+            shapeRenderer.dispose();
+        }
         super.dispose();
     }
-
-    
 }

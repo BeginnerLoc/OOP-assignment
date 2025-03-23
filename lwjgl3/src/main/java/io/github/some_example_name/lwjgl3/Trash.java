@@ -10,8 +10,8 @@ public class Trash extends Entity implements Collidable {
     private Rectangle bounds;
     private Texture texture;
     private boolean isPickedUp = false;
-    private float width = 32;
-    private float height = 32;
+    private float width = 48;
+    private float height = 48;
 
     public enum TrashType {
         PLASTIC,

@@ -42,6 +42,16 @@ public class Scene {
     	this.ioManager.getInputManager().update();
     }
     
+    /**
+     * Called when the screen is resized
+     * @param width The new width
+     * @param height The new height
+     */
+    public void resize(int width, int height) {
+        // Base implementation does nothing
+        // Subclasses can override this to handle resize events
+    }
+    
     public void dispose() {
     	this.entityManager.dispose();
     	this.collisionManager.dispose();
