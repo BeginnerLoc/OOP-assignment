@@ -7,6 +7,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+
+import game_engine.AIMovable;
+import game_engine.Collidable;
+import game_engine.Entity;
+
 import com.badlogic.gdx.Gdx;
 
 public class Enemy extends Entity implements AIMovable, Collidable {

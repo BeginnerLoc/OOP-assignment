@@ -4,6 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import game_engine.CustomButton;
+import game_engine.Scene;
+import game_engine.ServiceLocator;
+
 public class InstructionsScene extends Scene {
     private BackgroundRenderer backgroundRenderer;
     private CustomButton dismissButton;

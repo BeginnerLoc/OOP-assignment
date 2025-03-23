@@ -1,5 +1,10 @@
 package io.github.some_example_name.lwjgl3;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+
+import game_engine.CustomButton;
+import game_engine.Scene;
+import game_engine.ServiceLocator;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class MainMenuScene extends Scene {

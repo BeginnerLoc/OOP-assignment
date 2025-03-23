@@ -3,6 +3,11 @@ package io.github.some_example_name.lwjgl3;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import game_engine.CustomButton;
+import game_engine.Scene;
+import game_engine.ServiceLocator;
+import game_engine.Word;
+
 public class AboutScene extends Scene {
     private BackgroundRenderer backgroundRenderer;
     private CustomButton dismissButton;

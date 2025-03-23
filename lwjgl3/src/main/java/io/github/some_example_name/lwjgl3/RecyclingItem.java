@@ -6,6 +6,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 
+import game_engine.Collidable;
+import game_engine.Entity;
+
 public class RecyclingItem extends Entity implements Collidable {
     private RecyclingItemType type;
     private Rectangle bounds;

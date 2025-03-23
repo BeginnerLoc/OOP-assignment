@@ -7,6 +7,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import game_engine.CollisionManager;
+import game_engine.Entity;
+import game_engine.EntityManager;
+import game_engine.IOManager;
+import game_engine.MovementManager;
+import game_engine.SceneManager;
+import game_engine.ServiceLocator;
+
 public class GameMechanicsManager {
     private Player player;
     private List<Enemy> enemies;

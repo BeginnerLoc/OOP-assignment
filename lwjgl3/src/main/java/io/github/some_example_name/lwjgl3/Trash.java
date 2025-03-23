@@ -5,6 +5,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
+import game_engine.Collidable;
+import game_engine.Entity;
+
 public class Trash extends Entity implements Collidable {
     private TrashType type;
     private Rectangle bounds;

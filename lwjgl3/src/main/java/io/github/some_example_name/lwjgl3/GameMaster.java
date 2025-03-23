@@ -3,6 +3,14 @@ package io.github.some_example_name.lwjgl3;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.ScreenUtils;
+
+import game_engine.CollisionManager;
+import game_engine.EntityManager;
+import game_engine.IOManager;
+import game_engine.MovementManager;
+import game_engine.SceneManager;
+import game_engine.ServiceLocator;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 

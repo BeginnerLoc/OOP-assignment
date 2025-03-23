@@ -1,4 +1,4 @@
-package io.github.some_example_name.lwjgl3;
+package game_engine;
 
 public interface PlayerMovable extends Movable {
     void jump(int height);
