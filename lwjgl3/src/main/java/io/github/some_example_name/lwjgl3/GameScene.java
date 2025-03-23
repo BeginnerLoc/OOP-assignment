@@ -10,6 +10,11 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.graphics.Camera;
+
 
 
 
@@ -31,6 +36,10 @@ public class GameScene extends Scene {
     private int playerHealth = 3;
     private float powerUpSpawnTimer = 0;
 	private BackgroundEntity background;
+	private Texture pauseButtonTexture;
+	private Rectangle pauseButtonBounds;
+	private CustomButton pauseButton;
+
 	
 	// Define image arrays as class-level variables & each type of trash with their respective image filenames
 	private String[] plasticTrashImages = {"bottle_waste.png", "jug1_waste.png", "jug2_waste.png"};
@@ -88,6 +97,25 @@ public class GameScene extends Scene {
 
         font = new BitmapFont();
         font.setColor(Color.WHITE);
+        pauseButtonTexture = new Texture(Gdx.files.internal("pause-button.png")); // make sure the path is correct
+        pauseButtonBounds = new Rectangle(Gdx.graphics.getWidth() - 60, Gdx.graphics.getHeight() - 60, 50, 50); // Top-right corner
+        
+        //Get screen dimensions
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+        
+        float pauseButtonWidth = screenWidth * 0.06f;  
+        float pauseButtonHeight = screenHeight * 0.06f;  
+        float pauseButtonX = screenWidth * 0.96f - (pauseButtonWidth)/2;  
+        float pauseButtonY = screenHeight * 0.96f - (pauseButtonHeight / 2); 
+
+        pauseButton = new CustomButton("pause-button.png", pauseButtonX, pauseButtonY, pauseButtonWidth, pauseButtonHeight);
+        pauseButton.setOnClickAction(() -> {
+            this.sceneManager.setScene(PauseScene.class);
+        });
+        this.entityManager.addEntity(pauseButton);
+        this.ioManager.getInputManager().registerClickable(pauseButton);
+
     }
 
     private void createTrashBins() {
@@ -348,7 +376,7 @@ public class GameScene extends Scene {
     @Override
     public void render() {
         ScreenUtils.clear(0, 0, 0.2f, 1);
-        
+     
         // Update timers
         float delta = Gdx.graphics.getDeltaTime();
         GameState.updateTime(delta);
@@ -443,6 +471,10 @@ public class GameScene extends Scene {
         if (isSpeedPenalized) {
             font.draw(batch, "Speed Penalty: " + String.format("%.1f", speedPenaltyTimer), 10, 390);
         }
+     // ✅ Draw pause button
+//        batch.draw(pauseButtonTexture, pauseButtonBounds.x, pauseButtonBounds.y, pauseButtonBounds.width, pauseButtonBounds.height);
+
+       
         batch.end();
     }
 
