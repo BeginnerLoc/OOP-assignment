@@ -88,7 +88,7 @@ public class GameScene extends Scene {
         this.ioManager.getInputManager().subscribeKeyDown(Keys.S, () -> mechanics.getPlayer().setDirection(0, -1));
         this.ioManager.getInputManager().subscribeKeyDown(Keys.A, () -> mechanics.getPlayer().setDirection(-1, 0));
         this.ioManager.getInputManager().subscribeKeyDown(Keys.D, () -> mechanics.getPlayer().setDirection(1, 0));
-        this.ioManager.getInputManager().subscribeKeyDown(Keys.SPACE, () -> mechanics.getPlayer().dropTrash());
+        this.ioManager.getInputManager().subscribeKeyDown(Keys.SPACE, () -> mechanics.throwBananaPeel());
     }
     
     @Override
@@ -195,22 +195,25 @@ public class GameScene extends Scene {
         float lineSpacing = virtualHeight * 0.03f; // 3% of screen height
         
         font.draw(batch, "Score: " + GameState.getScore(), textX, baseTextY);
-        font.draw(batch, "Health: " + mechanics.getPlayerHealth(), textX, baseTextY - lineSpacing);
-        font.draw(batch, "Level: " + mechanics.getLevel(), textX, baseTextY - lineSpacing * 2);
+        font.draw(batch, "Level: " + mechanics.getLevel(), textX, baseTextY - lineSpacing);
         
         Player player = mechanics.getPlayer();
         if (player.getHeldTrash() != null) {
             float iconSize = virtualHeight * 0.05f;
             float iconX = textX + virtualWidth * 0.1f;
-            float iconY = baseTextY - lineSpacing * 3 - iconSize/2;
+            float iconY = baseTextY - lineSpacing * 2 - iconSize/2;
             
-            font.draw(batch, "Holding:", textX, baseTextY - lineSpacing * 3);
+            font.draw(batch, "Holding:", textX, baseTextY - lineSpacing * 2);
             batch.draw(player.getHeldTrash().getImage(), iconX, iconY, iconSize, iconSize);
         }
         
-        float statusY = baseTextY - lineSpacing * 4;
+        float statusY = baseTextY - lineSpacing * 3;
+        if (mechanics.getBananaCharges() > 0) {
+            font.draw(batch, "Banana Peels: " + mechanics.getBananaCharges() + " - Press SPACE to throw", textX, statusY);
+            statusY -= lineSpacing;
+        }
         if (mechanics.isSpeedBoosted()) {
-            font.draw(batch, "Speed Boost", textX, statusY);
+            font.draw(batch, "Speed Boost Active", textX, statusY);
             statusY -= lineSpacing;
         }
         if (mechanics.isSpeedPenalized()) {

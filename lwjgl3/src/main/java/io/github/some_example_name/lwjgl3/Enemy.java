@@ -14,6 +14,7 @@ public class Enemy extends Entity implements AIMovable, Collidable {
     private float dx = 0;
     private float dy = 0;
     private Consumer<Collidable> collisionAction;
+    private boolean isStunned = false;
     
     private Texture texture;
     private float width;
@@ -45,7 +46,7 @@ public class Enemy extends Entity implements AIMovable, Collidable {
 
     @Override
     public void followEntity() {
-        if (!isActive || target == null) return;
+        if (!isActive || target == null || isStunned) return;
             
         Vector2 direction = new Vector2(target.getX() - getX(), target.getY() - getY());
 
@@ -60,7 +61,7 @@ public class Enemy extends Entity implements AIMovable, Collidable {
 
     @Override
     public void move() {
-        if (!isActive) return;
+        if (!isActive || isStunned) return;
         
         // Use virtual viewport dimensions instead of raw screen dimensions
         float virtualWidth = BackgroundRenderer.VIRTUAL_WIDTH;
@@ -116,6 +117,17 @@ public class Enemy extends Entity implements AIMovable, Collidable {
     
     public boolean isActive() {
         return isActive;
+    }
+    
+    public void setStunned(boolean stunned) {
+        this.isStunned = stunned;
+        if (stunned) {
+            stop();
+        }
+    }
+
+    public boolean isStunned() {
+        return isStunned;
     }
     
     @Override

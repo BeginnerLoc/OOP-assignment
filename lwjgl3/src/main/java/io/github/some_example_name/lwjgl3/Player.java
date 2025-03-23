@@ -208,4 +208,11 @@ public class Player extends Entity implements PlayerMovable, Collidable {
     public void draw(SpriteBatch batch) {
         batch.draw(texture, getX(), getY(), width, height);
     }
+
+    @Override 
+    public void dispose() {
+        if (texture != null) {
+            texture.dispose();
+        }
+    }
 }

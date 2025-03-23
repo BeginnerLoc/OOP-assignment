@@ -1,7 +1,10 @@
 package io.github.some_example_name.lwjgl3;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class GameMechanicsManager {
@@ -10,6 +13,7 @@ public class GameMechanicsManager {
     private List<TrashBin> bins;
     private List<Trash> trashItems;
     private List<PowerUp> powerUps;
+    private List<BananaPeel> bananaPeels;
     private float speedBoostTimer;
     private float speedPenaltyTimer;
     private boolean isSpeedBoosted;
@@ -17,8 +21,9 @@ public class GameMechanicsManager {
     private float trashCooldown;
     private int level;
     private float levelTimer;
-    private int playerHealth;
     private float powerUpSpawnTimer;
+    private Map<Enemy, Float> stunnedEnemies;
+    private int bananaCharges; // New field for banana charges
 
     private EntityManager entityManager;
     private CollisionManager collisionManager;
@@ -37,8 +42,10 @@ public class GameMechanicsManager {
         this.bins = new ArrayList<>();
         this.trashItems = new ArrayList<>();
         this.powerUps = new ArrayList<>();
+        this.bananaPeels = new ArrayList<>();
+        this.stunnedEnemies = new HashMap<>();
         this.level = 1;
-        this.playerHealth = 3;
+        this.bananaCharges = 0; // Initialize banana charges
         
         // Get manager instances
         this.entityManager = ServiceLocator.get(EntityManager.class);
@@ -262,9 +269,8 @@ public class GameMechanicsManager {
     }
 
     private void handleEnemyCollision() {
-        // Immediately end game on enemy collision
+        // Immediately end game on enemy collision if not penalized
         if (!isSpeedPenalized) {
-            // Play game over sound and end the game
             if (ioManager.getSoundManager() != null) {
                 ioManager.getSoundManager().playSound("game_over");
             }
@@ -335,7 +341,6 @@ public class GameMechanicsManager {
             trashCooldown = 0;
             level = 1;
             levelTimer = 0;
-            playerHealth = 3;
             powerUpSpawnTimer = 0;
             
             // Clean up player resources if necessary
@@ -367,6 +372,7 @@ public class GameMechanicsManager {
             GameState.updateScore(correct);
             if (correct) {
                 applySpeedBoost();
+                bananaCharges++; // Add banana charge for correct trash disposal
                 ioManager.getSoundManager().playSound("trash_correct");
             } else {
                 applySpeedPenalty();
@@ -380,11 +386,44 @@ public class GameMechanicsManager {
     }
 
     private void handlePowerUpCollision(PowerUp powerUp) {
-        powerUp.applyEffect(player);
         powerUps.remove(powerUp);
         entityManager.removeEntity(powerUp);
         collisionManager.remove(powerUp);
+        bananaCharges++; // Only add banana charge for power-up collection
         ioManager.getSoundManager().playSound("Power Up");
+    }
+
+    private void handleBananaPeelCollision(BananaPeel peel, Enemy enemy) {
+        // Stun the enemy
+        stunnedEnemies.put(enemy, peel.getStunDuration());
+        enemy.setStunned(true);
+        enemy.setSpeed(0);
+        
+        // Remove the banana peel
+        bananaPeels.remove(peel);
+        entityManager.removeEntity(peel);
+        collisionManager.remove(peel);
+        peel.dispose();
+    }
+
+    public void throwBananaPeel() {
+        if (bananaCharges > 0) { // Check if player has charges instead of speed boost
+            float x = player.getX();
+            float y = player.getY();
+            BananaPeel peel = new BananaPeel(x, y);
+            
+            // Set up collision handling for the peel
+            peel.setCollisionAction(other -> {
+                if (other instanceof Enemy) {
+                    handleBananaPeelCollision(peel, (Enemy)other);
+                }
+            });
+            
+            bananaPeels.add(peel);
+            entityManager.addEntity(peel);
+            collisionManager.register(peel);
+            bananaCharges--; // Use up one charge
+        }
     }
 
     public void applySpeedBoost() {
@@ -418,9 +457,7 @@ public class GameMechanicsManager {
             if (speedBoostTimer <= 0) {
                 isSpeedBoosted = false;
                 player.setSpeed(GameState.getPlayerSpeed());
-                
                 player.changeTexture("mrbean.png");
-
             }
         }
         
@@ -430,6 +467,22 @@ public class GameMechanicsManager {
                 isSpeedPenalized = false;
                 player.changeTexture("mrbean.png");
                 player.setSpeed(GameState.getPlayerSpeed());
+            }
+        }
+
+        // Update stunned enemies
+        Iterator<Map.Entry<Enemy, Float>> it = stunnedEnemies.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<Enemy, Float> entry = it.next();
+            Enemy enemy = entry.getKey();
+            float remainingStunTime = entry.getValue() - delta;
+            
+            if (remainingStunTime <= 0) {
+                enemy.setStunned(false);
+                enemy.setSpeed(GameState.getEnemySpeed());
+                it.remove();
+            } else {
+                entry.setValue(remainingStunTime);
             }
         }
 
@@ -461,11 +514,11 @@ public class GameMechanicsManager {
     }
 
     // Getters for UI display
-    public int getPlayerHealth() { return playerHealth; }
     public int getLevel() { return level; }
     public boolean isSpeedBoosted() { return isSpeedBoosted; }
     public boolean isSpeedPenalized() { return isSpeedPenalized; }
     public float getSpeedBoostTimer() { return speedBoostTimer; }
     public float getSpeedPenaltyTimer() { return speedPenaltyTimer; }
     public Player getPlayer() { return player; }
+    public int getBananaCharges() { return bananaCharges; }
 }
