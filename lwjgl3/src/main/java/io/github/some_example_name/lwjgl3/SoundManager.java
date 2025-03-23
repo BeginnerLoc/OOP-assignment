@@ -6,47 +6,12 @@ import com.badlogic.gdx.files.FileHandle;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * SoundManager loads and plays sounds, no references to InputManager
- */
-//public class SoundManager {
-//
-//    private final Map<String, Sound> sounds = new HashMap<>();
-//
-//    public void loadSound(String id, String filePath) {
-//        FileHandle fileHandle = Gdx.files.internal(filePath);
-//        Sound sound = Gdx.audio.newSound(fileHandle);
-//        sounds.put(id, sound);
-//    }
-//
-//    public void playSound(String id) {
-//        Sound sound = sounds.get(id);
-//        if (sound != null) {
-//            sound.play(1.0f);
-//        }
-//    }
-//
-//    public void dispose() {
-//        for (Sound s : sounds.values()) {
-//            s.dispose();
-//        }
-//        sounds.clear();
-//    }
-//    
-//    public void disposeSound(String id) {
-//        Sound sound = sounds.get(id);
-//        if (sound != null) {
-//            sound.dispose();
-//            sounds.remove(id); // Remove the sound from the map after disposing
-//        }
-//    }
-//}
-
 
 public class SoundManager {
     private final Map<String, Sound> sounds = new HashMap<>();
     private String currentBackgroundMusicId = null; // Track the currently playing background music ID
     private boolean isBackgroundMusicPlaying = false;
+    private float currentVolume = 1.0f; // Store current volume level
 
     public void loadSound(String id, String filePath) {
         FileHandle fileHandle = Gdx.files.internal(filePath);
@@ -57,7 +22,7 @@ public class SoundManager {
     public void playSound(String id) {
         Sound sound = sounds.get(id);
         if (sound != null) {
-            sound.play(1.0f); // Play the sound with default volume
+            sound.play(currentVolume); // Play the sound with current volume
         }
     }
 
@@ -75,7 +40,7 @@ public class SoundManager {
         // Play the requested background music
         Sound sound = sounds.get(id);
         if (sound != null) {
-            sound.loop(1.0f); // Loop the background music
+            sound.loop(currentVolume); // Loop the background music with current volume
             currentBackgroundMusicId = id; // Update the current background music ID
             isBackgroundMusicPlaying = true; // Mark the music as playing
         }
@@ -111,7 +76,25 @@ public class SoundManager {
             isBackgroundMusicPlaying = false; // Reset the music playing flag
         }
     }
- // New method to check if background music is playing
+
+    public void setVolume(float volume) {
+        // Clamp volume between 0 and 1
+        currentVolume = Math.max(0.0f, Math.min(1.0f, volume));
+        
+        // Update volume for currently playing background music
+        if (currentBackgroundMusicId != null && isBackgroundMusicPlaying) {
+            Sound bgMusic = sounds.get(currentBackgroundMusicId);
+            if (bgMusic != null) {
+                bgMusic.setVolume(0, currentVolume); // Update volume for the looping sound
+            }
+        }
+    }
+
+    public float getVolume() {
+        return currentVolume;
+    }
+
+    // New method to check if background music is playing
     public boolean isBackgroundMusicPlaying() {
         return isBackgroundMusicPlaying;
     }

@@ -28,7 +28,6 @@ public class IOManager {
     public SoundManager getSoundManager() {
         return soundManager;
     }
-
     /** Clean up resources when done. */
     public void dispose() {
         soundManager.dispose();

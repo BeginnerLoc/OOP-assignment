@@ -1,14 +1,13 @@
 package io.github.some_example_name.lwjgl3;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class SettingsScene extends Scene {
     private BackgroundRenderer backgroundRenderer;
     private CustomButton dismissButton;
-    private CustomButton easylvlButton;
-    private CustomButton mediumlvlButton;
-    private CustomButton hardlvlButton;
+    private CustomButton lowVolumeButton;
+    private CustomButton mediumVolumeButton;
+    private CustomButton highVolumeButton;
 
     public SettingsScene(String name) {
         super(name);
@@ -52,35 +51,54 @@ public class SettingsScene extends Scene {
         this.entityManager.addEntity(dismissButton);
         this.ioManager.getInputManager().registerClickable(dismissButton);
 
-        // Calculate positions for difficulty buttons
-        float difficultyButtonsY = virtualHeight * 0.5f;  // Center vertically
+        // Calculate positions for volume buttons - centered on screen
+        float volumeButtonsY = virtualHeight * 0.5f;  // Centered vertically
         float totalButtonsWidth = (buttonWidth * 3) + (virtualWidth * 0.05f * 2);  // 3 buttons + 2 gaps
         float startX = (virtualWidth - totalButtonsWidth) * 0.5f;  // Center horizontally
         float spacing = virtualWidth * 0.05f;  // 5% of screen width for spacing
-
-        // Easy Level Button
-        easylvlButton = new CustomButton("easy_level.png", startX, difficultyButtonsY, buttonWidth, buttonHeight);
-        easylvlButton.setOnClickAction(() -> {
-            easylvlButton.setImage("easy_level2.png");
+        
+        // Low Volume Button
+        lowVolumeButton = new CustomButton("easy_level.png", startX, volumeButtonsY, buttonWidth, buttonHeight);
+        lowVolumeButton.setOnClickAction(() -> {
+            this.ioManager.getSoundManager().setVolume(0.1f);
+            updateVolumeButtonsState("low");
         });
-        this.entityManager.addEntity(easylvlButton);
-        this.ioManager.getInputManager().registerClickable(easylvlButton);
+        this.entityManager.addEntity(lowVolumeButton);
+        this.ioManager.getInputManager().registerClickable(lowVolumeButton);
 
-        // Medium Level Button
-        mediumlvlButton = new CustomButton("medium_level.png", startX + buttonWidth + spacing, difficultyButtonsY, buttonWidth, buttonHeight);
-        mediumlvlButton.setOnClickAction(() -> {
-            mediumlvlButton.setImage("medium_level2.png");
+        // Medium Volume Button
+        mediumVolumeButton = new CustomButton("medium_level.png", startX + buttonWidth + spacing, volumeButtonsY, buttonWidth, buttonHeight);
+        mediumVolumeButton.setOnClickAction(() -> {
+            this.ioManager.getSoundManager().setVolume(0.6f);
+            updateVolumeButtonsState("medium");
         });
-        this.entityManager.addEntity(mediumlvlButton);
-        this.ioManager.getInputManager().registerClickable(mediumlvlButton);
+        this.entityManager.addEntity(mediumVolumeButton);
+        this.ioManager.getInputManager().registerClickable(mediumVolumeButton);
 
-        // Hard Level Button
-        hardlvlButton = new CustomButton("hard_level.png", startX + (buttonWidth + spacing) * 2, difficultyButtonsY, buttonWidth, buttonHeight);
-        hardlvlButton.setOnClickAction(() -> {
-            hardlvlButton.setImage("hard_level2.png");
+        // High Volume Button
+        highVolumeButton = new CustomButton("hard_level.png", startX + (buttonWidth + spacing) * 2, volumeButtonsY, buttonWidth, buttonHeight);
+        highVolumeButton.setOnClickAction(() -> {
+            this.ioManager.getSoundManager().setVolume(1.0f);
+            updateVolumeButtonsState("high");
         });
-        this.entityManager.addEntity(hardlvlButton);
-        this.ioManager.getInputManager().registerClickable(hardlvlButton);
+        this.entityManager.addEntity(highVolumeButton);
+        this.ioManager.getInputManager().registerClickable(highVolumeButton);
+
+        // Set initial volume button state based on current volume
+        float currentVolume = this.ioManager.getSoundManager().getVolume();
+        if (currentVolume <= 0.3f) {
+            updateVolumeButtonsState("low");
+        } else if (currentVolume <= 0.6f) {
+            updateVolumeButtonsState("medium");
+        } else {
+            updateVolumeButtonsState("high");
+        }
+    }
+
+    private void updateVolumeButtonsState(String activeVolume) {
+        lowVolumeButton.setImage(activeVolume.equals("low") ? "easy_level2.png" : "easy_level.png");
+        mediumVolumeButton.setImage(activeVolume.equals("medium") ? "medium_level2.png" : "medium_level.png");
+        highVolumeButton.setImage(activeVolume.equals("high") ? "hard_level2.png" : "hard_level.png");
     }
 
     @Override
