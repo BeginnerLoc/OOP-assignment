@@ -24,6 +24,7 @@ public class Enemy extends Entity implements AIMovable, Collidable {
     private float moveTimer = 0;
     private float circularAngle = 0;
     private boolean zigzagDirection = true;
+    private float circularRadius = 100; // Radius for circular movement
 
     public Enemy(float x, float y, String texturePath, float speed, EnemyMovePattern pattern) {
         super(x, y, null, speed, 10);
@@ -83,9 +84,11 @@ public class Enemy extends Entity implements AIMovable, Collidable {
                     break;
                     
                 case CIRCULAR:
-                    // Move in a circular pattern while approaching
-                    circularAngle += Gdx.graphics.getDeltaTime() * 180; // 180 degrees per second
-                    direction.rotateDeg(circularAngle);
+                    // Calculate orbital movement
+                    circularAngle += Gdx.graphics.getDeltaTime() * 2; // Control rotation speed
+                    float orbitX = target.getX() + circularRadius * (float)Math.cos(circularAngle);
+                    float orbitY = target.getY() + circularRadius * (float)Math.sin(circularAngle);
+                    direction.set(orbitX - getX(), orbitY - getY()).nor();
                     break;
                     
                 case RANDOM_ANGLES:
