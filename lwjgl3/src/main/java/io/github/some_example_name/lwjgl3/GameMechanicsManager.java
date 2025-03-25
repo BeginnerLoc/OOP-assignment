@@ -456,7 +456,7 @@ public class GameMechanicsManager {
     }
 
     public void applySpeedPenalty() {
-        player.changeTexture("turtle.png");
+        player.changeTexture("mrbean_slow_hr.png");
         isSpeedPenalized = true;
         isSpeedBoosted = false;
         speedPenaltyTimer = 2;

@@ -17,7 +17,7 @@ public class RecyclingItem extends Entity implements Collidable {
     public RecyclingItem(float x, float y) {
         super(x, y, null, 0, 5);
         this.type = RecyclingItemType.getRandomType(); // Randomize item type
-        this.bounds = new Rectangle(x, y, 32, 32); // Smaller size
+        this.bounds = new Rectangle(x, y, 40, 40); // Smaller size
     }
 
     public RecyclingItemType getType() {
