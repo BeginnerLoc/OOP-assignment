@@ -1,11 +1,15 @@
-package io.github.some_example_name.lwjgl3;
+package game.scenes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import game.entities.Player;
+import game.utils.GameState;
+import game_engine.BackgroundRenderer;
 import game_engine.Scene;
 import game_engine.ServiceLocator;
+import io.github.some_example_name.lwjgl3.GameMechanicsManager;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;

@@ -7,6 +7,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import game.entities.BananaPeel;
+import game.entities.Enemy;
+import game.entities.Player;
+import game.entities.PowerUp;
+import game.entities.Trash;
+import game.entities.TrashBin;
+import game.scenes.GameOverScene;
+import game.utils.EnemyMovePattern;
+import game.utils.GameState;
+import game_engine.BackgroundRenderer;
 import game_engine.CollisionManager;
 import game_engine.Entity;
 import game_engine.EntityManager;

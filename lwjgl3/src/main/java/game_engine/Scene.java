@@ -1,6 +1,5 @@
 package game_engine;
 
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 
@@ -41,15 +40,9 @@ public class Scene {
     	this.movementManager.followEntity();
     	this.ioManager.getInputManager().update();
     }
-    
-    /**
-     * Called when the screen is resized
-     * @param width The new width
-     * @param height The new height
-     */
+
     public void resize(int width, int height) {
-        // Base implementation does nothing
-        // Subclasses can override this to handle resize events
+      
     }
     
     public void dispose() {

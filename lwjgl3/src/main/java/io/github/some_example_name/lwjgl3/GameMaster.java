@@ -4,6 +4,12 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import game.scenes.AboutScene;
+import game.scenes.GameOverScene;
+import game.scenes.GameScene;
+import game.scenes.InstructionsScene;
+import game.scenes.MainMenuScene;
+import game.scenes.SettingsScene;
 import game_engine.CollisionManager;
 import game_engine.EntityManager;
 import game_engine.IOManager;

@@ -1,6 +1,7 @@
-package io.github.some_example_name.lwjgl3;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+package game.scenes;
 
+import game.utils.GameState;
+import game_engine.BackgroundRenderer;
 import game_engine.CustomButton;
 import game_engine.Scene;
 import game_engine.ServiceLocator;
@@ -13,7 +14,6 @@ public class MainMenuScene extends Scene {
     private CustomButton aboutButton;
     private CustomButton settingsButton;
     private CustomButton instructionsButton;
-    private ShapeRenderer shapeRenderer;
     
     public MainMenuScene(String name) {
         super(name);
@@ -23,12 +23,8 @@ public class MainMenuScene extends Scene {
     public void create() {
         super.create();
      
-        // Initialize the background renderer with fixed resolution
         backgroundRenderer = new BackgroundRenderer("OVERTRASHED.png");
-        
-        // Initialize ShapeRenderer
-        shapeRenderer = new ShapeRenderer();
-        
+                
         // Pass the background renderer's viewport to the input manager
         this.ioManager.getInputManager().setViewport(backgroundRenderer.getViewport());
         this.entityManager.setViewport(backgroundRenderer.getViewport());
@@ -42,7 +38,6 @@ public class MainMenuScene extends Scene {
             this.ioManager.getSoundManager().playBackgroundMusic("background_music_MMS");
         }
         
-        // Use virtual coordinates for positioning
         float virtualWidth = BackgroundRenderer.VIRTUAL_WIDTH;
         float virtualHeight = BackgroundRenderer.VIRTUAL_HEIGHT;
         
@@ -126,9 +121,6 @@ public class MainMenuScene extends Scene {
     public void dispose() {
         if (backgroundRenderer != null) {
             backgroundRenderer.dispose();
-        }
-        if (shapeRenderer != null) {
-            shapeRenderer.dispose();
         }
         super.dispose();
     }

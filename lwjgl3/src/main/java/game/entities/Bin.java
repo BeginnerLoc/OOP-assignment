@@ -1,4 +1,4 @@
-package io.github.some_example_name.lwjgl3;
+package game.entities;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 

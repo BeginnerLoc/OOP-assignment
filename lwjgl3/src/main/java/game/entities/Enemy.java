@@ -1,4 +1,4 @@
-package io.github.some_example_name.lwjgl3;
+package game.entities;
 
 import java.util.function.Consumer;
 
@@ -8,7 +8,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
+import game.utils.EnemyMovePattern;
 import game_engine.AIMovable;
+import game_engine.BackgroundRenderer;
 import game_engine.Collidable;
 import game_engine.Entity;
 

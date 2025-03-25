@@ -1,7 +1,8 @@
-package io.github.some_example_name.lwjgl3;
+package game.scenes;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import game_engine.BackgroundRenderer;
 import game_engine.CustomButton;
 import game_engine.Scene;
 import game_engine.ServiceLocator;

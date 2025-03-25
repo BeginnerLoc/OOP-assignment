@@ -1,9 +1,10 @@
-package io.github.some_example_name.lwjgl3;
+package game.entities;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
+import game_engine.BackgroundRenderer;
 import game_engine.Collidable;
 import game_engine.Entity;
 import game_engine.PlayerMovable;

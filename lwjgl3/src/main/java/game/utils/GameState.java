@@ -1,4 +1,4 @@
-package io.github.some_example_name.lwjgl3;
+package game.utils;
 
 public class GameState {
     private static int score = 0;

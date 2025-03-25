@@ -1,10 +1,7 @@
-package io.github.some_example_name.lwjgl3;
+package game_engine;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
-import game_engine.Entity;
-
 import com.badlogic.gdx.Gdx;
 
 public class BackgroundEntity extends Entity {
