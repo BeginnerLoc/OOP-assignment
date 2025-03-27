@@ -18,6 +18,7 @@ import game.scenes.GameOverScene;
 import game.utils.EnemyMovePattern;
 import game.utils.GameState;
 import game_engine.BackgroundRenderer;
+import game_engine.Collidable;
 import game_engine.CollisionManager;
 import game_engine.Entity;
 import game_engine.EntityManager;
@@ -186,6 +187,9 @@ public class GameMechanicsManager {
                                                 randomPattern, 65f, 90f);
             enemy.setTarget(player);
             
+            // Set up collision handling within the Enemy class
+            configureEnemyCollisions(enemy);
+            
             enemies.add(enemy);
             entityManager.addEntity(enemy);
             collisionManager.register(enemy);
@@ -207,97 +211,111 @@ public class GameMechanicsManager {
         float x = (float) (Math.random() * (virtualWidth - 32));
         float y = (float) (Math.random() * (virtualHeight - 32));
         PowerUp powerUp = new PowerUp(x, y, "teddy.png");
+        
+        // Configure PowerUp collision handling
+        configureCollisionForPowerUp(powerUp);
+        
         powerUps.add(powerUp);
         entityManager.addEntity(powerUp);
         collisionManager.register(powerUp);
     }
 
+    /**
+     * Sets up collision handling for all entities through their Collidable interface
+     */
     private void setupCollisions() {
-        player.setCollisionAction(other -> handleCollision((Entity)other));
+        // Set up player collision handling
+        configurePlayerCollisions();
         
-        // Set up collision handling for enemies
+        // Set up enemy collision handling
         for (Enemy enemy : enemies) {
-            enemy.setCollisionAction(other -> {
-                if (other instanceof TrashBin) {
-                    TrashBin bin = (TrashBin) other;
-                    // Calculate centers
-                    float enemyCenterX = enemy.getX() + enemy.getBounds().width / 2;
-                    float enemyCenterY = enemy.getY() + enemy.getBounds().height / 2;
-                    float binCenterX = bin.getX() + bin.getBounds().width / 2;
-                    float binCenterY = bin.getY() + bin.getBounds().height / 2;
-                    
-                    // Calculate direction vector from bin center to enemy center
-                    float dx = enemyCenterX - binCenterX;
-                    float dy = enemyCenterY - binCenterY;
-                    float distance = (float) Math.sqrt(dx * dx + dy * dy);
-                    
-                    if (distance < 0.1f) {
-                        // If centers are too close, push directly right
-                        dx = 1;
-                        dy = 0;
-                        distance = 1;
-                    }
-                    
-                    // Calculate minimum distance needed between centers
-                    float minDistance = (enemy.getBounds().width + bin.getBounds().width) / 2;
-                    
-                    if (distance < minDistance) {
-                        // Calculate new position maintaining minimum distance
-                        float pushX = (dx / distance) * (minDistance - distance);
-                        float pushY = (dy / distance) * (minDistance - distance);
-                        
-                        enemy.setX(enemy.getX() + pushX);
-                        enemy.setY(enemy.getY() + pushY);
-                    }
-                }
-            });
+            configureEnemyCollisions(enemy);
+        }
+        
+        // Set up trash bin collision handling for all bins
+        for (TrashBin bin : bins) {
+            configureBinCollisions(bin);
+        }
+        
+        // Set up trash collision handling
+        for (Trash trash : trashItems) {
+            configureTrashCollisions(trash);
         }
     }
 
-    private void handleCollision(Entity other) {
-        if (other instanceof Enemy) {
-            handleEnemyCollision();
-        } else if (other instanceof Trash) {
-            handleTrashCollision((Trash) other);
-        } else if (other instanceof TrashBin) {
-            handleTrashBinCollision((TrashBin) other);
-            TrashBin bin = (TrashBin) other;
-            // Calculate centers of entities
-            float playerCenterX = player.getX() + player.getBounds().width / 2;
-            float playerCenterY = player.getY() + player.getBounds().height / 2;
-            float binCenterX = bin.getX() + bin.getBounds().width / 2;
-            float binCenterY = bin.getY() + bin.getBounds().height / 2;
-            
-            // Calculate direction vector from bin center to player center
-            float dx = playerCenterX - binCenterX;
-            float dy = playerCenterY - binCenterY;
-            float distance = (float) Math.sqrt(dx * dx + dy * dy);
-            
-            if (distance < 0.1f) {
-                // If centers are too close, push directly right
-                dx = 1;
-                dy = 0;
-                distance = 1;
+    /**
+     * Configure player collision handling
+     */
+    private void configurePlayerCollisions() {
+        player.setCollisionAction(other -> {
+            if (other instanceof Enemy) {
+                handlePlayerEnemyCollision((Enemy) other);
+            } else if (other instanceof Trash) {
+                handlePlayerTrashCollision((Trash) other);
+            } else if (other instanceof TrashBin) {
+                handlePlayerTrashBinCollision((TrashBin) other);
+            } else if (other instanceof PowerUp) {
+                handlePlayerPowerUpCollision((PowerUp) other);
             }
-            
-            // Calculate minimum distance needed between centers
-            float minDistance = (player.getBounds().width + bin.getBounds().width) / 2;
-            
-            if (distance < minDistance) {
-                // Calculate new position maintaining minimum distance
-                float pushX = (dx / distance) * (minDistance - distance);
-                float pushY = (dy / distance) * (minDistance - distance);
-                
-                player.setX(player.getX() + pushX);
-                player.setY(player.getY() + pushY);
+        });
+    }
+    
+    /**
+     * Configure enemy collision handling
+     */
+    private void configureEnemyCollisions(Enemy enemy) {
+        enemy.setCollisionAction(other -> {
+            if (other instanceof TrashBin) {
+                // Handle enemy-bin collision with physics-like pushing
+                TrashBin bin = (TrashBin) other;
+                handlePushFromStaticObject(enemy, bin);
+            } else if (other instanceof CatToy) {
+                // Cat toy stuns the enemy
+                handleEnemyCatToyCollision(enemy, (CatToy) other);
             }
-        } else if (other instanceof PowerUp) {
-            handlePowerUpCollision((PowerUp) other);
-        }
+        });
+    }
+    
+    /**
+     * Configure trash bin collision handling
+     */
+    private void configureBinCollisions(TrashBin bin) {
+        // Bins don't need active collision handling,
+        // they are passive in collisions
+    }
+    
+    /**
+     * Configure trash item collision handling
+     */
+    private void configureTrashCollisions(Trash trash) {
+        // Trash items don't need active collision handling,
+        // they are passive in collisions
+    }
+    
+    /**
+     * Configure power-up collision handling
+     */
+    private void configureCollisionForPowerUp(PowerUp powerUp) {
+        // Power-ups don't need active collision handling,
+        // they are passive in collisions
+    }
+    
+    /**
+     * Configure cat toy collision handling
+     */
+    private void configureCatToyCollisions(CatToy toy) {
+        toy.setCollisionAction(other -> {
+            if (other instanceof Enemy) {
+                handleEnemyCatToyCollision((Enemy) other, toy);
+            }
+        });
     }
 
-    private void handleEnemyCollision() {
-        // Immediately end game on enemy collision if not penalized
+    /**
+     * Handles collision between player and enemy
+     */
+    private void handlePlayerEnemyCollision(Enemy enemy) {
+        // End game on enemy collision if not penalized
         if (!isSpeedPenalized) {
             if (ioManager.getSoundManager() != null) {
                 ioManager.getSoundManager().playSound("game_over");
@@ -308,91 +326,24 @@ public class GameMechanicsManager {
     }
     
     /**
-     * Cleans up all game resources when the game is over
+     * Handles collision between player and trash
      */
-    public void cleanupGameResources() {
-        // Only unregister entities from managers but don't dispose them
-        // The Scene's dispose() will handle proper disposal through EntityManager
-        unregisterEntities();
-    }
-    
-    /**
-     * Unregisters all entities from managers without disposing them
-     * to prevent memory leaks and state persistence. Actual disposal
-     * is handled by the Scene's EntityManager.
-     */
-    private void unregisterEntities() {
-        try {
-            // Use safe iteration with a copy of the list when possible
-            List<Enemy> enemiesCopy = new ArrayList<>(enemies);
-            for (Enemy enemy : enemiesCopy) {
-                entityManager.removeEntity(enemy);
-                collisionManager.remove(enemy);
-                movementManager.removeMovingEntity(enemy);
-                movementManager.removeAIEntity(enemy);
-                // Don't call enemy.dispose() here - let EntityManager handle disposal
-            }
-            enemies.clear();
-            
-            // Clean up trash items
-            List<Trash> trashCopy = new ArrayList<>(trashItems);
-            for (Trash trash : trashCopy) {
-                entityManager.removeEntity(trash);
-                collisionManager.remove(trash);
-                // Don't call trash.dispose() here - let EntityManager handle disposal
-            }
-            trashItems.clear();
-            
-            // Clean up power-ups
-            List<PowerUp> powerUpsCopy = new ArrayList<>(powerUps);
-            for (PowerUp powerUp : powerUpsCopy) {
-                entityManager.removeEntity(powerUp);
-                collisionManager.remove(powerUp);
-                // Don't call powerUp.dispose() here - let EntityManager handle disposal
-            }
-            powerUps.clear();
-            
-            // Clean up bins
-            List<TrashBin> binsCopy = new ArrayList<>(bins);
-            for (TrashBin bin : binsCopy) {
-                entityManager.removeEntity(bin);
-                collisionManager.remove(bin);
-                // Don't call bin.dispose() here - let EntityManager handle disposal
-            }
-            bins.clear();
-            
-            // Reset all flags and timers
-            speedBoostTimer = 0;
-            speedPenaltyTimer = 0;
-            isSpeedBoosted = false;
-            isSpeedPenalized = false;
-            trashCooldown = 0;
-            level = 1;
-            levelTimer = 0;
-            powerUpSpawnTimer = 0;
-            
-            // Clean up player resources if necessary
-            if (player != null && player.getHeldTrash() != null) {
-                Trash heldTrash = player.getHeldTrash();
-                entityManager.removeEntity(heldTrash);
-                collisionManager.remove(heldTrash);
-                // Don't call heldTrash.dispose() here - let EntityManager handle disposal
-            }
-        } catch (Exception e) {
-            System.err.println("Error during entity cleanup: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    private void handleTrashCollision(Trash trash) {
+    private void handlePlayerTrashCollision(Trash trash) {
         if (!trash.isPickedUp() && player.getHeldTrash() == null && player.droppedTrash() != trash) {
             trash.setPickedUp(true);
             player.pickupTrash(trash);
             ioManager.getSoundManager().playSound("pickup");
         }
     }
-
-    private void handleTrashBinCollision(TrashBin bin) {
+    
+    /**
+     * Handles collision between player and trash bin
+     */
+    private void handlePlayerTrashBinCollision(TrashBin bin) {
+        // Physics-like handling to push player away from bin
+        handlePushFromStaticObject(player, bin);
+        
+        // Game logic for depositing trash in bin
         Trash heldTrash = player.getHeldTrash();
         if (heldTrash != null) {
             boolean correct = bin.getAcceptedType() == heldTrash.getType();
@@ -411,16 +362,22 @@ public class GameMechanicsManager {
             spawnNewTrash();
         }
     }
-
-    private void handlePowerUpCollision(PowerUp powerUp) {
+    
+    /**
+     * Handles collision between player and power-up
+     */
+    private void handlePlayerPowerUpCollision(PowerUp powerUp) {
         powerUps.remove(powerUp);
         entityManager.removeEntity(powerUp);
         collisionManager.remove(powerUp);
-        catCharges++; // Only add cat charge for power-up collection
+        catCharges++; // Add cat charge for power-up collection
         ioManager.getSoundManager().playSound("Power Up");
     }
-
-    private void handleCatToyCollision(CatToy toy, Enemy enemy) {
+    
+    /**
+     * Handles collision between enemy and cat toy
+     */
+    private void handleEnemyCatToyCollision(Enemy enemy, CatToy toy) {
         // Stun the enemy
         stunnedEnemies.put(enemy, toy.getStunDuration());
         enemy.setTexture("grandmother_happy.png");
@@ -433,6 +390,41 @@ public class GameMechanicsManager {
         collisionManager.remove(toy);
         toy.dispose();
     }
+    
+    /**
+     * Physics-like collision handling that pushes a moving entity away from a static object
+     */
+    private void handlePushFromStaticObject(Collidable movingEntity, Collidable staticEntity) {
+        // Calculate centers
+        float movingCenterX = ((Entity)movingEntity).getX() + movingEntity.getBounds().width / 2;
+        float movingCenterY = ((Entity)movingEntity).getY() + movingEntity.getBounds().height / 2;
+        float staticCenterX = ((Entity)staticEntity).getX() + staticEntity.getBounds().width / 2;
+        float staticCenterY = ((Entity)staticEntity).getY() + staticEntity.getBounds().height / 2;
+        
+        // Calculate direction vector from static center to moving center
+        float dx = movingCenterX - staticCenterX;
+        float dy = movingCenterY - staticCenterY;
+        float distance = (float) Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance < 0.1f) {
+            // If centers are too close, push directly right
+            dx = 1;
+            dy = 0;
+            distance = 1;
+        }
+        
+        // Calculate minimum distance needed between centers
+        float minDistance = (movingEntity.getBounds().width + staticEntity.getBounds().width) / 2;
+        
+        if (distance < minDistance) {
+            // Calculate new position maintaining minimum distance
+            float pushX = (dx / distance) * (minDistance - distance);
+            float pushY = (dy / distance) * (minDistance - distance);
+            
+            ((Entity)movingEntity).setX(((Entity)movingEntity).getX() + pushX);
+            ((Entity)movingEntity).setY(((Entity)movingEntity).getY() + pushY);
+        }
+    }
 
     public void throwCatToy() {
         if (catCharges > 0 && catCooldown <= 0) { // Only throw if cooldown is up
@@ -441,11 +433,7 @@ public class GameMechanicsManager {
             CatToy toy = new CatToy(x, y, "cat.png", 52, 52);
             
             // Set up collision handling for the toy
-            toy.setCollisionAction(other -> {
-                if (other instanceof Enemy) {
-                    handleCatToyCollision(toy, (Enemy)other);
-                }
-            });
+            configureCatToyCollisions(toy);
             
             catToys.add(toy);
             entityManager.addEntity(toy);
@@ -545,6 +533,71 @@ public class GameMechanicsManager {
         if (powerUpSpawnTimer >= 10) {
             powerUpSpawnTimer = 0;
             spawnPowerUp();
+        }
+    }
+    
+    /**
+     * Cleans up all game resources when the game is over
+     */
+    public void cleanupGameResources() {
+        unregisterEntities();
+    }
+    
+
+    private void unregisterEntities() {
+        try {
+            List<Enemy> enemiesCopy = new ArrayList<>(enemies);
+            for (Enemy enemy : enemiesCopy) {
+                entityManager.removeEntity(enemy);
+                collisionManager.remove(enemy);
+                movementManager.removeMovingEntity(enemy);
+                movementManager.removeAIEntity(enemy);
+            }
+            enemies.clear();
+            
+            // Clean up trash items
+            List<Trash> trashCopy = new ArrayList<>(trashItems);
+            for (Trash trash : trashCopy) {
+                entityManager.removeEntity(trash);
+                collisionManager.remove(trash);
+            }
+            trashItems.clear();
+            
+            // Clean up power-ups
+            List<PowerUp> powerUpsCopy = new ArrayList<>(powerUps);
+            for (PowerUp powerUp : powerUpsCopy) {
+                entityManager.removeEntity(powerUp);
+                collisionManager.remove(powerUp);
+            }
+            powerUps.clear();
+            
+            // Clean up bins
+            List<TrashBin> binsCopy = new ArrayList<>(bins);
+            for (TrashBin bin : binsCopy) {
+                entityManager.removeEntity(bin);
+                collisionManager.remove(bin);
+            }
+            bins.clear();
+            
+            // Reset all flags and timers
+            speedBoostTimer = 0;
+            speedPenaltyTimer = 0;
+            isSpeedBoosted = false;
+            isSpeedPenalized = false;
+            trashCooldown = 0;
+            level = 1;
+            levelTimer = 0;
+            powerUpSpawnTimer = 0;
+            
+            // Clean up player resources if necessary
+            if (player != null && player.getHeldTrash() != null) {
+                Trash heldTrash = player.getHeldTrash();
+                entityManager.removeEntity(heldTrash);
+                collisionManager.remove(heldTrash);
+            }
+        } catch (Exception e) {
+            System.err.println("Error during entity cleanup: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
