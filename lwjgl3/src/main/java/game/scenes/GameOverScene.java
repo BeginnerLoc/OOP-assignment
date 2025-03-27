@@ -119,6 +119,8 @@ public class GameOverScene extends Scene {
         if (font != null) {
             font.dispose();
         }
+        
+        // Dispose any specific sounds loaded by this scene
         this.ioManager.getSoundManager().disposeSound("game_over");
         
         // Clear clickables when disposing the scene

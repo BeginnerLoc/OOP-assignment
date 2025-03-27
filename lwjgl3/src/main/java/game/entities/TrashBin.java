@@ -42,4 +42,12 @@ public class TrashBin extends Entity implements Collidable {
     public void draw(SpriteBatch batch) {
         batch.draw(texture, getX(), getY(), bounds.width, bounds.height);
     }
+    
+    @Override
+    public void dispose() {
+        if (texture != null) {
+            texture.dispose();
+            texture = null;
+        }
+    }
 }

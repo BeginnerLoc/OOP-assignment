@@ -311,14 +311,17 @@ public class GameMechanicsManager {
      * Cleans up all game resources when the game is over
      */
     public void cleanupGameResources() {
-        // Clean up all entities
-        cleanupEntities();
+        // Only unregister entities from managers but don't dispose them
+        // The Scene's dispose() will handle proper disposal through EntityManager
+        unregisterEntities();
     }
     
     /**
-     * Cleans up all game entities to prevent memory leaks and state persistence
+     * Unregisters all entities from managers without disposing them
+     * to prevent memory leaks and state persistence. Actual disposal
+     * is handled by the Scene's EntityManager.
      */
-    private void cleanupEntities() {
+    private void unregisterEntities() {
         try {
             // Use safe iteration with a copy of the list when possible
             List<Enemy> enemiesCopy = new ArrayList<>(enemies);
@@ -327,7 +330,7 @@ public class GameMechanicsManager {
                 collisionManager.remove(enemy);
                 movementManager.removeMovingEntity(enemy);
                 movementManager.removeAIEntity(enemy);
-                enemy.dispose(); 
+                // Don't call enemy.dispose() here - let EntityManager handle disposal
             }
             enemies.clear();
             
@@ -336,7 +339,7 @@ public class GameMechanicsManager {
             for (Trash trash : trashCopy) {
                 entityManager.removeEntity(trash);
                 collisionManager.remove(trash);
-                trash.dispose(); 
+                // Don't call trash.dispose() here - let EntityManager handle disposal
             }
             trashItems.clear();
             
@@ -345,7 +348,7 @@ public class GameMechanicsManager {
             for (PowerUp powerUp : powerUpsCopy) {
                 entityManager.removeEntity(powerUp);
                 collisionManager.remove(powerUp);
-                powerUp.dispose(); 
+                // Don't call powerUp.dispose() here - let EntityManager handle disposal
             }
             powerUps.clear();
             
@@ -354,7 +357,7 @@ public class GameMechanicsManager {
             for (TrashBin bin : binsCopy) {
                 entityManager.removeEntity(bin);
                 collisionManager.remove(bin);
-               
+                // Don't call bin.dispose() here - let EntityManager handle disposal
             }
             bins.clear();
             
@@ -373,7 +376,7 @@ public class GameMechanicsManager {
                 Trash heldTrash = player.getHeldTrash();
                 entityManager.removeEntity(heldTrash);
                 collisionManager.remove(heldTrash);
-                heldTrash.dispose();
+                // Don't call heldTrash.dispose() here - let EntityManager handle disposal
             }
         } catch (Exception e) {
             System.err.println("Error during entity cleanup: " + e.getMessage());

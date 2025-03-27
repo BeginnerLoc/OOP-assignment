@@ -252,9 +252,20 @@ public class GameScene extends Scene {
         if (shapeRenderer != null) {
             shapeRenderer.dispose();
         }
-        this.ioManager.getSoundManager().stopSound("background_music_MMS");
+        
+        // Stop and dispose all game-specific sounds to prevent memory leaks
         this.ioManager.getSoundManager().stopSound("background_music_GS");
         this.ioManager.getSoundManager().disposeSound("background_music_GS");
+        this.ioManager.getSoundManager().disposeSound("enemy_hit");
+        this.ioManager.getSoundManager().disposeSound("game_over");
+        this.ioManager.getSoundManager().disposeSound("trash_correct");
+        this.ioManager.getSoundManager().disposeSound("trash_wrong");
+        this.ioManager.getSoundManager().disposeSound("pickup");
+        
+        // Don't dispose background_music_MMS as it's shared with other scenes
+        // Just stop it if it's playing
+        this.ioManager.getSoundManager().stopSound("background_music_MMS");
+        
         super.dispose();
     }
 }
