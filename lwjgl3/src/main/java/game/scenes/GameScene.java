@@ -154,7 +154,7 @@ public class GameScene extends Scene {
         float barWidth = virtualWidth * 0.2f;    // 20% of screen width
         float barHeight = virtualHeight * 0.03f;  // 3% of screen height
         float barX = virtualWidth * 0.1f;        // 10% from left edge
-        float barY = virtualHeight * 0.9f;        // 90% from bottom
+        float barY = virtualHeight * 0.87f;        // 87% from bottom edge
         
         shapeRenderer.begin(ShapeType.Filled);
         
@@ -200,7 +200,7 @@ public class GameScene extends Scene {
         float virtualHeight = BackgroundRenderer.VIRTUAL_HEIGHT;
         
         float textX = virtualWidth * 0.01f;      // 1% from left
-        float baseTextY = virtualHeight * 0.95f;  // 95% from bottom
+        float baseTextY = virtualHeight * 0.85f;  // 95% from bottom
         float lineSpacing = virtualHeight * 0.03f; // 3% of screen height
         
         font.draw(batch, "Score: " + GameState.getScore(), textX, baseTextY);
@@ -218,7 +218,7 @@ public class GameScene extends Scene {
         
         float statusY = baseTextY - lineSpacing * 3;
         if (mechanics.getBananaCharges() > 0) {
-            font.draw(batch, "Banana Peels: " + mechanics.getBananaCharges() + " - Press SPACE to throw", textX, statusY);
+            font.draw(batch, "Grandma's Cat: " + mechanics.getBananaCharges() + " - Press SPACE to drop", textX, statusY);
             statusY -= lineSpacing;
         }
         if (mechanics.isSpeedBoosted()) {
