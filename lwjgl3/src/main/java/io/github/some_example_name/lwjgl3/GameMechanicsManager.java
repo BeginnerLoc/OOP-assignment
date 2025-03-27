@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+
 import game.entities.CatToy;
 import game.entities.Enemy;
 import game.entities.EnemyFactory;
@@ -73,6 +76,7 @@ public class GameMechanicsManager {
         spawnTrash();
         spawnEnemies();
         setupCollisions();
+        setupControls();
     }
 
     public void createTrashBins() {
@@ -397,6 +401,7 @@ public class GameMechanicsManager {
         updateEnemySpeeds();
         checkLevelProgress(delta);
         checkPowerUpSpawn(delta);
+        
     }
 
     private void updateTimers(float delta) {
@@ -466,6 +471,39 @@ public class GameMechanicsManager {
         if (powerUpSpawnTimer >= 10) {
             powerUpSpawnTimer = 0;
             spawnPowerUp();
+        }
+    }
+
+        
+    private void setupControls() {
+        this.ioManager.getInputManager().subscribeKeyDown(Keys.W, () -> this.getPlayer().setDirection(0, 1));
+        this.ioManager.getInputManager().subscribeKeyDown(Keys.S, () -> this.getPlayer().setDirection(0, -1));
+        this.ioManager.getInputManager().subscribeKeyDown(Keys.A, () -> this.getPlayer().setDirection(-1, 0));
+        this.ioManager.getInputManager().subscribeKeyDown(Keys.D, () -> this.getPlayer().setDirection(1, 0));
+        this.ioManager.getInputManager().subscribeKeyDown(Keys.SPACE, () -> this.throwCatToy());
+        
+        // Add sprint control with Shift key
+        this.ioManager.getInputManager().subscribeKeyDown(Keys.SHIFT_LEFT, () -> this.getPlayer().sprint(true));
+        this.ioManager.getInputManager().subscribeKeyUp(Keys.SHIFT_LEFT, () -> this.getPlayer().sprint(false));
+        
+        // Stop movement when keys are released
+        this.ioManager.getInputManager().subscribeKeyUp(Keys.W, () -> checkStopMovement());
+        this.ioManager.getInputManager().subscribeKeyUp(Keys.S, () -> checkStopMovement());
+        this.ioManager.getInputManager().subscribeKeyUp(Keys.A, () -> checkStopMovement());
+        this.ioManager.getInputManager().subscribeKeyUp(Keys.D, () -> checkStopMovement());
+    }
+    
+
+    private void checkStopMovement() {
+        // Check if any movement keys are still pressed
+        boolean wPressed = Gdx.input.isKeyPressed(Keys.W);
+        boolean sPressed = Gdx.input.isKeyPressed(Keys.S);
+        boolean aPressed = Gdx.input.isKeyPressed(Keys.A);
+        boolean dPressed = Gdx.input.isKeyPressed(Keys.D);
+
+        // If no movement keys are pressed, stop the player
+        if (!wPressed && !sPressed && !aPressed && !dPressed) {
+            this.getPlayer().stop();
         }
     }
     

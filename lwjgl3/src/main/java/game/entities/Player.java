@@ -86,6 +86,9 @@ public class Player extends Entity implements PlayerMovable, Collidable {
         if (dx != 0 || dy != 0) {
             isMoving = true;
             
+            // Update animation timer
+            animationTimer += Gdx.graphics.getDeltaTime();
+            
             // Calculate bob effect
             float verticalOffset = (float) Math.abs(Math.sin(animationTimer * 10)) * bobHeight;
             
