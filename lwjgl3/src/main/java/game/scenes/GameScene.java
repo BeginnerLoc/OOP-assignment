@@ -154,7 +154,7 @@ public class GameScene extends Scene {
         float barWidth = virtualWidth * 0.2f;    // 20% of screen width
         float barHeight = virtualHeight * 0.03f;  // 3% of screen height
         float barX = virtualWidth * 0.1f;        // 10% from left edge
-        float barY = virtualHeight * 0.87f;        // 87% from bottom edge
+        float barY = virtualHeight * 0.88f;        // 88% from bottom edge
         
         shapeRenderer.begin(ShapeType.Filled);
         

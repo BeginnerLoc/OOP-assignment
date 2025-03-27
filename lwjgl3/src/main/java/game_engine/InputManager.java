@@ -25,6 +25,7 @@ public class InputManager extends InputAdapter {
 
     // Vector for coordinate transformation
     private final Vector3 touchPoint = new Vector3();
+    private CustomButton lastHoveredButton = null;
 
     public void setViewport(Viewport viewport) {
         this.currentViewport = viewport;
@@ -88,6 +89,36 @@ public class InputManager extends InputAdapter {
         return false;
     }
     
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        if (currentViewport != null) {
+            touchPoint.set(screenX, screenY, 0);
+            currentViewport.unproject(touchPoint);
+            
+            CustomButton currentHovered = null;
+            
+            // Check for new hover
+            for (CustomButton button : clickableObjects) {
+                if (button.isHovered(touchPoint.x, touchPoint.y)) {
+                    currentHovered = button;
+                    if (lastHoveredButton != button) {
+                        button.onHoverEnter();
+                    }
+                    break;
+                }
+            }
+            
+            // Handle hover exit
+            if (lastHoveredButton != null && lastHoveredButton != currentHovered) {
+                lastHoveredButton.onHoverExit();
+            }
+            
+            lastHoveredButton = currentHovered;
+            return currentHovered != null;
+        }
+        return false;
+    }
+
     // Call this in your game's update loop
     public void update() {
         for (Integer key : activeKeys) {

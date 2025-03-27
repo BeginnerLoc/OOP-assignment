@@ -7,17 +7,33 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 public abstract class Entity {
     private float x;
     private float y;
+    private float width;   
+    private float height;   
     private float speed;
     private Color color;
     private int renderPriority; // Higher number means render later (on top)
     
     public Entity() {
         this.renderPriority = 0;
+        this.width = 0;
+        this.height = 0;
     }
     
     public Entity(float x, float y, Color color, float speed, int renderPriority) {
         this.x = x;
         this.y = y;
+        this.speed = speed;
+        this.color = color;
+        this.renderPriority = renderPriority;
+        this.width = 0;
+        this.height = 0;
+    }
+
+    public Entity(float x, float y, float width, float height, Color color, float speed, int renderPriority) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
         this.speed = speed;
         this.color = color;
         this.renderPriority = renderPriority;
@@ -61,6 +77,22 @@ public abstract class Entity {
 
     public void setRenderPriority(int priority) {
         this.renderPriority = priority;
+    }
+    
+    public float getWidth() {
+        return width;
+    }
+
+    public void setWidth(float width) {
+        this.width = width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public void setHeight(float height) {
+        this.height = height;
     }
     
     public void draw(ShapeRenderer rd) {
