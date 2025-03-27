@@ -434,7 +434,7 @@ public class GameMechanicsManager {
         if (bananaCharges > 0 && bananaCooldown <= 0) { // Only throw if cooldown is up
             float x = player.getX();
             float y = player.getY();
-            BananaPeel peel = new BananaPeel(x, y);
+            BananaPeel peel = new BananaPeel(x, y, "cat.png", 52, 52);
             
             // Set up collision handling for the peel
             peel.setCollisionAction(other -> {
@@ -452,7 +452,7 @@ public class GameMechanicsManager {
     }
 
     public void applySpeedBoost() {
-        player.changeTexture("car.png");
+        player.changeTexture("mrbean_car.png");
         isSpeedBoosted = true;
         isSpeedPenalized = false;
         speedBoostTimer = 5;
@@ -460,7 +460,7 @@ public class GameMechanicsManager {
     }
 
     public void applySpeedPenalty() {
-        player.changeTexture("mrbean_slow_hr.png");
+        player.changeTexture("mrbean_slow.png");
         isSpeedPenalized = true;
         isSpeedBoosted = false;
         speedPenaltyTimer = 2;

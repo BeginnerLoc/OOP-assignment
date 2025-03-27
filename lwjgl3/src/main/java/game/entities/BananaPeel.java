@@ -13,12 +13,16 @@ public class BananaPeel extends Entity implements Collidable {
     private Rectangle bounds;
     private Texture texture;
     private Consumer<Collidable> collisionAction;
+    private int width;
+    private int height;
     private float stunDuration = 3.0f; // 3 seconds stun
     
-    public BananaPeel(float x, float y) {
+    public BananaPeel(float x, float y, String texturePath, int width, int height) {
         super(x, y, null, 0, 5);
-        this.bounds = new Rectangle(x, y, 32, 32);
-        this.texture = new Texture("cat_stopenemy_hr.png");
+        this.width = width;
+        this.height = height;
+        this.bounds = new Rectangle(x, y, width, height);
+        this.texture = new Texture(texturePath);
     }
     
     @Override
