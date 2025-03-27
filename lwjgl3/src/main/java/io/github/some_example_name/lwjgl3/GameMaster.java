@@ -46,7 +46,7 @@ public class GameMaster extends ApplicationAdapter {
         ServiceLocator.register(IOManager.class, ioManager);
         ServiceLocator.register(SceneManager.class, sceneManager);
         
-        this.ioManager.getSoundManager().loadSound("game_over", "Game Over Sound Effect.mp3");
+        this.ioManager.getSoundManager().loadSound("gameover_sound", "gameover_sound.mp3");
         this.ioManager.getSoundManager().loadSound("pickup", "Item Pickup [Sound Effect].mp3");
         this.ioManager.getSoundManager().loadSound("trash_correct", "Correct Answer sound effect.mp3");
         this.ioManager.getSoundManager().loadSound("trash_wrong", "Wrong Answer Sound effect.mp3");

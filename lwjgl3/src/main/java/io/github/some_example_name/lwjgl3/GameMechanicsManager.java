@@ -377,19 +377,10 @@ public class GameMechanicsManager {
                 }
                 trashCooldown = 1.0f;
                 
-                // Store a reference to the trash before the player drops it
                 Trash trashToRemove = heldTrash;
-                
-                // Drop the trash (this will set player.heldTrash to null)
-                player.dropTrash();
-                
-                // Use the stored reference to properly remove the trash entity
+                player.dropTrash();                
                 entityManager.removeEntity(trashToRemove);
-                
-                // Remove from trashItems list too
                 trashItems.remove(trashToRemove);
-                
-                // Remove collision registration
                 collisionManager.remove(trashToRemove);
                 
                 // Spawn a new trash item
