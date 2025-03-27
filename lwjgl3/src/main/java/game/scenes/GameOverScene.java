@@ -28,6 +28,9 @@ public class GameOverScene extends Scene {
         // Stop and dispose of the game scene background music
         this.ioManager.getSoundManager().stopSound("background_music_GS");
         this.ioManager.getSoundManager().disposeSound("background_music_GS");
+
+        // Play the game over sound
+        this.ioManager.getSoundManager().playSound("background_music_MMS");
         
         // Initialize the background renderer with fixed HD resolution
         backgroundRenderer = new BackgroundRenderer("gameover_bg.png");
@@ -121,7 +124,7 @@ public class GameOverScene extends Scene {
         }
         
         // Dispose any specific sounds loaded by this scene
-        this.ioManager.getSoundManager().disposeSound("game_over");
+        this.ioManager.getSoundManager().disposeSound("background_music_MMS");
         
         // Clear clickables when disposing the scene
         this.ioManager.getInputManager().clearClickables();

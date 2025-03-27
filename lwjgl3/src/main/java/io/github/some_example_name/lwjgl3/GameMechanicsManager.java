@@ -136,21 +136,35 @@ public class GameMechanicsManager {
     }
 
     public void spawnEnemies() {
-        // Clear existing enemies except the first one
-        if (enemies.size() > 1) {
-            for (int i = enemies.size() - 1; i > 0; i--) {
-                Enemy enemy = enemies.remove(i);
-                entityManager.removeEntity(enemy);
-                collisionManager.remove(enemy);
-                movementManager.getMovingEntities().remove(enemy);           
-            }
+        // Early return if we already have enough enemies for the current level
+        if (enemies.size() >= level + 1) {
+            return; 
         }
 
-        // Create new enemies based on current level
-        int enemyCount = Math.min(level + 1, 5); // Cap at 5 enemies maximum
+        // Determine how many enemies to spawn based on the current level
+        int enemyCount = determineEnemyCount();
+        
+        // Only add new enemies to reach the target count
+        spawnAdditionalEnemies(enemyCount);
+    }
+    
+    /**
+     * Determines the target number of enemies based on the current level
+     * @return the number of enemies that should be present
+     */
+    private int determineEnemyCount() {
+        // Number of enemies equals the current level
+        return level;
+    }
+    
+    /**
+     * Spawns additional enemies until the target count is reached
+     * @param targetCount the total number of enemies that should be present
+     */
+    private void spawnAdditionalEnemies(int targetCount) {
         Random random = new Random();
-
-        for (int i = enemies.size(); i < enemyCount; i++) {
+        
+        for (int i = enemies.size(); i < targetCount; i++) {
             // Spawn enemy at random position away from the player
             float x, y;
             do {
@@ -160,24 +174,56 @@ public class GameMechanicsManager {
             } while (GameUtils.isNearEntity(x, y, player, 200)); // Keep enemies at least 200 units away from player initially
             
             // Get a random movement pattern
-            EnemyMovePattern[] patterns = EnemyMovePattern.values();
-            EnemyMovePattern randomPattern = patterns[random.nextInt(patterns.length)];
+            EnemyMovePattern randomPattern = getRandomMovementPattern(random);
             
-            // Create enemy using the factory instead of direct instantiation
-            Enemy enemy = EnemyFactory.createEnemy(x, y, "grandmother.png", 
-                                                GameState.getEnemySpeed(), 
-                                                randomPattern, 65f, 90f);
-            enemy.setTarget(player);
+            // Create and configure enemy
+            Enemy enemy = createAndConfigureEnemy(x, y, randomPattern);
             
-            // Set up collision handling within the Enemy class
-            configureEnemyCollisions(enemy);
-            
-            enemies.add(enemy);
-            entityManager.addEntity(enemy);
-            collisionManager.register(enemy);
-            movementManager.addMovingEntity(enemy);
-            movementManager.addAIEntity(enemy);
+            // Register enemy with various managers
+            registerEnemy(enemy);
         }
+    }
+    
+    /**
+     * Selects a random movement pattern for an enemy
+     * @param random Random number generator
+     * @return A randomly selected enemy movement pattern
+     */
+    private EnemyMovePattern getRandomMovementPattern(Random random) {
+        EnemyMovePattern[] patterns = EnemyMovePattern.values();
+        return patterns[random.nextInt(patterns.length)];
+    }
+    
+    /**
+     * Creates and configures a new enemy entity
+     * @param x X-coordinate for spawn position
+     * @param y Y-coordinate for spawn position
+     * @param movePattern Movement pattern to assign to the enemy
+     * @return The configured enemy entity
+     */
+    private Enemy createAndConfigureEnemy(float x, float y, EnemyMovePattern movePattern) {
+        // Create enemy using the factory 
+        Enemy enemy = EnemyFactory.createEnemy(x, y, "grandmother.png", 
+                                            GameState.getEnemySpeed(), 
+                                            movePattern, 65f, 90f);
+        
+        // Configure target and collision handling
+        enemy.setTarget(player);
+        configureEnemyCollisions(enemy);
+        
+        return enemy;
+    }
+    
+    /**
+     * Registers an enemy with all required managers and collections
+     * @param enemy The enemy to register
+     */
+    private void registerEnemy(Enemy enemy) {
+        enemies.add(enemy);
+        entityManager.addEntity(enemy);
+        collisionManager.register(enemy);
+        movementManager.addMovingEntity(enemy);
+        movementManager.addAIEntity(enemy);
     }
 
     public void spawnPowerUp() {
