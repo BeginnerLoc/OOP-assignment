@@ -9,6 +9,7 @@ import java.util.Random;
 
 import game.entities.BananaPeel;
 import game.entities.Enemy;
+import game.entities.EnemyFactory;
 import game.entities.Player;
 import game.entities.PowerUp;
 import game.entities.Trash;
@@ -179,7 +180,10 @@ public class GameMechanicsManager {
             EnemyMovePattern[] patterns = EnemyMovePattern.values();
             EnemyMovePattern randomPattern = patterns[random.nextInt(patterns.length)];
             
-            Enemy enemy = new Enemy(x, y, "grandmother.png", GameState.getEnemySpeed(), 65f, 90f, randomPattern);
+            // Create enemy using the factory instead of direct instantiation
+            Enemy enemy = EnemyFactory.createEnemy(x, y, "grandmother.png", 
+                                                GameState.getEnemySpeed(), 
+                                                randomPattern, 65f, 90f);
             enemy.setTarget(player);
             
             enemies.add(enemy);

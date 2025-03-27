@@ -6,8 +6,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Array;
 
+import game.movement.MovementStrategy;
+import game.movement.MovementStrategyFactory;
 import game.utils.EnemyMovePattern;
 import game_engine.AIMovable;
 import game_engine.BackgroundRenderer;
@@ -27,11 +28,7 @@ public class Enemy extends Entity implements AIMovable, Collidable {
     private float width;
     private float height;
     private boolean isActive = true;
-    private EnemyMovePattern movePattern;
-    private float moveTimer = 0;
-    private float circularAngle = 0;
-    private boolean zigzagDirection = true;
-    private float circularRadius = 100; // Radius for circular movement
+    private MovementStrategy movementStrategy;
 
     public Enemy(float x, float y, String texturePath, float speed, EnemyMovePattern pattern) {
         super(x, y, null, speed, 10);
@@ -39,7 +36,7 @@ public class Enemy extends Entity implements AIMovable, Collidable {
         this.height = 36;
         this.bounds = new Rectangle(x + width * 0.25f, y + height * 0.25f, width * 0.5f, height * 0.5f);
         this.texture = new Texture(texturePath);
-        this.movePattern = pattern;
+        this.movementStrategy = MovementStrategyFactory.createStrategy(pattern);
     }
     
     public Enemy(float x, float y, String texturePath, float speed, float width, float height, EnemyMovePattern pattern) {
@@ -48,7 +45,7 @@ public class Enemy extends Entity implements AIMovable, Collidable {
         this.height = height;
         this.bounds = new Rectangle(x + width * 0.25f, y + height * 0.25f, width * 0.5f, height * 0.5f);
         this.texture = new Texture(texturePath);
-        this.movePattern = pattern;
+        this.movementStrategy = MovementStrategyFactory.createStrategy(pattern);
     }
 
     public void setTarget(Entity target) {
@@ -58,58 +55,32 @@ public class Enemy extends Entity implements AIMovable, Collidable {
     @Override
     public void followEntity() {
         if (!isActive || target == null || isStunned) return;
-            
-        Vector2 direction = new Vector2(target.getX() - getX(), target.getY() - getY());
-        float distanceToTarget = direction.len();
-
+        
+        float distanceToTarget = new Vector2(target.getX() - getX(), target.getY() - getY()).len();
+        
         if (distanceToTarget > 3) {
-            direction.nor();
-            
-            moveTimer += Gdx.graphics.getDeltaTime();
-            
-            switch (movePattern) {
-                case DIRECT:
-                    // Simply move directly towards the target
-                    break;
-                    
-                case ZIGZAG:
-                    // Change direction every 1 second
-                    if (moveTimer > 1.0f) {
-                        zigzagDirection = !zigzagDirection;
-                        moveTimer = 0;
-                    }
-                    direction.rotateDeg(zigzagDirection ? 45 : -45);
-                    break;
-                    
-                case FLANKING:
-                    // Try to approach from the side
-                    Vector2 perpendicular = new Vector2(-direction.y, direction.x);
-                    if (distanceToTarget > 100) {
-                        direction.scl(0.7f).add(perpendicular.scl(0.3f));
-                        direction.nor();
-                    }
-                    break;
-                    
-                case CIRCULAR:
-                    // Calculate orbital movement
-                    circularAngle += Gdx.graphics.getDeltaTime() * 2; // Control rotation speed
-                    float orbitX = target.getX() + circularRadius * (float)Math.cos(circularAngle);
-                    float orbitY = target.getY() + circularRadius * (float)Math.sin(circularAngle);
-                    direction.set(orbitX - getX(), orbitY - getY()).nor();
-                    break;
-                    
-                case RANDOM_ANGLES:
-                    // Change direction every 2 seconds
-                    if (moveTimer > 2.0f) {
-                        direction.rotateDeg((float)(Math.random() * 90 - 45));
-                        moveTimer = 0;
-                    }
-                    break;
-            }
+            // Use the strategy to calculate the movement direction
+            Vector2 direction = movementStrategy.calculateDirection(
+                getX(), getY(), 
+                target.getX(), target.getY(), 
+                Gdx.graphics.getDeltaTime()
+            );
             
             setDirection(direction.x, direction.y);
         } else {
             stop();
+        }
+    }
+
+
+    public void setMovementPattern(EnemyMovePattern pattern) {
+        this.movementStrategy = MovementStrategyFactory.createStrategy(pattern);
+    }
+    
+
+    public void setMovementStrategy(MovementStrategy strategy) {
+        if (strategy != null) {
+            this.movementStrategy = strategy;
         }
     }
 
