@@ -3,11 +3,13 @@ package game.entities;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.Gdx;
 
 import game_engine.BackgroundRenderer;
 import game_engine.Collidable;
 import game_engine.Entity;
 import game_engine.PlayerMovable;
+import game.utils.GameState;
 
 import java.util.function.Consumer;
 
@@ -25,25 +27,40 @@ public class Player extends Entity implements PlayerMovable, Collidable {
     
     private float width;
     private float height;
+    private float animationTimer = 0;
+    private float bobHeight = 2f; // How much the character bobs up and down
+    private boolean isMoving = false;
 
+    private Texture idleTexture;
+    private Texture[] runningTextures;
+    private static final float ANIMATION_FRAME_DURATION = 0.1f; // Time to show each frame
+    private static final int NUM_RUNNING_FRAMES = 2;
+    
     public Player(float x, float y, String texturePath, float speed) {
         super(x, y, null, speed, 10); 
         this.width = 36;
         this.height = 36;
-        // Make the collision bounds smaller than the sprite
         this.bounds = new Rectangle(x + width * 0.25f, y + height * 0.25f, width * 0.5f, height * 0.5f); 
         this.texturePath = texturePath;
-        this.texture = new Texture(texturePath); 
+        loadTextures();
+        this.texture = idleTexture;
     }
     
     public Player(float x, float y, String texturePath, float speed, float width, float height) {
         super(x, y, null, speed, 10); 
-        
         this.width = width;
         this.height = height;
-        // Make the collision bounds smaller than the sprite
         this.bounds = new Rectangle(x + width * 0.25f, y + height * 0.25f, width * 0.5f, height * 0.5f);
-        this.texture = new Texture(texturePath);
+        this.texturePath = texturePath;
+        loadTextures();
+        this.texture = idleTexture;
+    }
+
+    private void loadTextures() {
+        idleTexture = new Texture("mr_bean.png");
+        runningTextures = new Texture[NUM_RUNNING_FRAMES];
+        runningTextures[0] = new Texture("running_1.png");
+        runningTextures[1] = new Texture("running_2.png");
     }
 
     public void applyGravity(float gravity) {
@@ -64,22 +81,34 @@ public class Player extends Entity implements PlayerMovable, Collidable {
 
     @Override
     public void move() {
-        // Use virtual viewport dimensions for bounds
         float virtualWidth = BackgroundRenderer.VIRTUAL_WIDTH;
         float virtualHeight = BackgroundRenderer.VIRTUAL_HEIGHT;
 
-        // Calculate new position based on velocity and speed
-        float newX = getX() + dx * getSpeed();
-        float newY = getY() + dy * getSpeed();
-        
-        // Clamp position within bounds
-        newX = Math.max(0, Math.min(newX, virtualWidth - width));
-        newY = Math.max(0, Math.min(newY, virtualHeight - height));
+        // Update animation timer when moving
+        if (dx != 0 || dy != 0) {
+            isMoving = true;
+            float deltaTime = Gdx.graphics.getDeltaTime();
+            animationTimer += deltaTime * (isSprinting ? 1.5f : 1.0f); // Faster animation when sprinting
+            
+            // Calculate bob effect
+            float verticalOffset = (float) Math.abs(Math.sin(animationTimer * 10)) * bobHeight;
+            
+            // Calculate new position with bob effect when moving
+            float newX = getX() + dx * getSpeed();
+            float newY = getY() + dy * getSpeed() + (isMoving ? verticalOffset : 0);
+            
+            // Clamp position within bounds
+            newX = Math.max(0, Math.min(newX, virtualWidth - width));
+            newY = Math.max(0, Math.min(newY, virtualHeight - height));
 
-        // Update position and bounds
-        setX(newX);
-        setY(newY);
-        bounds.setPosition(newX + width * 0.25f, newY + height * 0.25f);
+            // Update position and bounds
+            setX(newX);
+            setY(newY - verticalOffset); // Subtract offset to keep base position consistent
+            bounds.setPosition(newX + width * 0.25f, newY + height * 0.25f);
+        } else {
+            isMoving = false;
+            animationTimer = 0;
+        }
 
         // Update held trash position if we have any
         updateHeldTrashPosition();
@@ -136,7 +165,8 @@ public class Player extends Entity implements PlayerMovable, Collidable {
     @Override
     public void sprint(boolean isSprinting) {
         this.isSprinting = isSprinting;
-        setSpeed(isSprinting ? 8.0f : 4.0f);
+        setSpeed(isSprinting ? GameState.getPlayerSpeed() * 2.0f : GameState.getPlayerSpeed());
+        bobHeight = isSprinting ? 4f : 2f; // Increase bob height when sprinting
     }
 
     @Override
@@ -193,33 +223,75 @@ public class Player extends Entity implements PlayerMovable, Collidable {
      * @param newTexturePath Path to the new texture
      */
     public void changeTexture(String newTexturePath) {
-        // Dispose of the old texture to avoid memory leaks
-        if (texture != null) {
-            texture.dispose();
+        // Dispose of the old textures to avoid memory leaks
+        if (idleTexture != null) {
+            idleTexture.dispose();
+        }
+        if (runningTextures != null) {
+            for (Texture tex : runningTextures) {
+                if (tex != null) {
+                    tex.dispose();
+                }
+            }
         }
         
-        // Load and apply the new texture
-        texture = new Texture(newTexturePath);
+        // If it's a special texture (like car or slow), use it for all states
+        if (newTexturePath.contains("car") || newTexturePath.contains("slow")) {
+            idleTexture = new Texture(newTexturePath);
+            runningTextures = new Texture[NUM_RUNNING_FRAMES];
+            for (int i = 0; i < NUM_RUNNING_FRAMES; i++) {
+                runningTextures[i] = new Texture(newTexturePath);
+            }
+        } else {
+            // Otherwise load the normal animation textures
+            idleTexture = new Texture(newTexturePath);
+            runningTextures[0] = new Texture("running_1.png");
+            runningTextures[1] = new Texture("running_2.png");
+        }
+        texture = idleTexture;
         this.texturePath = newTexturePath;
-    }
-    
-    /**
-     * Gets the current texture path
-     * @return The path of the current texture
-     */
-    public String getTexturePath() {
-        return texturePath;
     }
 
     @Override
     public void draw(SpriteBatch batch) {
-        batch.draw(texture, getX(), getY(), width, height);
+        if (idleTexture != null && runningTextures != null) {
+            // Apply slight rotation based on movement, more pronounced when sprinting
+            float tilt = 0;
+            if (isMoving) {
+                float tiltAmount = isSprinting ? 8f : 5f;
+                tilt = (float) Math.sin(animationTimer * 10) * tiltAmount;
+                
+                // Calculate which frame of the running animation to show
+                int frameIndex = (int)((animationTimer / ANIMATION_FRAME_DURATION) % NUM_RUNNING_FRAMES);
+                texture = runningTextures[frameIndex];
+            } else {
+                texture = idleTexture;
+            }
+            
+            // Draw with rotation around center
+            batch.draw(texture, 
+                getX(), getY(),
+                width/2, height/2,
+                width, height,
+                1, 1,
+                tilt,
+                0, 0,
+                texture.getWidth(), texture.getHeight(),
+                false, false);
+        }
     }
 
     @Override 
     public void dispose() {
-        if (texture != null) {
-            texture.dispose();
+        if (idleTexture != null) {
+            idleTexture.dispose();
+        }
+        if (runningTextures != null) {
+            for (Texture tex : runningTextures) {
+                if (tex != null) {
+                    tex.dispose();
+                }
+            }
         }
     }
 }

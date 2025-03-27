@@ -97,7 +97,29 @@ public class GameScene extends Scene {
         this.ioManager.getInputManager().subscribeKeyDown(Keys.A, () -> mechanics.getPlayer().setDirection(-1, 0));
         this.ioManager.getInputManager().subscribeKeyDown(Keys.D, () -> mechanics.getPlayer().setDirection(1, 0));
         this.ioManager.getInputManager().subscribeKeyDown(Keys.SPACE, () -> mechanics.throwBananaPeel());
+        
+        // Add sprint control with Shift key
+        this.ioManager.getInputManager().subscribeKeyDown(Keys.SHIFT_LEFT, () -> mechanics.getPlayer().sprint(true));
+        this.ioManager.getInputManager().subscribeKeyUp(Keys.SHIFT_LEFT, () -> mechanics.getPlayer().sprint(false));
+        
+        // Stop movement when keys are released
+        this.ioManager.getInputManager().subscribeKeyUp(Keys.W, () -> checkStopMovement());
+        this.ioManager.getInputManager().subscribeKeyUp(Keys.S, () -> checkStopMovement());
+        this.ioManager.getInputManager().subscribeKeyUp(Keys.A, () -> checkStopMovement());
+        this.ioManager.getInputManager().subscribeKeyUp(Keys.D, () -> checkStopMovement());
+    }
 
+    private void checkStopMovement() {
+        // Check if any movement keys are still pressed
+        boolean wPressed = Gdx.input.isKeyPressed(Keys.W);
+        boolean sPressed = Gdx.input.isKeyPressed(Keys.S);
+        boolean aPressed = Gdx.input.isKeyPressed(Keys.A);
+        boolean dPressed = Gdx.input.isKeyPressed(Keys.D);
+
+        // If no movement keys are pressed, stop the player
+        if (!wPressed && !sPressed && !aPressed && !dPressed) {
+            mechanics.getPlayer().stop();
+        }
     }
     
     @Override
