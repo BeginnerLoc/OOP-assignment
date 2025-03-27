@@ -9,7 +9,7 @@ import game_engine.Entity;
 
 import java.util.function.Consumer;
 
-public class BananaPeel extends Entity implements Collidable {
+public class CatToy extends Entity implements Collidable {
     private Rectangle bounds;
     private Texture texture;
     private Consumer<Collidable> collisionAction;
@@ -17,7 +17,7 @@ public class BananaPeel extends Entity implements Collidable {
     private int height;
     private float stunDuration = 3.0f; // 3 seconds stun
     
-    public BananaPeel(float x, float y, String texturePath, int width, int height) {
+    public CatToy(float x, float y, String texturePath, int width, int height) {
         super(x, y, null, 0, 5);
         this.width = width;
         this.height = height;

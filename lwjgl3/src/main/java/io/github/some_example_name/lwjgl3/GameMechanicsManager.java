@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import game.entities.BananaPeel;
+import game.entities.CatToy;
 import game.entities.Enemy;
 import game.entities.EnemyFactory;
 import game.entities.Player;
@@ -32,7 +32,7 @@ public class GameMechanicsManager {
     private List<TrashBin> bins;
     private List<Trash> trashItems;
     private List<PowerUp> powerUps;
-    private List<BananaPeel> bananaPeels;
+    private List<CatToy> catToys;
     private float speedBoostTimer;
     private float speedPenaltyTimer;
     private boolean isSpeedBoosted;
@@ -42,8 +42,8 @@ public class GameMechanicsManager {
     private float levelTimer;
     private float powerUpSpawnTimer;
     private Map<Enemy, Float> stunnedEnemies;
-    private int bananaCharges; 
-    private float bananaCooldown = 0; 
+    private int catCharges; 
+    private float catCooldown = 0; 
 
     private EntityManager entityManager;
     private CollisionManager collisionManager;
@@ -62,10 +62,10 @@ public class GameMechanicsManager {
         this.bins = new ArrayList<>();
         this.trashItems = new ArrayList<>();
         this.powerUps = new ArrayList<>();
-        this.bananaPeels = new ArrayList<>();
+        this.catToys = new ArrayList<>();
         this.stunnedEnemies = new HashMap<>();
         this.level = 1;
-        this.bananaCharges = 0; // Initialize banana charges
+        this.catCharges = 0; // Initialize cat charges
         
         // Get manager instances
         this.entityManager = ServiceLocator.get(EntityManager.class);
@@ -399,7 +399,7 @@ public class GameMechanicsManager {
             GameState.updateScore(correct);
             if (correct) {
                 applySpeedBoost();
-                bananaCharges++; // Add banana charge for correct trash disposal
+                catCharges++; // Add cat charge for correct trash disposal
                 ioManager.getSoundManager().playSound("trash_correct");
             } else {
                 applySpeedPenalty();
@@ -416,42 +416,42 @@ public class GameMechanicsManager {
         powerUps.remove(powerUp);
         entityManager.removeEntity(powerUp);
         collisionManager.remove(powerUp);
-        bananaCharges++; // Only add banana charge for power-up collection
+        catCharges++; // Only add cat charge for power-up collection
         ioManager.getSoundManager().playSound("Power Up");
     }
 
-    private void handleBananaPeelCollision(BananaPeel peel, Enemy enemy) {
+    private void handleCatToyCollision(CatToy toy, Enemy enemy) {
         // Stun the enemy
-        stunnedEnemies.put(enemy, peel.getStunDuration());
+        stunnedEnemies.put(enemy, toy.getStunDuration());
         enemy.setTexture("grandmother_happy.png");
         enemy.setStunned(true);
         enemy.setSpeed(0);
         
-        // Remove the banana peel
-        bananaPeels.remove(peel);
-        entityManager.removeEntity(peel);
-        collisionManager.remove(peel);
-        peel.dispose();
+        // Remove the cat toy
+        catToys.remove(toy);
+        entityManager.removeEntity(toy);
+        collisionManager.remove(toy);
+        toy.dispose();
     }
 
-    public void throwBananaPeel() {
-        if (bananaCharges > 0 && bananaCooldown <= 0) { // Only throw if cooldown is up
+    public void throwCatToy() {
+        if (catCharges > 0 && catCooldown <= 0) { // Only throw if cooldown is up
             float x = player.getX();
             float y = player.getY();
-            BananaPeel peel = new BananaPeel(x, y, "cat.png", 52, 52);
+            CatToy toy = new CatToy(x, y, "cat.png", 52, 52);
             
-            // Set up collision handling for the peel
-            peel.setCollisionAction(other -> {
+            // Set up collision handling for the toy
+            toy.setCollisionAction(other -> {
                 if (other instanceof Enemy) {
-                    handleBananaPeelCollision(peel, (Enemy)other);
+                    handleCatToyCollision(toy, (Enemy)other);
                 }
             });
             
-            bananaPeels.add(peel);
-            entityManager.addEntity(peel);
-            collisionManager.register(peel);
-            bananaCharges--; // Use up one charge
-            bananaCooldown = 0.5f; // Set cooldown to 0.5 seconds
+            catToys.add(toy);
+            entityManager.addEntity(toy);
+            collisionManager.register(toy);
+            catCharges--; // Use up one charge
+            catCooldown = 0.5f; // Set cooldown to 0.5 seconds
         }
     }
 
@@ -516,9 +516,9 @@ public class GameMechanicsManager {
             }
         }
 
-        // Update banana cooldown
-        if (bananaCooldown > 0) {
-            bananaCooldown -= delta;
+        // Update cat cooldown
+        if (catCooldown > 0) {
+            catCooldown -= delta;
         }
 
         if (trashCooldown > 0) {
@@ -555,5 +555,5 @@ public class GameMechanicsManager {
     public float getSpeedBoostTimer() { return speedBoostTimer; }
     public float getSpeedPenaltyTimer() { return speedPenaltyTimer; }
     public Player getPlayer() { return player; }
-    public int getBananaCharges() { return bananaCharges; }
+    public int getCatCharges() { return catCharges; }
 }

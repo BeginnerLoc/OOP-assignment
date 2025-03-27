@@ -96,7 +96,7 @@ public class GameScene extends Scene {
         this.ioManager.getInputManager().subscribeKeyDown(Keys.S, () -> mechanics.getPlayer().setDirection(0, -1));
         this.ioManager.getInputManager().subscribeKeyDown(Keys.A, () -> mechanics.getPlayer().setDirection(-1, 0));
         this.ioManager.getInputManager().subscribeKeyDown(Keys.D, () -> mechanics.getPlayer().setDirection(1, 0));
-        this.ioManager.getInputManager().subscribeKeyDown(Keys.SPACE, () -> mechanics.throwBananaPeel());
+        this.ioManager.getInputManager().subscribeKeyDown(Keys.SPACE, () -> mechanics.throwCatToy());
         
         // Add sprint control with Shift key
         this.ioManager.getInputManager().subscribeKeyDown(Keys.SHIFT_LEFT, () -> mechanics.getPlayer().sprint(true));
@@ -239,8 +239,8 @@ public class GameScene extends Scene {
         }
         
         float statusY = baseTextY - lineSpacing * 3;
-        if (mechanics.getBananaCharges() > 0) {
-            font.draw(batch, "Grandma's Cat: " + mechanics.getBananaCharges() + " - Press SPACE to drop", textX, statusY);
+        if (mechanics.getCatCharges() > 0) {
+            font.draw(batch, "Grandma's Cat: " + mechanics.getCatCharges() + " - Press SPACE to drop", textX, statusY);
             statusY -= lineSpacing;
         }
         if (mechanics.isSpeedBoosted()) {
