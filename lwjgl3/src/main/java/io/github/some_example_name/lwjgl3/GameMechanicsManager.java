@@ -361,23 +361,40 @@ public class GameMechanicsManager {
         // Physics-like handling to push player away from bin
         GameUtils.handlePushFromStaticObject(player, bin);
         
-        // Game logic for depositing trash in bin
-        Trash heldTrash = player.getHeldTrash();
-        if (heldTrash != null) {
-            boolean correct = bin.getAcceptedType() == heldTrash.getType();
-            GameState.updateScore(correct);
-            if (correct) {
-                applySpeedBoost();
-                catCharges++; // Add cat charge for correct trash disposal
-                ioManager.getSoundManager().playSound("trash_correct");
-            } else {
-                applySpeedPenalty();
-                ioManager.getSoundManager().playSound("trash_wrong");
+        // Game logic for depositing trash in bin - only if not on cooldown
+        if (trashCooldown <= 0) {
+            Trash heldTrash = player.getHeldTrash();
+            if (heldTrash != null) {
+                boolean correct = bin.getAcceptedType() == heldTrash.getType();
+                GameState.updateScore(correct);
+                if (correct) {
+                    applySpeedBoost();
+                    catCharges++; // Add cat charge for correct trash disposal
+                    ioManager.getSoundManager().playSound("trash_correct");
+                } else {
+                    applySpeedPenalty();
+                    ioManager.getSoundManager().playSound("trash_wrong");
+                }
+                trashCooldown = 1.0f;
+                
+                // Store a reference to the trash before the player drops it
+                Trash trashToRemove = heldTrash;
+                
+                // Drop the trash (this will set player.heldTrash to null)
+                player.dropTrash();
+                
+                // Use the stored reference to properly remove the trash entity
+                entityManager.removeEntity(trashToRemove);
+                
+                // Remove from trashItems list too
+                trashItems.remove(trashToRemove);
+                
+                // Remove collision registration
+                collisionManager.remove(trashToRemove);
+                
+                // Spawn a new trash item
+                spawnNewTrash();
             }
-            trashCooldown = 0.2f;
-            player.dropTrash();
-            entityManager.removeEntity(heldTrash);
-            spawnNewTrash();
         }
     }
     
