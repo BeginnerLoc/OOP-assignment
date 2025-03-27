@@ -32,9 +32,11 @@ public class Player extends Entity implements PlayerMovable, Collidable {
     private boolean isMoving = false;
 
     private Texture idleTexture;
-    private Texture[] runningTextures;
+    private Texture[] runningTexturesRight;
+    private Texture[] runningTexturesLeft;
     private static final float ANIMATION_FRAME_DURATION = 0.1f; // Time to show each frame
     private static final int NUM_RUNNING_FRAMES = 2;
+    private boolean isFacingLeft = false;
     
     public Player(float x, float y, String texturePath, float speed) {
         super(x, y, null, speed, 10); 
@@ -58,9 +60,16 @@ public class Player extends Entity implements PlayerMovable, Collidable {
 
     private void loadTextures() {
         idleTexture = new Texture("mr_bean.png");
-        runningTextures = new Texture[NUM_RUNNING_FRAMES];
-        runningTextures[0] = new Texture("running_1.png");
-        runningTextures[1] = new Texture("running_2.png");
+        runningTexturesRight = new Texture[NUM_RUNNING_FRAMES];
+        runningTexturesLeft = new Texture[NUM_RUNNING_FRAMES];
+        
+        // Load right-facing running animations
+        runningTexturesRight[0] = new Texture("running_1.png");
+        runningTexturesRight[1] = new Texture("running_2.png");
+        
+        // Load left-facing running animations
+        runningTexturesLeft[0] = new Texture("running_3.png");
+        runningTexturesLeft[1] = new Texture("running_4.png");
     }
 
     public void applyGravity(float gravity) {
@@ -129,9 +138,16 @@ public class Player extends Entity implements PlayerMovable, Collidable {
 
     @Override
     public void setDirection(float dx, float dy) {
-        // Set velocity instead of directly updating position
         this.dx = dx;
         this.dy = dy;
+        
+        // Update facing direction based on horizontal movement
+        if (dx < 0) {
+            isFacingLeft = true;
+        } else if (dx > 0) {
+            isFacingLeft = false;
+        }
+        // Don't update facing direction if only moving vertically (dx == 0)
     }
 
     @Override
@@ -227,8 +243,15 @@ public class Player extends Entity implements PlayerMovable, Collidable {
         if (idleTexture != null) {
             idleTexture.dispose();
         }
-        if (runningTextures != null) {
-            for (Texture tex : runningTextures) {
+        if (runningTexturesRight != null) {
+            for (Texture tex : runningTexturesRight) {
+                if (tex != null) {
+                    tex.dispose();
+                }
+            }
+        }
+        if (runningTexturesLeft != null) {
+            for (Texture tex : runningTexturesLeft) {
                 if (tex != null) {
                     tex.dispose();
                 }
@@ -238,15 +261,19 @@ public class Player extends Entity implements PlayerMovable, Collidable {
         // If it's a special texture (like car or slow), use it for all states
         if (newTexturePath.contains("car") || newTexturePath.contains("slow")) {
             idleTexture = new Texture(newTexturePath);
-            runningTextures = new Texture[NUM_RUNNING_FRAMES];
+            runningTexturesRight = new Texture[NUM_RUNNING_FRAMES];
+            runningTexturesLeft = new Texture[NUM_RUNNING_FRAMES];
             for (int i = 0; i < NUM_RUNNING_FRAMES; i++) {
-                runningTextures[i] = new Texture(newTexturePath);
+                runningTexturesRight[i] = new Texture(newTexturePath);
+                runningTexturesLeft[i] = new Texture(newTexturePath);
             }
         } else {
             // Otherwise load the normal animation textures
             idleTexture = new Texture(newTexturePath);
-            runningTextures[0] = new Texture("running_1.png");
-            runningTextures[1] = new Texture("running_2.png");
+            runningTexturesRight[0] = new Texture("running_1.png");
+            runningTexturesRight[1] = new Texture("running_2.png");
+            runningTexturesLeft[0] = new Texture("running_3.png");
+            runningTexturesLeft[1] = new Texture("running_4.png");
         }
         texture = idleTexture;
         this.texturePath = newTexturePath;
@@ -254,7 +281,7 @@ public class Player extends Entity implements PlayerMovable, Collidable {
 
     @Override
     public void draw(SpriteBatch batch) {
-        if (idleTexture != null && runningTextures != null) {
+        if (idleTexture != null && runningTexturesRight != null && runningTexturesLeft != null) {
             // Apply slight rotation based on movement, more pronounced when sprinting
             float tilt = 0;
             if (isMoving) {
@@ -263,7 +290,9 @@ public class Player extends Entity implements PlayerMovable, Collidable {
                 
                 // Calculate which frame of the running animation to show
                 int frameIndex = (int)((animationTimer / ANIMATION_FRAME_DURATION) % NUM_RUNNING_FRAMES);
-                texture = runningTextures[frameIndex];
+                
+                // Select the appropriate texture array based on direction
+                texture = isFacingLeft ? runningTexturesLeft[frameIndex] : runningTexturesRight[frameIndex];
             } else {
                 texture = idleTexture;
             }
@@ -286,8 +315,15 @@ public class Player extends Entity implements PlayerMovable, Collidable {
         if (idleTexture != null) {
             idleTexture.dispose();
         }
-        if (runningTextures != null) {
-            for (Texture tex : runningTextures) {
+        if (runningTexturesRight != null) {
+            for (Texture tex : runningTexturesRight) {
+                if (tex != null) {
+                    tex.dispose();
+                }
+            }
+        }
+        if (runningTexturesLeft != null) {
+            for (Texture tex : runningTexturesLeft) {
                 if (tex != null) {
                     tex.dispose();
                 }

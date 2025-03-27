@@ -485,7 +485,7 @@ public class GameMechanicsManager {
             if (speedBoostTimer <= 0) {
                 isSpeedBoosted = false;
                 player.setSpeed(GameState.getPlayerSpeed());
-                player.changeTexture("mrbean.png");
+                player.changeTexture("mr_bean.png");
             }
         }
         
@@ -493,7 +493,7 @@ public class GameMechanicsManager {
             speedPenaltyTimer -= delta;
             if (speedPenaltyTimer <= 0) {
                 isSpeedPenalized = false;
-                player.changeTexture("mrbean.png");
+                player.changeTexture("mr_bean.png");
                 player.setSpeed(GameState.getPlayerSpeed());
             }
         }

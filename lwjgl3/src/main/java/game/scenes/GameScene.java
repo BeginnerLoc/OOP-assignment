@@ -68,7 +68,7 @@ public class GameScene extends Scene {
         Player player = new Player(
             virtualWidth * 0.1f,    // X position: 10% from left
             virtualHeight * 0.4f,   // Y position: 40% from bottom
-            "mrbean.png",
+            "mr_bean.png",
             3.0f,                   // Speed multiplier
             virtualWidth * 0.08f,   // Width: 8% of virtual width
             virtualHeight * 0.15f // Height: 15% of virtual height
