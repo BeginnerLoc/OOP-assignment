@@ -19,33 +19,24 @@ public class Player extends Entity implements PlayerMovable, Collidable {
     private boolean isSprinting;
     private Consumer<Collidable> collisionAction;
     private Rectangle bounds;
-    private Texture texture; 
     private Trash heldTrash;
     private Trash droppedTrash;
     private int health = 3;
-    private String texturePath; 
     
     private float width;
     private float height;
     private float animationTimer = 0;
-    private float bobHeight = 2f; // How much the character bobs up and down
+    private float bobHeight = 2f;
     private boolean isMoving = false;
-
     private Texture idleTexture;
     private Texture[] runningTexturesRight;
     private Texture[] runningTexturesLeft;
-    private static final float ANIMATION_FRAME_DURATION = 0.1f; // Time to show each frame
+    private static final float ANIMATION_FRAME_DURATION = 0.1f;
     private static final int NUM_RUNNING_FRAMES = 2;
     private boolean isFacingLeft = false;
     
     public Player(float x, float y, String texturePath, float speed) {
-        super(x, y, null, speed, 10); 
-        this.width = 36;
-        this.height = 36;
-        this.bounds = new Rectangle(x + width * 0.25f, y + height * 0.25f, width * 0.5f, height * 0.5f); 
-        this.texturePath = texturePath;
-        loadTextures();
-        this.texture = idleTexture;
+        this(x, y, texturePath, speed, 36, 36);
     }
     
     public Player(float x, float y, String texturePath, float speed, float width, float height) {
@@ -53,9 +44,7 @@ public class Player extends Entity implements PlayerMovable, Collidable {
         this.width = width;
         this.height = height;
         this.bounds = new Rectangle(x + width * 0.25f, y + height * 0.25f, width * 0.5f, height * 0.5f);
-        this.texturePath = texturePath;
         loadTextures();
-        this.texture = idleTexture;
     }
 
     private void loadTextures() {
@@ -119,18 +108,14 @@ public class Player extends Entity implements PlayerMovable, Collidable {
             animationTimer = 0;
         }
 
-        // Update held trash position if we have any
         updateHeldTrashPosition();
     }
     
     // Update held trash positioning
     private void updateHeldTrashPosition() {
         if (heldTrash != null) {
-            // Position trash relative to player
             float playerCenterX = getX() + width / 2;
             float playerCenterY = getY() + height / 2;
-            
-            // Position slightly above player's center
             heldTrash.setX(playerCenterX - 16);
             heldTrash.setY(playerCenterY + 10);
         }
@@ -147,7 +132,6 @@ public class Player extends Entity implements PlayerMovable, Collidable {
         } else if (dx > 0) {
             isFacingLeft = false;
         }
-        // Don't update facing direction if only moving vertically (dx == 0)
     }
 
     @Override
@@ -239,24 +223,7 @@ public class Player extends Entity implements PlayerMovable, Collidable {
      * @param newTexturePath Path to the new texture
      */
     public void changeTexture(String newTexturePath) {
-        // Dispose of the old textures to avoid memory leaks
-        if (idleTexture != null) {
-            idleTexture.dispose();
-        }
-        if (runningTexturesRight != null) {
-            for (Texture tex : runningTexturesRight) {
-                if (tex != null) {
-                    tex.dispose();
-                }
-            }
-        }
-        if (runningTexturesLeft != null) {
-            for (Texture tex : runningTexturesLeft) {
-                if (tex != null) {
-                    tex.dispose();
-                }
-            }
-        }
+        disposeTextures();
         
         // If it's a special texture (like car or slow), use it for all states
         if (newTexturePath.contains("car") || newTexturePath.contains("slow")) {
@@ -270,19 +237,14 @@ public class Player extends Entity implements PlayerMovable, Collidable {
         } else {
             // Otherwise load the normal animation textures
             idleTexture = new Texture(newTexturePath);
-            runningTexturesRight[0] = new Texture("running_1.png");
-            runningTexturesRight[1] = new Texture("running_2.png");
-            runningTexturesLeft[0] = new Texture("running_3.png");
-            runningTexturesLeft[1] = new Texture("running_4.png");
+            loadTextures();
         }
-        texture = idleTexture;
-        this.texturePath = newTexturePath;
     }
 
     @Override
     public void draw(SpriteBatch batch) {
         if (idleTexture != null && runningTexturesRight != null && runningTexturesLeft != null) {
-            // Apply slight rotation based on movement, more pronounced when sprinting
+            // Apply slight rotation based on movement
             float tilt = 0;
             if (isMoving) {
                 float tiltAmount = isSprinting ? 8f : 5f;
@@ -291,27 +253,35 @@ public class Player extends Entity implements PlayerMovable, Collidable {
                 // Calculate which frame of the running animation to show
                 int frameIndex = (int)((animationTimer / ANIMATION_FRAME_DURATION) % NUM_RUNNING_FRAMES);
                 
-                // Select the appropriate texture array based on direction
-                texture = isFacingLeft ? runningTexturesLeft[frameIndex] : runningTexturesRight[frameIndex];
+                // Draw the appropriate texture based on direction
+                batch.draw(
+                    isFacingLeft ? runningTexturesLeft[frameIndex] : runningTexturesRight[frameIndex],
+                    getX(), getY(),
+                    width/2, height/2,
+                    width, height,
+                    1, 1,
+                    tilt,
+                    0, 0,
+                    idleTexture.getWidth(), idleTexture.getHeight(),
+                    false, false
+                );
             } else {
-                texture = idleTexture;
+                batch.draw(
+                    idleTexture,
+                    getX(), getY(),
+                    width/2, height/2,
+                    width, height,
+                    1, 1,
+                    tilt,
+                    0, 0,
+                    idleTexture.getWidth(), idleTexture.getHeight(),
+                    false, false
+                );
             }
-            
-            // Draw with rotation around center
-            batch.draw(texture, 
-                getX(), getY(),
-                width/2, height/2,
-                width, height,
-                1, 1,
-                tilt,
-                0, 0,
-                texture.getWidth(), texture.getHeight(),
-                false, false);
         }
     }
 
-    @Override 
-    public void dispose() {
+    private void disposeTextures() {
         if (idleTexture != null) {
             idleTexture.dispose();
         }
@@ -329,5 +299,10 @@ public class Player extends Entity implements PlayerMovable, Collidable {
                 }
             }
         }
+    }
+
+    @Override 
+    public void dispose() {
+        disposeTextures();
     }
 }

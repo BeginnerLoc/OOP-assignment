@@ -42,8 +42,8 @@ public class GameMechanicsManager {
     private float levelTimer;
     private float powerUpSpawnTimer;
     private Map<Enemy, Float> stunnedEnemies;
-    private int bananaCharges; // New field for banana charges
-    private float bananaCooldown = 0; // Add cooldown timer for banana throws
+    private int bananaCharges; 
+    private float bananaCooldown = 0; 
 
     private EntityManager entityManager;
     private CollisionManager collisionManager;
@@ -423,6 +423,7 @@ public class GameMechanicsManager {
     private void handleBananaPeelCollision(BananaPeel peel, Enemy enemy) {
         // Stun the enemy
         stunnedEnemies.put(enemy, peel.getStunDuration());
+        enemy.setTexture("grandmother_happy.png");
         enemy.setStunned(true);
         enemy.setSpeed(0);
         
@@ -507,6 +508,7 @@ public class GameMechanicsManager {
             
             if (remainingStunTime <= 0) {
                 enemy.setStunned(false);
+                enemy.setTexture("grandmother.png");
                 enemy.setSpeed(GameState.getEnemySpeed());
                 it.remove();
             } else {

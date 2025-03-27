@@ -208,4 +208,11 @@ public class Enemy extends Entity implements AIMovable, Collidable {
             texture.dispose();
         }
     }
+
+    public void setTexture(String string) {
+        if (texture != null) {
+            texture.dispose();
+        }
+        this.texture = new Texture(string);
+    }
 }
