@@ -42,7 +42,7 @@ public class GameScene extends Scene {
     	
         // Load essential sound effects
         this.ioManager.getSoundManager().loadSound("enemy_hit", "Wrong Answer Sound effect.mp3");
-        this.ioManager.getSoundManager().loadSound("game_over", "Game Over Sound Effect.mp3");
+        this.ioManager.getSoundManager().loadSound("gameover_sound", "gameover_sound.mp3");
         this.ioManager.getSoundManager().loadSound("trash_correct", "Correct Answer sound effect.mp3");
         this.ioManager.getSoundManager().loadSound("trash_wrong", "Wrong Answer Sound effect.mp3");
         this.ioManager.getSoundManager().loadSound("pickup", "Item Pickup [Sound Effect].mp3");
@@ -93,8 +93,6 @@ public class GameScene extends Scene {
 
     @Override
     public void render() {
-        // Clear the screen
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         ScreenUtils.clear(0, 0, 0.2f, 1);
         
         // Update game mechanics
