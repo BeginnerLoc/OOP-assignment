@@ -218,10 +218,6 @@ public class Player extends Entity implements PlayerMovable, Collidable {
         return health;
     }
 
-    /**
-     * Changes the player's texture to a new one
-     * @param newTexturePath Path to the new texture
-     */
     public void changeTexture(String newTexturePath) {
         disposeTextures();
         
@@ -234,10 +230,22 @@ public class Player extends Entity implements PlayerMovable, Collidable {
                 runningTexturesRight[i] = new Texture(newTexturePath);
                 runningTexturesLeft[i] = new Texture(newTexturePath);
             }
-        } else {
-            // Otherwise load the normal animation textures
+        } else if (newTexturePath.equals("mr_bean.png")) {
+            // For normal state, reload all running animations
             idleTexture = new Texture(newTexturePath);
-            loadTextures();
+            runningTexturesRight = new Texture[NUM_RUNNING_FRAMES];
+            runningTexturesLeft = new Texture[NUM_RUNNING_FRAMES];
+            
+            // Load right-facing running animations
+            runningTexturesRight[0] = new Texture("running_1.png");
+            runningTexturesRight[1] = new Texture("running_2.png");
+            
+            // Load left-facing running animations
+            runningTexturesLeft[0] = new Texture("running_3.png");
+            runningTexturesLeft[1] = new Texture("running_4.png");
+        } else {
+            // For any other textures, just change the idle texture
+            idleTexture = new Texture(newTexturePath);
         }
     }
 
