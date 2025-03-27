@@ -17,10 +17,9 @@ import game.entities.TrashBin;
 import game.scenes.GameOverScene;
 import game.utils.EnemyMovePattern;
 import game.utils.GameState;
+import game.utils.GameUtils;
 import game_engine.BackgroundRenderer;
-import game_engine.Collidable;
 import game_engine.CollisionManager;
-import game_engine.Entity;
 import game_engine.EntityManager;
 import game_engine.IOManager;
 import game_engine.MovementManager;
@@ -50,13 +49,6 @@ public class GameMechanicsManager {
     private CollisionManager collisionManager;
     private IOManager ioManager;
     private MovementManager movementManager;
-    
-
-    // Trash image arrays
-    private final String[] plasticTrashImages = {"bottle_waste.png", "jug1_waste.png", "jug2_waste.png"};
-    private final String[] paperTrashImages = {"newspaper_waste.png", "cup_waste.png", "paperbag_waste.png", "parcelbox_waste.png", "pizzabox_waste.png"};
-    private final String[] metalTrashImages = {"ColaCan_waste.png", "canfood_waste.png", "SprayCan_waste.png", "catfoodCan_waste.png"};
-    private final String[] glassTrashImages = {"glassbottle1_waste.png", "glassbottle2_waste.png", "glassjar_waste.png"};
 
     public GameMechanicsManager() {
         this.enemies = new ArrayList<>();
@@ -99,24 +91,23 @@ public class GameMechanicsManager {
     }
 
     public void spawnTrash() {
-        float virtualWidth = BackgroundRenderer.VIRTUAL_WIDTH;
-        float virtualHeight = BackgroundRenderer.VIRTUAL_HEIGHT;
-        float centerX = virtualWidth / 2f;
-        float centerY = virtualHeight / 2f;
+        float[] center = GameUtils.getScreenCenter();
+        float centerX = center[0];
+        float centerY = center[1];
         Random random = new Random();
 
-        spawnTrashOfType(Trash.TrashType.PLASTIC, plasticTrashImages, 2, centerX, centerY, random);
-        spawnTrashOfType(Trash.TrashType.PAPER, paperTrashImages, 2, centerX, centerY, random);
-        spawnTrashOfType(Trash.TrashType.METAL, metalTrashImages, 2, centerX, centerY, random);
-        spawnTrashOfType(Trash.TrashType.GLASS, glassTrashImages, 2, centerX, centerY, random);
+        spawnTrashOfType(Trash.TrashType.PLASTIC, 2, centerX, centerY, random);
+        spawnTrashOfType(Trash.TrashType.PAPER, 2, centerX, centerY, random);
+        spawnTrashOfType(Trash.TrashType.METAL, 2, centerX, centerY, random);
+        spawnTrashOfType(Trash.TrashType.GLASS, 2, centerX, centerY, random);
     }
 
-    private void spawnTrashOfType(Trash.TrashType type, String[] images, int count, float centerX, float centerY, Random random) {
+    private void spawnTrashOfType(Trash.TrashType type, int count, float centerX, float centerY, Random random) {
         float virtualWidth = BackgroundRenderer.VIRTUAL_WIDTH;
         float virtualHeight = BackgroundRenderer.VIRTUAL_HEIGHT;
         
         for (int i = 0; i < count; i++) {
-            String imageName = images[random.nextInt(images.length)];
+            String imageName = GameUtils.getRandomImageForType(type);
             float x = centerX + (random.nextFloat() - 0.5f) * virtualWidth * 0.4f;
             float y = centerY + (random.nextFloat() - 0.5f) * virtualHeight * 0.4f;
             Trash trash = new Trash(x, y, type, imageName);
@@ -127,29 +118,17 @@ public class GameMechanicsManager {
     }
 
     public void spawnNewTrash() {
-        float virtualWidth = BackgroundRenderer.VIRTUAL_WIDTH;
-        float virtualHeight = BackgroundRenderer.VIRTUAL_HEIGHT;
-        float centerX = virtualWidth / 2f + (float)(Math.random() * 100 - 50);
-        float centerY = virtualHeight / 2f + (float)(Math.random() * 100 - 50);
+        float[] center = GameUtils.getScreenCenter();
+        float centerX = center[0] + (float)(Math.random() * 100 - 50);
+        float centerY = center[1] + (float)(Math.random() * 100 - 50);
         Trash.TrashType randomType = Trash.TrashType.values()[(int)(Math.random() * 4)];
         
-        String imageName = getRandomImageForType(randomType);
+        String imageName = GameUtils.getRandomImageForType(randomType);
         Trash newTrash = new Trash(centerX, centerY, randomType, imageName);
         
         trashItems.add(newTrash);
         entityManager.addEntity(newTrash);
         collisionManager.register(newTrash);
-    }
-
-    private String getRandomImageForType(Trash.TrashType type) {
-        Random random = new Random();
-        switch (type) {
-            case PLASTIC: return plasticTrashImages[random.nextInt(plasticTrashImages.length)];
-            case PAPER: return paperTrashImages[random.nextInt(paperTrashImages.length)];
-            case METAL: return metalTrashImages[random.nextInt(metalTrashImages.length)];
-            case GLASS: return glassTrashImages[random.nextInt(glassTrashImages.length)];
-            default: return "";
-        }
     }
 
     public void spawnEnemies() {
@@ -165,17 +144,16 @@ public class GameMechanicsManager {
 
         // Create new enemies based on current level
         int enemyCount = Math.min(level + 1, 5); // Cap at 5 enemies maximum
-        float virtualWidth = BackgroundRenderer.VIRTUAL_WIDTH;
-        float virtualHeight = BackgroundRenderer.VIRTUAL_HEIGHT;
         Random random = new Random();
 
         for (int i = enemies.size(); i < enemyCount; i++) {
             // Spawn enemy at random position away from the player
             float x, y;
             do {
-                x = (float) (Math.random() * (virtualWidth - 100));
-                y = (float) (Math.random() * (virtualHeight - 100));
-            } while (isNearPlayer(x, y, 200)); // Keep enemies at least 200 units away from player initially
+                float[] position = GameUtils.getRandomPosition(100);
+                x = position[0];
+                y = position[1];
+            } while (GameUtils.isNearEntity(x, y, player, 200)); // Keep enemies at least 200 units away from player initially
             
             // Get a random movement pattern
             EnemyMovePattern[] patterns = EnemyMovePattern.values();
@@ -198,19 +176,9 @@ public class GameMechanicsManager {
         }
     }
 
-    private boolean isNearPlayer(float x, float y, float minDistance) {
-        if (player == null) return false;
-        float dx = x - player.getX();
-        float dy = y - player.getY();
-        return Math.sqrt(dx * dx + dy * dy) < minDistance;
-    }
-
     public void spawnPowerUp() {
-        float virtualWidth = BackgroundRenderer.VIRTUAL_WIDTH;
-        float virtualHeight = BackgroundRenderer.VIRTUAL_HEIGHT;
-        float x = (float) (Math.random() * (virtualWidth - 32));
-        float y = (float) (Math.random() * (virtualHeight - 32));
-        PowerUp powerUp = new PowerUp(x, y, "teddy.png");
+        float[] position = GameUtils.getRandomPosition(32);
+        PowerUp powerUp = new PowerUp(position[0], position[1], "teddy.png");
         
         // Configure PowerUp collision handling
         configureCollisionForPowerUp(powerUp);
@@ -268,7 +236,7 @@ public class GameMechanicsManager {
             if (other instanceof TrashBin) {
                 // Handle enemy-bin collision with physics-like pushing
                 TrashBin bin = (TrashBin) other;
-                handlePushFromStaticObject(enemy, bin);
+                GameUtils.handlePushFromStaticObject(enemy, bin);
             } else if (other instanceof CatToy) {
                 // Cat toy stuns the enemy
                 handleEnemyCatToyCollision(enemy, (CatToy) other);
@@ -341,7 +309,7 @@ public class GameMechanicsManager {
      */
     private void handlePlayerTrashBinCollision(TrashBin bin) {
         // Physics-like handling to push player away from bin
-        handlePushFromStaticObject(player, bin);
+        GameUtils.handlePushFromStaticObject(player, bin);
         
         // Game logic for depositing trash in bin
         Trash heldTrash = player.getHeldTrash();
@@ -389,41 +357,6 @@ public class GameMechanicsManager {
         entityManager.removeEntity(toy);
         collisionManager.remove(toy);
         toy.dispose();
-    }
-    
-    /**
-     * Physics-like collision handling that pushes a moving entity away from a static object
-     */
-    private void handlePushFromStaticObject(Collidable movingEntity, Collidable staticEntity) {
-        // Calculate centers
-        float movingCenterX = ((Entity)movingEntity).getX() + movingEntity.getBounds().width / 2;
-        float movingCenterY = ((Entity)movingEntity).getY() + movingEntity.getBounds().height / 2;
-        float staticCenterX = ((Entity)staticEntity).getX() + staticEntity.getBounds().width / 2;
-        float staticCenterY = ((Entity)staticEntity).getY() + staticEntity.getBounds().height / 2;
-        
-        // Calculate direction vector from static center to moving center
-        float dx = movingCenterX - staticCenterX;
-        float dy = movingCenterY - staticCenterY;
-        float distance = (float) Math.sqrt(dx * dx + dy * dy);
-        
-        if (distance < 0.1f) {
-            // If centers are too close, push directly right
-            dx = 1;
-            dy = 0;
-            distance = 1;
-        }
-        
-        // Calculate minimum distance needed between centers
-        float minDistance = (movingEntity.getBounds().width + staticEntity.getBounds().width) / 2;
-        
-        if (distance < minDistance) {
-            // Calculate new position maintaining minimum distance
-            float pushX = (dx / distance) * (minDistance - distance);
-            float pushY = (dy / distance) * (minDistance - distance);
-            
-            ((Entity)movingEntity).setX(((Entity)movingEntity).getX() + pushX);
-            ((Entity)movingEntity).setY(((Entity)movingEntity).getY() + pushY);
-        }
     }
 
     public void throwCatToy() {
@@ -543,9 +476,9 @@ public class GameMechanicsManager {
         unregisterEntities();
     }
     
-
     private void unregisterEntities() {
         try {
+            // Use safe iteration with a copy of the list when possible
             List<Enemy> enemiesCopy = new ArrayList<>(enemies);
             for (Enemy enemy : enemiesCopy) {
                 entityManager.removeEntity(enemy);

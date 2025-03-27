@@ -10,9 +10,9 @@ import game_engine.ServiceLocator;
 public class SettingsScene extends Scene {
     private BackgroundRenderer backgroundRenderer;
     private CustomButton dismissButton;
-    private CustomButton lowVolumeButton;
-    private CustomButton mediumVolumeButton;
-    private CustomButton highVolumeButton;
+    private CustomButton zeroVolumeButton;
+    private CustomButton halfVolumeButton;
+    private CustomButton fullVolumeButton;
 
     public SettingsScene(String name) {
         super(name);
@@ -42,11 +42,9 @@ public class SettingsScene extends Scene {
         float virtualWidth = BackgroundRenderer.VIRTUAL_WIDTH;
         float virtualHeight = BackgroundRenderer.VIRTUAL_HEIGHT;
 
-        // Common button dimensions
+        // Dismiss button (top-right corner)
         float buttonWidth = virtualWidth * 0.1f;
         float buttonHeight = virtualHeight * 0.1f;
-
-        // Dismiss button (top-right corner)
         float dismissX = virtualWidth * 0.95f - buttonWidth;
         float dismissY = virtualHeight * 0.95f - buttonHeight;
         dismissButton = new CustomButton("dismiss_button.png", dismissX, dismissY, buttonWidth, buttonHeight);
@@ -56,54 +54,37 @@ public class SettingsScene extends Scene {
         this.entityManager.addEntity(dismissButton);
         this.ioManager.getInputManager().registerClickable(dismissButton);
 
-        // Calculate positions for volume buttons - centered on screen
-        float volumeButtonsY = virtualHeight * 0.5f;  // Centered vertically
-        float totalButtonsWidth = (buttonWidth * 3) + (virtualWidth * 0.05f * 2);  // 3 buttons + 2 gaps
+        // Adjusted for three volume buttons with increased size
+        float volumeButtonWidth = virtualWidth * 0.28f;  
+        float volumeButtonHeight = virtualHeight * 0.18f;
+        float volumeButtonsY = virtualHeight * 0.5f - 60f;  // Centered vertically with a slight offset
+        float spacing = virtualWidth * 0.00005f;  
+        float totalButtonsWidth = (volumeButtonWidth * 3) + (spacing * 2);  // 3 buttons + 2 gaps
         float startX = (virtualWidth - totalButtonsWidth) * 0.5f;  // Center horizontally
-        float spacing = virtualWidth * 0.05f;  // 5% of screen width for spacing
         
-        // Low Volume Button
-        lowVolumeButton = new CustomButton("easy_level.png", startX, volumeButtonsY, buttonWidth, buttonHeight);
-        lowVolumeButton.setOnClickAction(() -> {
-            this.ioManager.getSoundManager().setVolume(0.1f);
-            updateVolumeButtonsState("low");
+        // 0% Volume Button
+        zeroVolumeButton = new CustomButton("0_volumebtn.png", startX, volumeButtonsY, volumeButtonWidth, volumeButtonHeight);
+        zeroVolumeButton.setOnClickAction(() -> {
+            this.ioManager.getSoundManager().setVolume(0.0f);
         });
-        this.entityManager.addEntity(lowVolumeButton);
-        this.ioManager.getInputManager().registerClickable(lowVolumeButton);
+        this.entityManager.addEntity(zeroVolumeButton);
+        this.ioManager.getInputManager().registerClickable(zeroVolumeButton);
 
-        // Medium Volume Button
-        mediumVolumeButton = new CustomButton("medium_level.png", startX + buttonWidth + spacing, volumeButtonsY, buttonWidth, buttonHeight);
-        mediumVolumeButton.setOnClickAction(() -> {
-            this.ioManager.getSoundManager().setVolume(0.6f);
-            updateVolumeButtonsState("medium");
+        // 50% Volume Button
+        halfVolumeButton = new CustomButton("50_volumebtn.png", startX + volumeButtonWidth + spacing, volumeButtonsY, volumeButtonWidth, volumeButtonHeight);
+        halfVolumeButton.setOnClickAction(() -> {
+            this.ioManager.getSoundManager().setVolume(0.5f);
         });
-        this.entityManager.addEntity(mediumVolumeButton);
-        this.ioManager.getInputManager().registerClickable(mediumVolumeButton);
+        this.entityManager.addEntity(halfVolumeButton);
+        this.ioManager.getInputManager().registerClickable(halfVolumeButton);
 
-        // High Volume Button
-        highVolumeButton = new CustomButton("hard_level.png", startX + (buttonWidth + spacing) * 2, volumeButtonsY, buttonWidth, buttonHeight);
-        highVolumeButton.setOnClickAction(() -> {
+        // 100% Volume Button
+        fullVolumeButton = new CustomButton("100_volumebtn.png", startX + (volumeButtonWidth + spacing) * 2, volumeButtonsY, volumeButtonWidth, volumeButtonHeight);
+        fullVolumeButton.setOnClickAction(() -> {
             this.ioManager.getSoundManager().setVolume(1.0f);
-            updateVolumeButtonsState("high");
         });
-        this.entityManager.addEntity(highVolumeButton);
-        this.ioManager.getInputManager().registerClickable(highVolumeButton);
-
-        // Set initial volume button state based on current volume
-        float currentVolume = this.ioManager.getSoundManager().getVolume();
-        if (currentVolume <= 0.3f) {
-            updateVolumeButtonsState("low");
-        } else if (currentVolume <= 0.6f) {
-            updateVolumeButtonsState("medium");
-        } else {
-            updateVolumeButtonsState("high");
-        }
-    }
-
-    private void updateVolumeButtonsState(String activeVolume) {
-        lowVolumeButton.setImage(activeVolume.equals("low") ? "easy_level2.png" : "easy_level.png");
-        mediumVolumeButton.setImage(activeVolume.equals("medium") ? "medium_level2.png" : "medium_level.png");
-        highVolumeButton.setImage(activeVolume.equals("high") ? "hard_level2.png" : "hard_level.png");
+        this.entityManager.addEntity(fullVolumeButton);
+        this.ioManager.getInputManager().registerClickable(fullVolumeButton);
     }
 
     @Override

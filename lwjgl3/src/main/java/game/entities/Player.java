@@ -85,8 +85,6 @@ public class Player extends Entity implements PlayerMovable, Collidable {
         // Update animation timer when moving
         if (dx != 0 || dy != 0) {
             isMoving = true;
-            float deltaTime = Gdx.graphics.getDeltaTime();
-            animationTimer += deltaTime * (isSprinting ? 1.5f : 1.0f); // Faster animation when sprinting
             
             // Calculate bob effect
             float verticalOffset = (float) Math.abs(Math.sin(animationTimer * 10)) * bobHeight;
