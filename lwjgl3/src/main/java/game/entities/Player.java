@@ -21,7 +21,6 @@ public class Player extends Entity implements PlayerMovable, Collidable {
     private Rectangle bounds;
     private Trash heldTrash;
     private Trash droppedTrash;
-    private int health = 3;
     
     private float width;
     private float height;
@@ -59,22 +58,6 @@ public class Player extends Entity implements PlayerMovable, Collidable {
         // Load left-facing running animations
         runningTexturesLeft[0] = new Texture("running_3.png");
         runningTexturesLeft[1] = new Texture("running_4.png");
-    }
-
-    public void applyGravity(float gravity) {
-        dy += gravity;
-        move();
-    }
-
-    public void setVelocity(float dx, float dy) {
-        this.dx = dx;
-        this.dy = dy;
-    }
-    
-    public void setDimensions(float width, float height) {
-        this.width = width;
-        this.height = height;
-        this.bounds.setSize(width, height); 
     }
 
     @Override
@@ -185,7 +168,7 @@ public class Player extends Entity implements PlayerMovable, Collidable {
         }
     }
     
-    public Trash droppedTrash() {
+    public Trash getDroppedTrash() {
     	return droppedTrash;
     }
 
@@ -206,17 +189,6 @@ public class Player extends Entity implements PlayerMovable, Collidable {
 
     public Trash getHeldTrash() {
         return heldTrash;
-    }
-
-    public void restoreHealth(int amount) {
-        health += amount;
-        if (health > 3) {
-            health = 3;
-        }
-    }
-
-    public int getHealth() {
-        return health;
     }
 
     public void changeTexture(String newTexturePath) {

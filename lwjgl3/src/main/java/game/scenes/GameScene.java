@@ -1,6 +1,5 @@
 package game.scenes;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
 
@@ -9,7 +8,7 @@ import game.utils.GameState;
 import game_engine.BackgroundRenderer;
 import game_engine.Scene;
 import game_engine.ServiceLocator;
-import io.github.some_example_name.lwjgl3.GameMechanicsManager;
+import io.github.some_example_name.lwjgl3.GameMechanics;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -21,14 +20,14 @@ public class GameScene extends Scene {
     // Rendering priority constants
     private static final int CHARACTER_PRIORITY = 3;
     
-    private GameMechanicsManager mechanics;
+    private GameMechanics mechanics;
     private BitmapFont font;
     private BackgroundRenderer backgroundRenderer;
     private ShapeRenderer shapeRenderer;
     
     public GameScene(String name) {
         super(name);
-        mechanics = new GameMechanicsManager();
+        mechanics = new GameMechanics();
     }
     
     @Override
@@ -45,8 +44,11 @@ public class GameScene extends Scene {
         this.ioManager.getSoundManager().loadSound("gameover_sound", "gameover_sound.mp3");
         this.ioManager.getSoundManager().loadSound("trash_correct", "Correct Answer sound effect.mp3");
         this.ioManager.getSoundManager().loadSound("trash_wrong", "Wrong Answer Sound effect.mp3");
-        this.ioManager.getSoundManager().loadSound("pickup", "Item Pickup [Sound Effect].mp3");
+        this.ioManager.getSoundManager().loadSound("pickup", "Item Pickup [Ssound Effect].mp3");
         this.ioManager.getSoundManager().loadSound("Power Up", "8-Bit Powerup Sound Effects (Copyright Free).mp3");
+        this.ioManager.getSoundManager().loadSound("cat_sound", "meow.mp3");
+        this.ioManager.getSoundManager().loadSound("lose_sound", "mr_bean_ahhh.mp3");
+
         
         // Reset the entity system to clear any lingering entities
         this.entityManager.clearAllEntities();
@@ -78,7 +80,7 @@ public class GameScene extends Scene {
         this.movementManager.addMovingEntity(player);
         
         // Initialize game mechanics
-        mechanics = new GameMechanicsManager();
+        mechanics = new GameMechanics();
         mechanics.initializeGame(player);
         
         // Initialize UI elements with proper scaling and priority

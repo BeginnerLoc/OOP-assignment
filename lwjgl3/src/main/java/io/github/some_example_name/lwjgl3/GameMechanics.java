@@ -29,7 +29,7 @@ import game_engine.MovementManager;
 import game_engine.SceneManager;
 import game_engine.ServiceLocator;
 
-public class GameMechanicsManager {
+public class GameMechanics {
     private Player player;
     private List<Enemy> enemies;
     private List<TrashBin> bins;
@@ -53,7 +53,7 @@ public class GameMechanicsManager {
     private IOManager ioManager;
     private MovementManager movementManager;
 
-    public GameMechanicsManager() {
+    public GameMechanics() {
         this.enemies = new ArrayList<>();
         this.bins = new ArrayList<>();
         this.trashItems = new ArrayList<>();
@@ -333,21 +333,17 @@ public class GameMechanicsManager {
      * Handles collision between player and enemy
      */
     private void handlePlayerEnemyCollision(Enemy enemy) {
-        // End game on enemy collision if not penalized
-        if (!isSpeedPenalized) {
-            if (ioManager.getSoundManager() != null) {
-                ioManager.getSoundManager().playSound("game_over");
-            }
-            cleanupGameResources();
-            ServiceLocator.get(SceneManager.class).setScene(GameOverScene.class);
-        }
+        ioManager.getSoundManager().playSound("lose_sound");
+        cleanupGameResources();
+        ServiceLocator.get(SceneManager.class).setScene(GameOverScene.class);
+        
     }
     
     /**
      * Handles collision between player and trash
      */
     private void handlePlayerTrashCollision(Trash trash) {
-        if (!trash.isPickedUp() && player.getHeldTrash() == null && player.droppedTrash() != trash) {
+        if (!trash.isPickedUp() && player.getHeldTrash() == null && player.getDroppedTrash() != trash) {
             trash.setPickedUp(true);
             player.pickupTrash(trash);
             ioManager.getSoundManager().playSound("pickup");
@@ -428,6 +424,7 @@ public class GameMechanicsManager {
             
             catToys.add(toy);
             entityManager.addEntity(toy);
+            this.ioManager.getSoundManager().playSound("cat_sound");
             collisionManager.register(toy);
             catCharges--; // Use up one charge
             catCooldown = 0.5f; // Set cooldown to 0.5 seconds
